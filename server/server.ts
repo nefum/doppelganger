@@ -7,7 +7,7 @@ import next from "next";
 import {kasmVncWsEndpoint} from "./device-info/device-regex";
 import createWebSocketProxy from "./kasmvnc/wsproxy";
 import WebSocket from "ws";
-import {getDeviceIdFromUrl, getDeviceInfoForId} from "./device-info/device-info";
+import {getDeviceInfoForId} from "./device-info/device-info";
 
 // for prod, see this file for reference: https://gist.github.com/regulad/9c5529137ebac136288f9627815d8933
 const dev = process.env.NODE_ENV !== 'production'
@@ -42,23 +42,17 @@ app.prepare().then(() => {
         return
       }
 
-      if (kasmVncWsEndpoint.test(pathname)) {
+      const match = pathname.match(kasmVncWsEndpoint);
+
+      if (match) {
+        const deviceId = match[1];
+
         // check to see if this is a websocket connection
         if (!req.headers.upgrade || req.headers.upgrade.toLowerCase() !== 'websocket') {
           // invalid method; upgrade required
           res.statusCode = 426
           res.setHeader('Content-Type', 'text/plain')
           res.end('upgrade required')
-          return
-        }
-
-        // parse the response body as JSON
-        const deviceId = getDeviceIdFromUrl(req.url);
-
-        if (!deviceId) {
-          res.statusCode = 400
-          res.setHeader('Content-Type', 'text/plain')
-          res.end('bad request')
           return
         }
 
