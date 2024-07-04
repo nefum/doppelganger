@@ -3,13 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node server/server.js",
-    "build": "next build",
-    "start": "NODE_ENV=production node server/server.js",
+    "build-server": "babel --config-file \"./server/babel.config.json\" -x \".ts\" server -d dist",
+    "run-server": "node dist/server.js",
+    "dev": "nodemon -x \"pnpm run build-server && pnpm run run-server\"",
+    "build": "pnpm run build-server && next build",
+    "start": "NODE_ENV=production pnpm run run-server",
     "lint": "next lint"
   },
   "dependencies": {
+    "async-lock": "^1.4.1",
+    "canvas": "^2.11.2",
     "ispinner.css": "^3.1.1",
+    "jsdom": "^24.1.0",
+    "mutation-observer": "^1.0.3",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
@@ -18,13 +24,21 @@
     "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@types/async-lock": "^1.4.2",
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/ws": "^8.5.10",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
+    "nodemon": "^3.1.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.5.3"
   }
 }

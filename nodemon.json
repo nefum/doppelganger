@@ -1,0 +1,6 @@
+{
+  "verbose": true,
+  "ignore": ["src/**", "dist/**", ".next/**"],
+  "watch": ["server/**"],
+  "ext": ".ts"
+}

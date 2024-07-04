@@ -3,7 +3,8 @@ FROM node:18-alpine AS base
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# pw: add for node-canvas
+RUN apk add --no-cache libc6-compat build-base cairo-dev pango-dev jpeg-dev giflib-dev librsvg-dev
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -66,4 +67,4 @@ EXPOSE 3000
 ENV PORT 3000
 
 # custom server
-CMD HOSTNAME="0.0.0.0" node server/server.js
+CMD HOSTNAME="0.0.0.0" node server/server.ts

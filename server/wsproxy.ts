@@ -1,6 +1,11 @@
-const ws = require('ws');
+import {WebSocket} from "ws";
+import {IncomingMessage, ServerResponse} from "node:http";
+import {BasicAuth} from "./device-info/device-info";
 
-function createWebSocketProxy(wss, req, res, url, insecure, basicAuth) {
+// @ts-expect-error -- it is not a namespace but can be used as one
+type WebSocketServer = WebSocket.Server;
+
+export default function createWebSocketProxy(wss: WebSocketServer, req: IncomingMessage, res: ServerResponse, url: string, insecure: boolean, basicAuth: BasicAuth): Promise<WebSocket> {
   // parse the target url
   const parsedTargetUrl = new URL(url)
   const usingTls = parsedTargetUrl.protocol === 'https:' || parsedTargetUrl.protocol === 'wss:'
@@ -12,11 +17,11 @@ function createWebSocketProxy(wss, req, res, url, insecure, basicAuth) {
   const head = Buffer.alloc(0)
 
   // now create a WebSocket proxy to the KasmVNC server at url
-  return new Promise((resolve, reject) => {
-    wss.handleUpgrade(req, socket, head, (userWs) => {
+  return new Promise<WebSocket>((resolve, reject) => {
+    wss.handleUpgrade(req, socket, head, (userWs: WebSocket) => {
       // get the protocols from the req['sec-websocket-protocol']
       const protocols = req.headers['sec-websocket-protocol']?.split(',').map((p) => p.trim())
-      const options = {
+      const options: {[key: string]: any} = {
         rejectUnauthorized: !insecure,
         headers: {
           pragma: "no-cache",
@@ -85,5 +90,3 @@ function createWebSocketProxy(wss, req, res, url, insecure, basicAuth) {
     });
   })
 }
-
-module.exports = createWebSocketProxy;
