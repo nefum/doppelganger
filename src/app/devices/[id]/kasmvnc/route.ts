@@ -6,17 +6,30 @@ export async function GET(request: NextRequest): Promise<NextResponse<DeviceInfo
   // return the device-info for the websoket proxy
   // first, get the id
   const id = getDeviceIdFromUrl(request.nextUrl);
-  // 404 if the id is not found
   if (!id) {
-    return NextResponse.error(); // can't even customize the status code
+    return NextResponse.json(
+      {
+        error: "Bad Request"
+      },
+      {
+        status: 400
+      }
+    )
   }
-
-  // TODO: check if user is authorized for device (e.g. user owns the device)
 
   const deviceInfo = getDeviceInfoForId(id);
   if (!deviceInfo) {
-    return NextResponse.error();
+    return NextResponse.json(
+      {
+        error: "Device not found"
+      },
+      {
+        status: 404
+      }
+    )
   }
+
+  // TODO: check authorization for device
 
   return NextResponse.json(deviceInfo);
 }

@@ -3,6 +3,11 @@ import {IncomingMessage, ServerResponse} from "node:http";
 import {createServer} from "http";
 import {parse} from "url";
 import next from "next";
+// our KasmVNC connections will go to the path /devices/[id]/kasmvnc
+import {kasmVncWsEndpoint} from "./device-info/device-regex";
+import createWebSocketProxy from "./kasmvnc/wsproxy";
+import WebSocket from "ws";
+import {getDeviceIdFromUrl, getDeviceInfoForId} from "./device-info/device-info";
 
 // for prod, see this file for reference: https://gist.github.com/regulad/9c5529137ebac136288f9627815d8933
 const dev = process.env.NODE_ENV !== 'production'
@@ -12,11 +17,6 @@ const hostname = process.env.HOSTNAME || '0.0.0.0'
 const app = next({ dev, hostname, port })
 const handle = app.getRequestHandler()
 
-// our KasmVNC connections will go to the path /devices/[id]/kasmvnc
-import {kasmVncWsEndpoint} from "./device-info/device-regex";
-import createWebSocketProxy from "./wsproxy";
-import WebSocket from "ws";
-import {getDeviceIdFromUrl, getDeviceInfoForId} from "./device-info/device-info";
 const wss = new WebSocket.Server({ noServer: true });
 
 app.prepare().then(() => {

@@ -8,6 +8,9 @@ dependencies:
   async-lock:
     specifier: ^1.4.1
     version: 1.4.1
+  bufferutil:
+    specifier: ^4.0.8
+    version: 4.0.8
   canvas:
     specifier: ^2.11.2
     version: 2.11.2
@@ -16,7 +19,7 @@ dependencies:
     version: 3.1.1
   jsdom:
     specifier: ^24.1.0
-    version: 24.1.0(canvas@2.11.2)
+    version: 24.1.0(bufferutil@4.0.8)(canvas@2.11.2)
   mutation-observer:
     specifier: ^1.0.3
     version: 1.0.3
@@ -37,7 +40,7 @@ dependencies:
     version: 0.33.4
   ws:
     specifier: ^8.17.1
-    version: 8.17.1
+    version: 8.17.1(bufferutil@4.0.8)
 
 devDependencies:
   '@babel/cli':
@@ -82,6 +85,9 @@ devDependencies:
   postcss:
     specifier: ^8
     version: 8.4.39
+  rimraf:
+    specifier: ^5.0.7
+    version: 5.0.7
   tailwindcss:
     specifier: ^3.4.1
     version: 3.4.4
@@ -2013,7 +2019,7 @@ packages:
       slash: 3.0.0
     dev: false
 
-  /@jest/core@27.5.1(canvas@2.11.2):
+  /@jest/core@27.5.1(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-AK6/UTrvQD0Cd24NSqmIA6rKsu0tKIxfiCducZvqxYdmMisOYAsdItspT+fQDQYARPf8XgjAFZi0ogW2agH5nQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     peerDependencies:
@@ -2034,13 +2040,13 @@ packages:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 27.5.1
-      jest-config: 27.5.1(canvas@2.11.2)
+      jest-config: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-haste-map: 27.5.1
       jest-message-util: 27.5.1
       jest-regex-util: 27.5.1
       jest-resolve: 27.5.1
       jest-resolve-dependencies: 27.5.1
-      jest-runner: 27.5.1(canvas@2.11.2)
+      jest-runner: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-runtime: 27.5.1
       jest-snapshot: 27.5.1
       jest-util: 27.5.1
@@ -2437,7 +2443,7 @@ packages:
       schema-utils: 4.2.0
       source-map: 0.7.4
       webpack: 5.92.1
-      webpack-dev-server: 4.15.2(webpack@5.92.1)
+      webpack-dev-server: 4.15.2(bufferutil@4.0.8)(webpack@5.92.1)
     dev: false
 
   /@rollup/plugin-babel@5.3.1(@babel/core@7.24.7)(rollup@2.79.1):
@@ -3936,6 +3942,14 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: false
 
+  /bufferutil@4.0.8:
+    resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
+    engines: {node: '>=6.14.2'}
+    requiresBuild: true
+    dependencies:
+      node-gyp-build: 4.8.1
+    dev: false
+
   /builtin-modules@3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
@@ -5343,7 +5357,7 @@ packages:
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/experimental-utils': 5.62.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
-      jest: 27.5.1(canvas@2.11.2)
+      jest: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -6785,7 +6799,7 @@ packages:
       - supports-color
     dev: false
 
-  /jest-cli@27.5.1(canvas@2.11.2):
+  /jest-cli@27.5.1(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-Hc6HOOwYq4/74/c62dEE3r5elx8wjYqxY0r0G/nFrLDPMFRu6RA/u8qINOIkvhxG7mMQ5EJsOGfRpI8L6eFUVw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
@@ -6795,14 +6809,14 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': 27.5.1(canvas@2.11.2)
+      '@jest/core': 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
       import-local: 3.1.0
-      jest-config: 27.5.1(canvas@2.11.2)
+      jest-config: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-util: 27.5.1
       jest-validate: 27.5.1
       prompts: 2.4.2
@@ -6815,7 +6829,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /jest-config@27.5.1(canvas@2.11.2):
+  /jest-config@27.5.1(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-5sAsjm6tGdsVbW9ahcChPAFCk4IlkQUknH5AvKjuLTSlcO/wCZKyFdn7Rg0EkC+OGgWODEy2hDpWB1PgzH0JNA==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     peerDependencies:
@@ -6834,13 +6848,13 @@ packages:
       glob: 7.2.3
       graceful-fs: 4.2.11
       jest-circus: 27.5.1
-      jest-environment-jsdom: 27.5.1(canvas@2.11.2)
+      jest-environment-jsdom: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-environment-node: 27.5.1
       jest-get-type: 27.5.1
       jest-jasmine2: 27.5.1
       jest-regex-util: 27.5.1
       jest-resolve: 27.5.1
-      jest-runner: 27.5.1(canvas@2.11.2)
+      jest-runner: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-util: 27.5.1
       jest-validate: 27.5.1
       micromatch: 4.0.7
@@ -6883,7 +6897,7 @@ packages:
       pretty-format: 27.5.1
     dev: false
 
-  /jest-environment-jsdom@27.5.1(canvas@2.11.2):
+  /jest-environment-jsdom@27.5.1(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-TFBvkTC1Hnnnrka/fUb56atfDtJ9VMZ94JkjTbggl1PEpwrYtUBKMezB3inLmWqQsXYLcMwNoDQwoBTAvFfsfw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
@@ -6893,7 +6907,7 @@ packages:
       '@types/node': 20.14.9
       jest-mock: 27.5.1
       jest-util: 27.5.1
-      jsdom: 16.7.0(canvas@2.11.2)
+      jsdom: 16.7.0(bufferutil@4.0.8)(canvas@2.11.2)
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -7068,7 +7082,7 @@ packages:
       slash: 3.0.0
     dev: false
 
-  /jest-runner@27.5.1(canvas@2.11.2):
+  /jest-runner@27.5.1(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-g4NPsM4mFCOwFKXO4p/H/kWGdJp9V8kURY2lX8Me2drgXqG7rrZAx5kv+5H7wtt/cdFIjhqYx1HrlqWHaOvDaQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
@@ -7082,7 +7096,7 @@ packages:
       emittery: 0.8.1
       graceful-fs: 4.2.11
       jest-docblock: 27.5.1
-      jest-environment-jsdom: 27.5.1(canvas@2.11.2)
+      jest-environment-jsdom: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-environment-node: 27.5.1
       jest-haste-map: 27.5.1
       jest-leak-detector: 27.5.1
@@ -7212,7 +7226,7 @@ packages:
     dependencies:
       ansi-escapes: 4.3.2
       chalk: 4.1.2
-      jest: 27.5.1(canvas@2.11.2)
+      jest: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-regex-util: 28.0.2
       jest-watcher: 28.1.3
       slash: 4.0.0
@@ -7274,7 +7288,7 @@ packages:
       supports-color: 8.1.1
     dev: false
 
-  /jest@27.5.1(canvas@2.11.2):
+  /jest@27.5.1(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-Yn0mADZB89zTtjkPJEXwrac3LHudkQMR+Paqa8uxJHCBr9agxztUifWCyiYrjhMPBoUVBjyny0I7XH6ozDr7QQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
@@ -7284,9 +7298,9 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': 27.5.1(canvas@2.11.2)
+      '@jest/core': 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       import-local: 3.1.0
-      jest-cli: 27.5.1(canvas@2.11.2)
+      jest-cli: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -7316,7 +7330,7 @@ packages:
     dependencies:
       argparse: 2.0.1
 
-  /jsdom@16.7.0(canvas@2.11.2):
+  /jsdom@16.7.0(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-u9Smc2G1USStM+s/x1ru5Sxrl6mPYCbByG1U/hUmqaVsm4tbNyS7CicOSRyuGQYZhTu0h84qkZZQ/I+dzizSVw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -7351,7 +7365,7 @@ packages:
       whatwg-encoding: 1.0.5
       whatwg-mimetype: 2.3.0
       whatwg-url: 8.7.0
-      ws: 7.5.10
+      ws: 7.5.10(bufferutil@4.0.8)
       xml-name-validator: 3.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -7359,7 +7373,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /jsdom@24.1.0(canvas@2.11.2):
+  /jsdom@24.1.0(bufferutil@4.0.8)(canvas@2.11.2):
     resolution: {integrity: sha512-6gpM7pRXCwIOKxX47cgOyvyQDN/Eh0f1MeKySBV2xGdKtqJBLj8P25eY3EVCWo2mglDDzozR2r2MW4T+JiNUZA==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -7388,7 +7402,7 @@ packages:
       whatwg-encoding: 3.1.1
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
-      ws: 8.17.1
+      ws: 8.17.1(bufferutil@4.0.8)
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -7921,6 +7935,11 @@ packages:
   /node-forge@1.3.1:
     resolution: {integrity: sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==}
     engines: {node: '>= 6.13.0'}
+    dev: false
+
+  /node-gyp-build@4.8.1:
+    resolution: {integrity: sha512-OSs33Z9yWr148JZcbZd5WiAXhh/n9z8TxQcdMhIOlpN9AhWpLfvVFO73+m77bBABQMaY9XSvIa+qk0jlI7Gcaw==}
+    hasBin: true
     dev: false
 
   /node-int64@0.4.0:
@@ -9325,7 +9344,7 @@ packages:
       '@rollup/plugin-typescript': 11.1.6(rollup@2.79.1)(typescript@5.5.3)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-scripts: 5.0.1(@babel/plugin-syntax-flow@7.24.7)(@babel/plugin-transform-react-jsx@7.24.7)(canvas@2.11.2)(eslint@8.57.0)(react@18.3.1)(typescript@5.5.3)
+      react-scripts: 5.0.1(@babel/plugin-syntax-flow@7.24.7)(@babel/plugin-transform-react-jsx@7.24.7)(bufferutil@4.0.8)(canvas@2.11.2)(eslint@8.57.0)(react@18.3.1)(typescript@5.5.3)
     transitivePeerDependencies:
       - rollup
       - tslib
@@ -9337,7 +9356,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-scripts@5.0.1(@babel/plugin-syntax-flow@7.24.7)(@babel/plugin-transform-react-jsx@7.24.7)(canvas@2.11.2)(eslint@8.57.0)(react@18.3.1)(typescript@5.5.3):
+  /react-scripts@5.0.1(@babel/plugin-syntax-flow@7.24.7)(@babel/plugin-transform-react-jsx@7.24.7)(bufferutil@4.0.8)(canvas@2.11.2)(eslint@8.57.0)(react@18.3.1)(typescript@5.5.3):
     resolution: {integrity: sha512-8VAmEm/ZAwQzJ+GOMLbBsTdDKOpuZh7RPs0UymvBR2vRk4iZWCskjbFnxqjrzoIvlNNRZ3QJFx6/qDSi6zSnaQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -9371,7 +9390,7 @@ packages:
       fs-extra: 10.1.0
       html-webpack-plugin: 5.6.0(webpack@5.92.1)
       identity-obj-proxy: 3.0.0
-      jest: 27.5.1(canvas@2.11.2)
+      jest: 27.5.1(bufferutil@4.0.8)(canvas@2.11.2)
       jest-resolve: 27.5.1
       jest-watch-typeahead: 1.1.0(jest@27.5.1)
       mini-css-extract-plugin: 2.9.0(webpack@5.92.1)
@@ -9395,7 +9414,7 @@ packages:
       terser-webpack-plugin: 5.3.10(webpack@5.92.1)
       typescript: 5.5.3
       webpack: 5.92.1
-      webpack-dev-server: 4.15.2(webpack@5.92.1)
+      webpack-dev-server: 4.15.2(bufferutil@4.0.8)(webpack@5.92.1)
       webpack-manifest-plugin: 4.1.1(webpack@5.92.1)
       workbox-webpack-plugin: 6.6.0(webpack@5.92.1)
     optionalDependencies:
@@ -9649,6 +9668,14 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
+
+  /rimraf@5.0.7:
+    resolution: {integrity: sha512-nV6YcJo5wbLW77m+8KjH8aB/7/rxQy9SZ0HY5shnwULfS+9nmTtVXAJET5NdZmCzA4fPI/Hm1wo/Po/4mopOdg==}
+    engines: {node: '>=14.18'}
+    hasBin: true
+    dependencies:
+      glob: 10.4.2
+    dev: true
 
   /rollup-plugin-terser@7.0.2(rollup@2.79.1):
     resolution: {integrity: sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ==}
@@ -10956,7 +10983,7 @@ packages:
       webpack: 5.92.1
     dev: false
 
-  /webpack-dev-server@4.15.2(webpack@5.92.1):
+  /webpack-dev-server@4.15.2(bufferutil@4.0.8)(webpack@5.92.1):
     resolution: {integrity: sha512-0XavAZbNJ5sDrCbkpWL8mia0o5WPOd2YGtxrEiZkBK9FjLppIUK2TgxK6qGD2P3hUXTJNNPVibrerKcx5WkR1g==}
     engines: {node: '>= 12.13.0'}
     hasBin: true
@@ -10999,7 +11026,7 @@ packages:
       spdy: 4.0.2
       webpack: 5.92.1
       webpack-dev-middleware: 5.3.4(webpack@5.92.1)
-      ws: 8.17.1
+      ws: 8.17.1(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -11412,7 +11439,7 @@ packages:
       typedarray-to-buffer: 3.1.5
     dev: false
 
-  /ws@7.5.10:
+  /ws@7.5.10(bufferutil@4.0.8):
     resolution: {integrity: sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==}
     engines: {node: '>=8.3.0'}
     peerDependencies:
@@ -11423,9 +11450,11 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dependencies:
+      bufferutil: 4.0.8
     dev: false
 
-  /ws@8.17.1:
+  /ws@8.17.1(bufferutil@4.0.8):
     resolution: {integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -11436,6 +11465,8 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dependencies:
+      bufferutil: 4.0.8
     dev: false
 
   /xml-name-validator@3.0.0:

@@ -1,6 +1,7 @@
 import {WebSocket} from "ws";
 import {IncomingMessage, ServerResponse} from "node:http";
-import {BasicAuth} from "./device-info/device-info";
+import {BasicAuth} from "../device-info/device-info";
+import {getWsWebSocketOptionForKasmVNC} from "./wsconnect";
 
 // @ts-expect-error -- it is not a namespace but can be used as one
 type WebSocketServer = WebSocket.Server;
@@ -8,7 +9,6 @@ type WebSocketServer = WebSocket.Server;
 export default function createWebSocketProxy(wss: WebSocketServer, req: IncomingMessage, res: ServerResponse, url: string, insecure: boolean, basicAuth: BasicAuth): Promise<WebSocket> {
   // parse the target url
   const parsedTargetUrl = new URL(url)
-  const usingTls = parsedTargetUrl.protocol === 'https:' || parsedTargetUrl.protocol === 'wss:'
 
   // get the underlying socket
   const {socket} = res;
@@ -21,25 +21,9 @@ export default function createWebSocketProxy(wss: WebSocketServer, req: Incoming
     wss.handleUpgrade(req, socket, head, (userWs: WebSocket) => {
       // get the protocols from the req['sec-websocket-protocol']
       const protocols = req.headers['sec-websocket-protocol']?.split(',').map((p) => p.trim())
-      const options: {[key: string]: any} = {
-        rejectUnauthorized: !insecure,
-        headers: {
-          pragma: "no-cache",
-          "cache-control": "no-cache",
-          "user-agent": req.headers["user-agent"],
-          "accept-language": req.headers["accept-language"],
-          "accept-encoding": req.headers["accept-encoding"],
-          "Host": `${parsedTargetUrl.hostname}:${parsedTargetUrl.port}`,
-          "Origin": `${usingTls ? 'https' : 'http'}//${parsedTargetUrl.hostname}:${parsedTargetUrl.port}`
-        }
-      }
-
-      if (basicAuth) {
-        const {username, password} = basicAuth;
-        const basicAuthString = `${username}:${password}`
-        const basicAuthEncoded = Buffer.from(basicAuthString).toString('base64')
-        options.headers["Authorization"] = `Basic ${basicAuthEncoded}`;
-      }
+      const options: {
+        [key: string]: any
+      } = getWsWebSocketOptionForKasmVNC(req.headers, parsedTargetUrl, insecure, basicAuth);
 
       const targetWs = new WebSocket(url, protocols, options);
       // error

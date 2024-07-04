@@ -1,11 +1,12 @@
-import {kasmVncWsEndpoint} from "./device-regex"
+import {anyDeviceEndpoint} from "./device-regex"
 
 export function getDeviceIdFromUrl(url: URL | string): string | null {
   let match;
   if (typeof url === 'string') {
-    match = url.match(kasmVncWsEndpoint);
+    match = url.match(anyDeviceEndpoint);
   } else {
-    match = url.pathname.match(kasmVncWsEndpoint);
+    // might be "/devices/1/snapshot"
+    match = url.pathname.match(anyDeviceEndpoint);
   }
   return match ? match[1] : null;
 }

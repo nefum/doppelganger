@@ -1,6 +1,9 @@
 // https://github.com/regulad/react-kasmvnc/blob/8b0c13060936c3d0455363442523ded19a36f6f8/src/lib/VncScreen.tsx
 import MouseButtonMapper, {XVNC_BUTTONS} from "@/noVNC/core/mousebuttonmapper";
-import type RFB from "@/noVNC/core/rfb"; // refers to window on import
+import type RFB from "@/noVNC/core/rfb";
+import {NextRequest} from "next/server";
+import {DeviceInfo} from "../../../../../server/device-info/device-info";
+import {getWsWebSocketOptionForKasmVNC} from "../../../../../server/kasmvnc/wsconnect"; // refers to window on import
 
 function createDefaultMouseButtonMapper(): MouseButtonMapper {
   const mouseButtonMapper = new MouseButtonMapper();
@@ -15,9 +18,12 @@ function createDefaultMouseButtonMapper(): MouseButtonMapper {
 }
 
 // https://github.com/regulad/react-kasmvnc/blob/8b0c13060936c3d0455363442523ded19a36f6f8/src/lib/VncScreen.tsx
-export default async function createRfb(screen: HTMLCanvasElement, keyboardInput: HTMLTextAreaElement, target: string): Promise<RFB> {
+export default async function createRfb(screen: HTMLDivElement, keyboardInput: HTMLTextAreaElement, target: string, req: NextRequest, deviceInfo: DeviceInfo): Promise<RFB> {
   // have to import it here because it makes a call to window
   const RuntimeRFB = (await import("@/noVNC/core/rfb")).default as unknown as typeof RFB;
+
+  const parsedTargetUrl = new URL(deviceInfo.url);
+  const webSocketOpts = getWsWebSocketOptionForKasmVNC(req.headers, parsedTargetUrl, deviceInfo.insecure, deviceInfo.basicAuth);
 
   const _rfb = new RuntimeRFB(
     screen,
@@ -25,6 +31,7 @@ export default async function createRfb(screen: HTMLCanvasElement, keyboardInput
     target,
     {},
     true,
+    webSocketOpts,
   );
 
   _rfb.viewOnly = false;

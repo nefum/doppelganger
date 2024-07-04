@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build-server": "babel --config-file \"./server/babel.config.json\" -x \".ts\" server -d dist",
+    "build-server": "rimraf -rf dist/ && babel --config-file \"./server/babel.config.json\" -x \".ts\" server -d dist",
     "run-server": "node dist/server.js",
-    "dev": "nodemon -x \"pnpm run build-server && pnpm run run-server\"",
+    "dev": "nodemon -x \"pnpm run build-server && NODE_ENV=development pnpm run run-server\"",
     "build": "pnpm run build-server && next build",
     "start": "NODE_ENV=production pnpm run run-server",
     "lint": "next lint"
   },
   "dependencies": {
     "async-lock": "^1.4.1",
+    "bufferutil": "^4.0.8",
     "canvas": "^2.11.2",
     "ispinner.css": "^3.1.1",
     "jsdom": "^24.1.0",
@@ -38,6 +39,7 @@
     "eslint-config-next": "14.2.4",
     "nodemon": "^3.1.4",
     "postcss": "^8",
+    "rimraf": "^5.0.7",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3"
   }

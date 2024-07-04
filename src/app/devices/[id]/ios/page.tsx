@@ -1,6 +1,8 @@
 import dynamic from "next/dynamic";
 import ISpinner from "@/app/components/ispinner";
-import "./ios-client.css";
+// import "./ios-client.css";
+// there is never a reason to manually hide the cursor because the cursor will not show in the WKWebView;
+// the cursor we view is from
 
 const IosClient = dynamic(() => import("./ios-client"), {
   ssr: false,
