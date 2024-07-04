@@ -33,13 +33,12 @@ export async function GET(request: NextRequest) {
 
   try {
     const outerCanvasOutput = await getSnapshotOfKasmVNCDevice(deviceInfo, request);
-
-    // now that we have the outer canvas output, we need to turn it into bytes and send a response with the content type png
+    const mimeType = outerCanvasOutput.split(",")[0].split(":")[1].split(";")[0];
     const base64 = outerCanvasOutput.split(",")[1];
     const buffer = Buffer.from(base64, "base64");
     return new NextResponse(buffer, {
       headers: {
-        "Content-Type": "image/png"
+        "Content-Type": mimeType,
       }
     });
   } catch (e: any) {
