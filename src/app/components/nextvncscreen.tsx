@@ -1,8 +1,5 @@
 "use client";
 
-import IosFail from "@/app/(no-layout)/devices/[id]/ios/ios-fail.tsx";
-import ISpinner from "@/app/(no-layout)/devices/[id]/ios/ispinner.tsx";
-
 import {
   VncScreen as KasmVNCScreen,
   VncScreenHandle as KasmVNCScreenHandle,
@@ -14,13 +11,15 @@ import type {
 } from "react-kasmvnc/dist/types/lib/VncScreen";
 // @ts-expect-error -- the types are exported wrong
 import type { RFB as KasmVNCRFB } from "react-kasmvnc/dist/types/noVNC/core/rfb";
-import { useEffect, useRef, useState } from "react";
+import { ComponentType, useEffect, useRef, useState } from "react";
 import { DeviceInfo } from "../../../server/device-info/device-info.ts";
 
 export interface ClientProps
   extends Partial<KasmVNCScreenProps | KasmVNCExtraRFBOptions> {
   thisPathname: string;
   deviceInfo: DeviceInfo;
+  failComponent: ComponentType<{ reason: string }>;
+  loadingComponent: ComponentType<{ large: boolean }>;
   fullScreen?: boolean;
   viewOnly?: boolean;
   focusOnClick?: boolean;
@@ -44,7 +43,11 @@ export interface ClientProps
 }
 
 // https://github.com/regulad/novnc-nofrills/blob/1d7b38a1f5d0d5ee665b4eca3f8921d4040f7709/src/App.tsx
-export default function NextVNCScreen(clientProps: Readonly<ClientProps>) {
+export default function NextVNCScreen({
+  failComponent: FailComponent,
+  loadingComponent: LoadingComponent,
+  ...clientProps
+}: Readonly<ClientProps>) {
   const ref = useRef<KasmVNCScreenHandle>(null);
   const [isFailed, setIsFailed] = useState<boolean>(false);
   const [failureReason, setFailureReason] = useState<string>("");
@@ -68,8 +71,10 @@ export default function NextVNCScreen(clientProps: Readonly<ClientProps>) {
   }
 
   if (isFailed) {
-    return <IosFail reason={failureReason} />;
+    return <FailComponent reason={failureReason} />;
   }
+
+  const renderedLoadingComponent = <LoadingComponent large />;
 
   function Screen() {
     if (!url) {
@@ -97,7 +102,7 @@ export default function NextVNCScreen(clientProps: Readonly<ClientProps>) {
           enableWebRTC: true, // doesn't hurt; just allow it (will probably fail)
           ...clientProps,
         }}
-        loadingUI={<ISpinner large />}
+        loadingUI={renderedLoadingComponent}
         background="rgba(0, 0, 0, 0)"
         style={clientProps.fullScreen ? style : {}}
         // this completely breaks the connection; i have no idea why
@@ -123,5 +128,5 @@ export default function NextVNCScreen(clientProps: Readonly<ClientProps>) {
     );
   }
 
-  return (url && <Screen />) || <ISpinner large />;
+  return (url && <Screen />) || renderedLoadingComponent;
 }
