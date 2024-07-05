@@ -1,12 +1,11 @@
 // this lock will ensure that only one window is created per nodejs process
 import AsyncLock from "async-lock";
-import { DeviceInfo } from "../../../../../server/device-info/device-info";
-import { NextRequest } from "next/server";
+import { DeviceInfo } from "../../../../../../server/device-info/device-info";
 import {
   depolyfillNode,
   polyfillNode,
-} from "@/app/devices/[id]/snapshot/node-shim";
-import createRfb from "@/app/devices/[id]/snapshot/rfb-shim";
+} from "@/app/(no-layout)/devices/[id]/snapshot/node-shim";
+import createRfb from "@/app/(no-layout)/devices/[id]/snapshot/rfb-shim";
 import { JSDOM } from "jsdom";
 
 const globalWindowLock = new AsyncLock();
@@ -44,11 +43,10 @@ function createJSDOMForKasmVNC(deviceInfo: DeviceInfo) {
  * HOWEVER, it only draws the part of the frame that has changed,
  * so there is a maximum number of frames before we only start receiving things that have already occurred
  */
-const framesRequired: number = 2;
+const framesRequired: number = 1;
 
 export default async function getSnapshotOfKasmVNCDevice(
   deviceInfo: DeviceInfo,
-  request: NextRequest,
 ): Promise<CanvasOutput> {
   const dom = createJSDOMForKasmVNC(deviceInfo);
 
@@ -72,7 +70,6 @@ export default async function getSnapshotOfKasmVNCDevice(
           screen,
           keyboardInput,
           deviceInfo.url,
-          request,
           deviceInfo,
         );
         const canvas = (rfb as any)._canvas as HTMLCanvasElement;
@@ -106,15 +103,10 @@ export default async function getSnapshotOfKasmVNCDevice(
                 return 0;
               };
 
-              rfb.addEventListener("connect", () => {
-                // wait for the first frame to be rendered
-                console.log("RFB connected");
-
-                // wait for the frame
-                setTimeout(() => {
-                  completeWithFrame();
-                }, 4_000);
-              });
+              // rfb.addEventListener("connect", () => {
+              //   // wait for the first frame to be rendered
+              //   console.log("RFB connected");
+              // });
               rfb.addEventListener("disconnect", () => {
                 reject2(new Error("RFB disconnected"));
               });

@@ -1,0 +1,18 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": "commonjs"
+      }
+    ],
+    [
+      "@babel/preset-typescript",
+      {
+        "rewriteImportExtensions": true,
+        "onlyRemoveTypeImports": true
+      }
+    ]
+  ],
+  "sourceMaps": true
+}

@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build-server": "rimraf -rf dist/ && babel --config-file \"./server/babel.config.json\" -x \".ts\" server -d dist",
-    "run-server": "node dist/server.js",
-    "dev": "nodemon -x \"pnpm run build-server && NODE_ENV=development pnpm run run-server\"",
+    "build-server": "rimraf -rf dist/ && babel --config-file \"./server/babel.config.server.json\" -x \".ts\" server -d dist",
+    "dev": "nodemon -x \"pnpm run build-server && node dist/server.js\"",
     "build": "pnpm run build-server && next build",
-    "start": "NODE_ENV=production pnpm run run-server",
+    "start": "NODE_ENV=production dist/server.js",
     "lint": "next lint --max-warnings 0",
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
     "async-lock": "^1.4.1",
     "bufferutil": "^4.0.8",
     "canvas": "^2.11.2",
@@ -36,6 +36,7 @@
     "@babel/core": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
+    "@tsconfig/node12": "^12.1.3",
     "@types/async-lock": "^1.4.2",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20",
@@ -50,6 +51,7 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "rimraf": "^5.0.7",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "v0": "^2.2.3"
   }
 }

@@ -3,9 +3,8 @@ import MouseButtonMapper, {
   XVNC_BUTTONS,
 } from "@/noVNC/core/mousebuttonmapper";
 import type RFB from "@/noVNC/core/rfb";
-import { NextRequest } from "next/server";
-import { DeviceInfo } from "../../../../../server/device-info/device-info";
-import { getWsWebSocketOptionForKasmVNC } from "../../../../../server/kasmvnc/wsconnect"; // refers to window on import
+import { DeviceInfo } from "../../../../../../server/device-info/device-info";
+import { getWsWebSocketOptionForKasmVNC } from "../../../../../../server/kasmvnc/wsconnect"; // refers to window on import
 
 function createDefaultMouseButtonMapper(): MouseButtonMapper {
   const mouseButtonMapper = new MouseButtonMapper();
@@ -24,7 +23,6 @@ export default async function createRfb(
   screen: HTMLDivElement,
   keyboardInput: HTMLTextAreaElement,
   target: string,
-  req: NextRequest,
   deviceInfo: DeviceInfo,
 ): Promise<RFB> {
   // have to import it here because it makes a call to window
@@ -33,7 +31,6 @@ export default async function createRfb(
 
   const parsedTargetUrl = new URL(deviceInfo.url);
   const webSocketOpts = getWsWebSocketOptionForKasmVNC(
-    req.headers,
     parsedTargetUrl,
     deviceInfo.insecure,
     deviceInfo.basicAuth,

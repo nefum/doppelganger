@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getDeviceIdFromUrl,
   getDeviceInfoForId,
-} from "../../../../../server/device-info/device-info";
-import getSnapshotOfKasmVNCDevice from "@/app/devices/[id]/snapshot/snapshot";
+} from "../../../../../../server/device-info/device-info";
+import getSnapshotOfKasmVNCDevice from "@/app/(no-layout)/devices/[id]/snapshot/snapshot";
 
 export async function GET(request: NextRequest) {
   // we need to connect to /devices/[id]/kasmvnc with RFB and then take a screenshot using node-canvas (jsdom has a node-canvas integ.)
@@ -35,10 +35,7 @@ export async function GET(request: NextRequest) {
   // TODO: check authorization for device
 
   try {
-    const outerCanvasOutput = await getSnapshotOfKasmVNCDevice(
-      deviceInfo,
-      request,
-    );
+    const outerCanvasOutput = await getSnapshotOfKasmVNCDevice(deviceInfo);
     const mimeType = outerCanvasOutput
       .split(",")[0]
       .split(":")[1]
@@ -48,6 +45,11 @@ export async function GET(request: NextRequest) {
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": mimeType,
+        "Cache-Control": "no-store",
+        Pragma: "no-cache",
+        Expires: "0",
+        "Content-Disposition": `inline; filename=${deviceInfo.deviceName}.png`,
+        "Content-Length": buffer.length.toString(),
       },
     });
   } catch (e: any) {

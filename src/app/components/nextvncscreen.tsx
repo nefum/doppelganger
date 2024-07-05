@@ -1,7 +1,7 @@
 "use client";
 
-import IosFail from "@/app/components/ios-fail";
-import ISpinner from "@/app/components/ispinner";
+import IosFail from "@/app/(no-layout)/devices/[id]/ios/ios-fail.tsx";
+import ISpinner from "@/app/(no-layout)/devices/[id]/ios/ispinner.tsx";
 
 import {
   VncScreen as KasmVNCScreen,
@@ -15,9 +15,36 @@ import type {
 // @ts-expect-error -- the types are exported wrong
 import type { RFB as KasmVNCRFB } from "react-kasmvnc/dist/types/noVNC/core/rfb";
 import { useEffect, useRef, useState } from "react";
+import { DeviceInfo } from "../../../server/device-info/device-info.ts";
+
+export interface ClientProps
+  extends Partial<KasmVNCScreenProps | KasmVNCExtraRFBOptions> {
+  thisPathname: string;
+  deviceInfo: DeviceInfo;
+  fullScreen?: boolean;
+  viewOnly?: boolean;
+  focusOnClick?: boolean;
+  retryDuration?: number;
+  resizeSession?: boolean;
+  showDotCursor?: boolean;
+  background?: string;
+  qualityLevel?: number;
+  compressionLevel?: number;
+  dynamicQualityMin?: number;
+  dynamicQualityMax?: number;
+  jpegVideoQuality?: number;
+  webpVideoQuality?: number;
+  maxVideoResolutionX?: number;
+  maxVideoResolutionY?: number;
+  frameRate?: number;
+  idleDisconnect?: boolean;
+  pointerRelative?: boolean;
+  videoQuality?: number;
+  antiAliasing?: number;
+}
 
 // https://github.com/regulad/novnc-nofrills/blob/1d7b38a1f5d0d5ee665b4eca3f8921d4040f7709/src/App.tsx
-export default function IosClient() {
+export default function NextVNCScreen(clientProps: Readonly<ClientProps>) {
   const ref = useRef<KasmVNCScreenHandle>(null);
   const [isFailed, setIsFailed] = useState<boolean>(false);
   const [failureReason, setFailureReason] = useState<string>("");
@@ -27,65 +54,13 @@ export default function IosClient() {
     // the url will be the same url but kasmvnc instead of ios
     // ie. /devices/[id]/ios -> /devices/[id]/kasmvnc
     const url = new URL(window.location.href);
-    url.pathname = url.pathname.replace(/\/ios$/, "/kasmvnc");
+    url.pathname = url.pathname.replace(
+      clientProps.thisPathname,
+      `/devices/${clientProps.deviceInfo.id}/kasmvnc`,
+    );
     url.protocol = url.protocol.replace("http", "ws");
     setUrl(url.toString());
-  }, []);
-
-  // other configs
-  const viewOnly = undefined;
-  const focusOnClick = undefined;
-  const retryDuration = undefined;
-  const resizeSession = undefined;
-  const showDotCursor = undefined;
-  const background = undefined;
-  const qualityLevel = undefined;
-  const compressionLevel = undefined;
-  const extraProps: Partial<KasmVNCScreenProps> = {
-    viewOnly: viewOnly === "true",
-    focusOnClick: focusOnClick === "true",
-    retryDuration: retryDuration ? parseInt(retryDuration) : undefined,
-    resizeSession: resizeSession === "true",
-    showDotCursor: showDotCursor === "true",
-    background: background,
-    qualityLevel: qualityLevel ? parseInt(qualityLevel) : undefined,
-    compressionLevel: compressionLevel ? parseInt(compressionLevel) : undefined,
-  };
-
-  // kasm configs
-  const dynamicQualityMin = undefined;
-  const dynamicQualityMax = undefined;
-  const jpegVideoQuality = undefined;
-  const webpVideoQuality = undefined;
-  const maxVideoResolutionX = undefined;
-  const maxVideoResolutionY = undefined;
-  const frameRate = undefined;
-  const idleDisconnect = undefined;
-  const pointerRelative = undefined;
-  const videoQuality = undefined;
-  const antiAliasing = undefined;
-
-  const kasmExtraProps: Partial<KasmVNCExtraRFBOptions> = {
-    dynamicQualityMin: dynamicQualityMin
-      ? parseInt(dynamicQualityMin)
-      : undefined,
-    dynamicQualityMax: dynamicQualityMax
-      ? parseInt(dynamicQualityMax)
-      : undefined,
-    jpegVideoQuality: jpegVideoQuality ? parseInt(jpegVideoQuality) : undefined,
-    webpVideoQuality: webpVideoQuality ? parseInt(webpVideoQuality) : undefined,
-    maxVideoResolutionX: maxVideoResolutionX
-      ? parseInt(maxVideoResolutionX)
-      : undefined,
-    maxVideoResolutionY: maxVideoResolutionY
-      ? parseInt(maxVideoResolutionY)
-      : undefined,
-    frameRate: frameRate ? parseInt(frameRate) : undefined,
-    idleDisconnect: idleDisconnect === "true",
-    pointerRelative: pointerRelative === "true",
-    videoQuality: videoQuality ? parseInt(videoQuality) : undefined,
-    antiAliasing: antiAliasing ? parseInt(antiAliasing) : undefined,
-  };
+  }, [clientProps.deviceInfo.id, clientProps.thisPathname]);
 
   function fail(reason: string) {
     setIsFailed(true);
@@ -97,6 +72,18 @@ export default function IosClient() {
   }
 
   function Screen() {
+    if (!url) {
+      return null;
+    }
+
+    const style = {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+    };
+
     return (
       <KasmVNCScreen
         ref={ref}
@@ -104,21 +91,15 @@ export default function IosClient() {
         scaleViewport
         clipViewport
         dragViewport={false}
-        {...extraProps}
+        {...clientProps}
         kasmOptions={{
           clipboardSeamless: true,
           enableWebRTC: true, // doesn't hurt; just allow it (will probably fail)
-          ...kasmExtraProps,
+          ...clientProps,
         }}
         loadingUI={<ISpinner large />}
         background="rgba(0, 0, 0, 0)"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-        }}
+        style={clientProps.fullScreen ? style : {}}
         // this completely breaks the connection; i have no idea why
         // onDisconnect={(rfb?: RFB) => {
         //   console.log("Disconnected", rfb);

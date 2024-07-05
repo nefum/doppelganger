@@ -1,49 +1,32 @@
 import { IncomingHttpHeaders } from "node:http";
-import { BasicAuth } from "../device-info/device-info";
+import { BasicAuth } from "../device-info/device-info.ts";
 
 export function getWsWebSocketOptionForKasmVNC(
-  rawRequestHeaders: IncomingHttpHeaders | Headers,
   targetUrl: URL,
   targetIsUnsecure: boolean,
   basicAuth: BasicAuth,
+  incomingHeaders?: IncomingHttpHeaders,
 ): {
   [key: string]: any;
 } {
-  let requestHeaders: { [key: string]: string | string[] | undefined } = {};
-  if (rawRequestHeaders instanceof Headers) {
-    rawRequestHeaders.forEach((value, key) => {
-      requestHeaders[key] = value;
-    });
-  } else {
-    requestHeaders = rawRequestHeaders;
-  }
-
   const usingTls =
     targetUrl.protocol === "https:" || targetUrl.protocol === "wss:";
+  let encodings = incomingHeaders?.["accept-encoding"] || "gzip, deflate";
+  if (typeof encodings !== "string") {
+    encodings = encodings.join(", ");
+  }
   const wsHeaders: { [key: string]: string } = {
     pragma: "no-cache",
     "cache-control": "no-cache",
     Host: `${targetUrl.hostname}:${targetUrl.port}`,
     Origin: `${usingTls ? "https" : "http"}//${targetUrl.hostname}:${targetUrl.port}`,
+    "User-Agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": encodings,
   };
   if (basicAuth) {
     wsHeaders["Authorization"] = generateBasicAuthHeader(basicAuth);
-  }
-  if (requestHeaders["user-agent"]) {
-    wsHeaders["user-agent"] = requestHeaders["user-agent"] as string;
-  }
-  if (requestHeaders["accept-language"]) {
-    wsHeaders["accept-language"] = requestHeaders["accept-language"] as string;
-  }
-  if (requestHeaders["accept-encoding"]) {
-    const acceptableForceEncodings = requestHeaders["accept-encoding"] as
-      | string
-      | string[];
-    if (Array.isArray(acceptableForceEncodings)) {
-      wsHeaders["accept-encoding"] = acceptableForceEncodings.join(", ");
-    } else {
-      wsHeaders["accept-encoding"] = acceptableForceEncodings;
-    }
   }
   return {
     rejectUnauthorized: !targetIsUnsecure,

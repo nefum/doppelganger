@@ -1,10 +1,10 @@
-import { WebSocket } from "ws";
+import { WebSocket as WsWebSocket } from "ws";
 import { IncomingMessage, ServerResponse } from "node:http";
-import { BasicAuth } from "../device-info/device-info";
-import { getWsWebSocketOptionForKasmVNC } from "./wsconnect";
+import { DeviceInfo } from "../device-info/device-info.ts";
+import { getWsWebSocketOptionForKasmVNC } from "./wsconnect.ts";
 
 // @ts-expect-error -- it is not a namespace but can be used as one
-type WebSocketServer = WebSocket.Server;
+type WebSocketServer = WsWebSocket.Server;
 
 function isFatalWebSocketError(err: Error & { code?: string }): boolean {
   // Define a list of fatal error codes or messages
@@ -24,19 +24,18 @@ function isFatalWebSocketError(err: Error & { code?: string }): boolean {
     return true;
   }
 
-  // Add more conditions as needed based on your application's requirements
-
-  return false; // Default to non-fatal
+  return true; // Default to fatal
 }
 
 export default function createWebSocketProxy(
   wss: WebSocketServer,
   req: IncomingMessage,
   res: ServerResponse,
-  url: string,
-  insecure: boolean,
-  basicAuth: BasicAuth,
-): Promise<WebSocket> {
+  deviceInfo: DeviceInfo,
+): Promise<WsWebSocket> {
+  const { url, insecure, basicAuth } = deviceInfo;
+  console.debug("creating a websocket proxy to", url);
+
   // parse the target url
   const parsedTargetUrl = new URL(url);
 
@@ -47,33 +46,30 @@ export default function createWebSocketProxy(
   const head = Buffer.alloc(0);
 
   // now create a WebSocket proxy to the KasmVNC server at url
-  return new Promise<WebSocket>((resolve, reject) => {
+
+  return new Promise<WsWebSocket>((resolve, reject) => {
     // get the protocols from the req['sec-websocket-protocol']
     const protocols = req.headers["sec-websocket-protocol"]
       ?.split(",")
       .map((p) => p.trim());
     const options = getWsWebSocketOptionForKasmVNC(
-      req.headers,
       parsedTargetUrl,
       insecure,
       basicAuth,
+      req.headers,
     );
-    const targetWs = new WebSocket(url, protocols, options);
-
-    let wsOpened = false;
-
+    const targetWs = new WsWebSocket(url, protocols, options);
     // error
     targetWs.on("error", (err) => {
-      if (!wsOpened) {
+      if (targetWs.readyState === WsWebSocket.CONNECTING) {
         reject(err);
+        targetWs.close();
       }
     });
     // open
-    targetWs.on("open", () => {
-      wsOpened = true;
-      wss.handleUpgrade(req, socket, head, (userWs: WebSocket) => {
+    targetWs.once("open", () => {
+      wss.handleUpgrade(req, socket, head, (userWs: WsWebSocket) => {
         resolve(userWs);
-
         // error
         userWs.on("error", (err) => {
           if (isFatalWebSocketError(err)) {
@@ -98,11 +94,19 @@ export default function createWebSocketProxy(
           }
         });
         // close
-        userWs.on("close", () => {
-          targetWs.close();
+        userWs.once("close", () => {
+          if (targetWs.readyState === WsWebSocket.OPEN) {
+            targetWs.terminate();
+          }
+          // if the res is still open, end it
+          if (!res.writableEnded) {
+            res.end();
+          }
         });
-        targetWs.on("close", () => {
-          userWs.close();
+        targetWs.once("close", () => {
+          if (userWs.readyState === WsWebSocket.OPEN) {
+            userWs.terminate();
+          }
         });
         // message
         userWs.on("message", (data) => {
