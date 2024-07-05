@@ -27,8 +27,8 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
     <div className="flex justify-center items-center place-items-center h-screen w-screen">
       <IosClient
         fullScreen
-        loadingComponent={ISpinner}
-        failComponent={IosFail}
+        loadingComponent={<ISpinner large />}
+        failComponent={<IosFail reason={"Failed to connect to device"} />}
         thisPathname={`/devices/${id}/ios`}
         deviceInfo={deviceInfo}
       />

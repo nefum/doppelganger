@@ -29,6 +29,8 @@ import {
 } from "@/components/device-cards/device-card-snapshot-client";
 import { Suspense } from "react";
 
+import { getSnapshotUrlOfDevice } from "@/app/(no-layout)/devices/[id]/snapshot/path.ts";
+
 export function DeviceCard({
   deviceInfo,
 }: Readonly<{ deviceInfo: DeviceInfo }>) {
@@ -60,6 +62,8 @@ export function DeviceCard({
             <p className="text-muted-foreground">128GB</p>
           </div>
         </div>
+        {/*because of the loading nightmare this snapshot is, we need to preload it manually*/}
+        <link rel="prefetch" href={getSnapshotUrlOfDevice(deviceInfo.id)} />
         <Suspense
           fallback={
             <div className={clsx(PARENT_DIV_CLASSES, "animate-pulse")} />

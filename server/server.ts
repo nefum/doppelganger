@@ -5,9 +5,8 @@ import { parse } from "url";
 import next from "next";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
 import { kasmVncWsEndpoint } from "./device-info/device-regex.ts";
-import createWebSocketProxy from "./kasmvnc/wsproxy.ts";
 import { WebSocket as WsWebSocket } from "ws";
-import { getDeviceInfoForId } from "./device-info/device-info.ts";
+import { handleKasmVNC } from "./kasmvnc/route.ts";
 
 // for prod, see this file for reference: https://gist.github.com/regulad/9c5529137ebac136288f9627815d8933
 const dev = process.env.NODE_ENV !== "production";
@@ -16,14 +15,6 @@ const hostname = process.env.HOSTNAME || "0.0.0.0";
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
-
-const wss = new WsWebSocket.Server({ noServer: true });
-
-function isWebSocketRequest(req: IncomingMessage): boolean {
-  return (
-    !req.headers.upgrade || req.headers.upgrade.toLowerCase() !== "websocket"
-  );
-}
 
 app.prepare().then(() => {
   createServer(
@@ -52,34 +43,7 @@ app.prepare().then(() => {
         const match = pathname.match(kasmVncWsEndpoint);
 
         if (match) {
-          const deviceId: string = match[1];
-
-          console.log("ws connection received", req.url, deviceId);
-
-          // check to see if this is a websocket connection
-          if (isWebSocketRequest(req)) {
-            // invalid method; upgrade required
-            res.statusCode = 426;
-            res.setHeader("Content-Type", "text/plain");
-            res.end("upgrade required");
-            return;
-          }
-
-          // TODO: check to see if the user is authorized
-
-          const deviceInfo = getDeviceInfoForId(deviceId);
-
-          if (!deviceInfo) {
-            res.statusCode = 404;
-            res.setHeader("Content-Type", "text/plain");
-            res.end("not found");
-            return;
-          }
-
-          // now create a WebSocket proxy to the KasmVNC server at url
-          const userWs = await createWebSocketProxy(wss, req, res, deviceInfo);
-
-          console.debug("ws connection established", userWs.readyState);
+          await handleKasmVNC(req, res, match);
         } else {
           await handle(req, res, parsedUrl);
         }

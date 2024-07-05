@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import styles from "./fill.module.css";
 
+import { getSnapshotUrlOfDevice } from "@/app/(no-layout)/devices/[id]/snapshot/path.ts";
+
 // https://stackoverflow.com/questions/14142378/how-can-i-fill-a-div-with-an-image-while-keeping-it-proportional for filling
 export const PARENT_DIV_CLASSES = clsx(
   "rounded-lg object-cover aspect-[2/4] relative bg-gray-200",
@@ -37,7 +39,7 @@ export function DeviceCardSnapshotClient(props: {
               "opacity-0": !loaded,
             })}
             alt={`${props.deviceName} snapshot`}
-            src={`/devices/${props.id}/snapshot`}
+            src={getSnapshotUrlOfDevice(props.id)}
             onLoad={() => setLoaded(true)}
           />
         )}

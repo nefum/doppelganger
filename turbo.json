@@ -1,0 +1,29 @@
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["build-server"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "build-server": {
+      "inputs": ["server/**"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
+    "lint": {
+      "cache": false
+    },
+    "type-check": {
+      "inputs": ["**/*.{ts,tsx}"],
+      "cache": false
+    },
+    "format": {
+      "cache": false
+    }
+  }
+}

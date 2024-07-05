@@ -27,6 +27,51 @@ function isFatalWebSocketError(err: Error & { code?: string }): boolean {
   return true; // Default to fatal
 }
 
+const HEARTBEAT_TIMEOUT = 30_000; // 30 seconds
+const HEARTBEAT_INTERVAL = 25_000; // 25 seconds
+
+// Add a heartbeat mechanism to the WebSocket proxy creation
+function setupHeartbeat(ws: WsWebSocket) {
+  let heartbeatTimeout: NodeJS.Timeout;
+
+  // Function to terminate the connection if it's considered dead
+  const terminateDeadConnection = () => {
+    console.error("Connection is considered dead. Closing.");
+    ws.terminate(); // Use terminate() to immediately close the connection
+  };
+
+  // Reset the heartbeat timeout to wait for the next pong
+  const resetHeartbeatTimeout = () => {
+    clearTimeout(heartbeatTimeout);
+    heartbeatTimeout = setTimeout(terminateDeadConnection, HEARTBEAT_TIMEOUT); // 30 seconds timeout
+  };
+
+  // Listen for pong messages to reset the heartbeat timeout
+  ws.on("pong", resetHeartbeatTimeout);
+
+  // Send a ping message periodically
+  const heartbeatInterval = setInterval(() => {
+    console.debug("Sending ping to check connection");
+    ws.ping(); // No payload is necessary
+  }, HEARTBEAT_INTERVAL); // 25 seconds interval
+
+  // Clear the interval and timeout when the WebSocket closes
+  ws.once("close", () => {
+    clearInterval(heartbeatInterval);
+    clearTimeout(heartbeatTimeout);
+  });
+
+  // Initialize the heartbeat timeout
+  resetHeartbeatTimeout();
+
+  // also add some code to listen to the other side's heartbeat
+  // and respond to it
+  ws.on("ping", () => {
+    console.debug("Received ping from the other side");
+    ws.pong(); // Respond with a pong message
+  });
+}
+
 export default function createWebSocketProxy(
   wss: WebSocketServer,
   req: IncomingMessage,
@@ -69,7 +114,6 @@ export default function createWebSocketProxy(
     // open
     targetWs.once("open", () => {
       wss.handleUpgrade(req, socket, head, (userWs: WsWebSocket) => {
-        resolve(userWs);
         // error
         userWs.on("error", (err) => {
           if (isFatalWebSocketError(err)) {
@@ -96,16 +140,12 @@ export default function createWebSocketProxy(
         // close
         userWs.once("close", () => {
           if (targetWs.readyState === WsWebSocket.OPEN) {
-            targetWs.terminate();
-          }
-          // if the res is still open, end it
-          if (!res.writableEnded) {
-            res.end();
+            targetWs.close();
           }
         });
         targetWs.once("close", () => {
           if (userWs.readyState === WsWebSocket.OPEN) {
-            userWs.terminate();
+            userWs.close();
           }
         });
         // message
@@ -115,21 +155,18 @@ export default function createWebSocketProxy(
         targetWs.on("message", (data) => {
           userWs.send(data);
         });
-        // ping
-        userWs.on("ping", (data) => {
-          targetWs.ping(data);
-        });
-        targetWs.on("ping", (data) => {
-          userWs.ping(data);
-        });
-        // pong
-        userWs.on("pong", (data) => {
-          targetWs.pong(data);
-        });
-        targetWs.on("pong", (data) => {
-          userWs.pong(data);
-        });
+        // setup heartbeat
+        setupHeartbeat(userWs);
+        setupHeartbeat(targetWs);
+
+        resolve(userWs);
       });
     });
   });
+}
+
+export function isWebSocketRequest(req: IncomingMessage): boolean {
+  return (
+    !req.headers.upgrade || req.headers.upgrade.toLowerCase() !== "websocket"
+  );
 }
