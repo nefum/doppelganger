@@ -1,8 +1,13 @@
-import {IncomingHttpHeaders} from "node:http";
-import {BasicAuth} from "../device-info/device-info";
+import { IncomingHttpHeaders } from "node:http";
+import { BasicAuth } from "../device-info/device-info";
 
-export function getWsWebSocketOptionForKasmVNC(rawRequestHeaders: IncomingHttpHeaders | Headers, targetUrl: URL, targetIsUnsecure: boolean, basicAuth: BasicAuth): {
-  [key: string]: any
+export function getWsWebSocketOptionForKasmVNC(
+  rawRequestHeaders: IncomingHttpHeaders | Headers,
+  targetUrl: URL,
+  targetIsUnsecure: boolean,
+  basicAuth: BasicAuth,
+): {
+  [key: string]: any;
 } {
   let requestHeaders: { [key: string]: string | string[] | undefined } = {};
   if (rawRequestHeaders instanceof Headers) {
@@ -10,16 +15,17 @@ export function getWsWebSocketOptionForKasmVNC(rawRequestHeaders: IncomingHttpHe
       requestHeaders[key] = value;
     });
   } else {
-    requestHeaders = rawRequestHeaders
+    requestHeaders = rawRequestHeaders;
   }
 
-  const usingTls = targetUrl.protocol === 'https:' || targetUrl.protocol === 'wss:';
+  const usingTls =
+    targetUrl.protocol === "https:" || targetUrl.protocol === "wss:";
   const wsHeaders: { [key: string]: string } = {
     pragma: "no-cache",
     "cache-control": "no-cache",
-    "Host": `${targetUrl.hostname}:${targetUrl.port}`,
-    "Origin": `${usingTls ? 'https' : 'http'}//${targetUrl.hostname}:${targetUrl.port}`
-  }
+    Host: `${targetUrl.hostname}:${targetUrl.port}`,
+    Origin: `${usingTls ? "https" : "http"}//${targetUrl.hostname}:${targetUrl.port}`,
+  };
   if (basicAuth) {
     wsHeaders["Authorization"] = generateBasicAuthHeader(basicAuth);
   }
@@ -30,7 +36,9 @@ export function getWsWebSocketOptionForKasmVNC(rawRequestHeaders: IncomingHttpHe
     wsHeaders["accept-language"] = requestHeaders["accept-language"] as string;
   }
   if (requestHeaders["accept-encoding"]) {
-    const acceptableForceEncodings = requestHeaders["accept-encoding"] as string | string[];
+    const acceptableForceEncodings = requestHeaders["accept-encoding"] as
+      | string
+      | string[];
     if (Array.isArray(acceptableForceEncodings)) {
       wsHeaders["accept-encoding"] = acceptableForceEncodings.join(", ");
     } else {
@@ -40,11 +48,11 @@ export function getWsWebSocketOptionForKasmVNC(rawRequestHeaders: IncomingHttpHe
   return {
     rejectUnauthorized: !targetIsUnsecure,
     headers: wsHeaders,
-  }
+  };
 }
 
 function generateBasicAuthHeader(basicAuth: BasicAuth): string {
-  const {username, password} = basicAuth;
+  const { username, password } = basicAuth;
   const basicAuthString = `${username}:${password}`;
-  return `Basic ${Buffer.from(basicAuthString).toString('base64')}`;
+  return `Basic ${Buffer.from(basicAuthString).toString("base64")}`;
 }

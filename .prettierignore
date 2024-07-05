@@ -1,0 +1,4 @@
+src/noVNC
+dist/
+node_modules/
+.next/

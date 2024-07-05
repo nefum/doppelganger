@@ -1,7 +1,9 @@
-import "ispinner.css/ispinner.css"
+import "ispinner.css/ispinner.css";
 import React from "react";
 
-export default function ISpinner({large}: Readonly<{ large?: boolean }>): React.ReactNode {
+export default function ISpinner({
+  large,
+}: Readonly<{ large?: boolean }>): React.ReactNode {
   if (large) {
     return (
       <div className="ispinner ispinner-large">
@@ -14,7 +16,7 @@ export default function ISpinner({large}: Readonly<{ large?: boolean }>): React.
         <div className="ispinner-blade"></div>
         <div className="ispinner-blade"></div>
       </div>
-    )
+    );
   } else {
     return (
       <div className="ispinner">
@@ -27,6 +29,6 @@ export default function ISpinner({large}: Readonly<{ large?: boolean }>): React.
         <div className="ispinner-blade"></div>
         <div className="ispinner-blade"></div>
       </div>
-    )
+    );
   }
 }

@@ -1,5 +1,8 @@
-import {NextRequest, NextResponse} from "next/server";
-import {getDeviceIdFromUrl, getDeviceInfoForId} from "../../../../../server/device-info/device-info";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getDeviceIdFromUrl,
+  getDeviceInfoForId,
+} from "../../../../../server/device-info/device-info";
 import getSnapshotOfKasmVNCDevice from "@/app/devices/[id]/snapshot/snapshot";
 
 export async function GET(request: NextRequest) {
@@ -9,46 +12,52 @@ export async function GET(request: NextRequest) {
   if (!id) {
     return NextResponse.json(
       {
-        error: "Bad Request"
+        error: "Bad Request",
       },
       {
-        status: 400
-      }
-    )
+        status: 400,
+      },
+    );
   }
 
   const deviceInfo = getDeviceInfoForId(id);
   if (!deviceInfo) {
     return NextResponse.json(
       {
-        error: "Device not found"
+        error: "Device not found",
       },
       {
-        status: 404
-      }
-    )
+        status: 404,
+      },
+    );
   }
 
   // TODO: check authorization for device
 
   try {
-    const outerCanvasOutput = await getSnapshotOfKasmVNCDevice(deviceInfo, request);
-    const mimeType = outerCanvasOutput.split(",")[0].split(":")[1].split(";")[0];
+    const outerCanvasOutput = await getSnapshotOfKasmVNCDevice(
+      deviceInfo,
+      request,
+    );
+    const mimeType = outerCanvasOutput
+      .split(",")[0]
+      .split(":")[1]
+      .split(";")[0];
     const base64 = outerCanvasOutput.split(",")[1];
     const buffer = Buffer.from(base64, "base64");
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": mimeType,
-      }
+      },
     });
   } catch (e: any) {
     return NextResponse.json(
       {
-        error: "Internal Server Error"
+        error: "Internal Server Error",
       },
       {
-        status: 500
-      }
-    )
+        status: 500,
+      },
+    );
   }
 }

@@ -8,20 +8,27 @@
     "dev": "nodemon -x \"pnpm run build-server && NODE_ENV=development pnpm run run-server\"",
     "build": "pnpm run build-server && next build",
     "start": "NODE_ENV=production pnpm run run-server",
-    "lint": "next lint"
+    "lint": "next lint --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
     "async-lock": "^1.4.1",
     "bufferutil": "^4.0.8",
     "canvas": "^2.11.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "ispinner.css": "^3.1.1",
     "jsdom": "^24.1.0",
+    "lucide-react": "^0.400.0",
     "mutation-observer": "^1.0.3",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
     "react-kasmvnc": "^2.0.2",
     "sharp": "^0.33.4",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7",
     "ws": "^8.17.1"
   },
   "devDependencies": {
@@ -39,6 +46,8 @@
     "eslint-config-next": "14.2.4",
     "nodemon": "^3.1.4",
     "postcss": "^8",
+    "prettier": "^3.3.2",
+    "prettier-plugin-tailwindcss": "^0.6.5",
     "rimraf": "^5.0.7",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3"
