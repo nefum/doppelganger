@@ -47,9 +47,7 @@ export async function GET(request: NextRequest) {
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": mimeType,
-        "Cache-Control": "no-store",
-        Pragma: "no-cache",
-        Expires: "0",
+        "Cache-Control": "max-age=10", // don't request a new snapshot every time; the screen won't change that much between 10 seconds and this route is expensive
         "Content-Disposition": `inline; filename=${deviceInfo.deviceName}.png`,
         "Content-Length": buffer.length.toString(),
       },

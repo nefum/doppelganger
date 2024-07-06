@@ -1,0 +1,43 @@
+name: test-scrcpy
+services:
+  redroid:
+    image: "{{ redroid_image }}"
+    hostname: "{{ id }}-redroid"
+    ports:
+      - "5555:5555/tcp"
+    privileged: true  # required for redroid
+    volumes:
+      - "/mnt/doppelganger/redroid14.0.0-base:/data-base"
+      - "/mnt/doppelganger/staging-diff:/data-diff"
+    # https://github.com/remote-android/redroid-doc?tab=readme-ov-file#configuration
+    command:
+      - "androidboot.use_redroid_overlayfs=1"
+      - "androidboot.use_memfd=true"
+      - "androidboot.redroid_fps=${MAX_FPS:-30}"
+      - "androidboot.redroid_width=${DEVICE_WIDTH:-1170}"
+      - "androidboot.redroid_height=${DEVICE_HEIGHT:-2532}"
+      - "androidboot.redroid_dpi=${DEVICE_DPI:-460}"
+      - "androidboot.redroid_net_ndns=2"
+      - "androidboot.redroid_net_dns1=1.1.1.1"
+      - "androidboot.redroid_net_dns2=1.0.0.1"
+      - "androidboot.redroid_gpu_mode=guest"
+  scrcpy:
+    image: "ghcr.io/regulad/workspaces-images:scrcpy"
+    ports:
+      - "6901:6901/tcp"
+      - "4901:4901/tcp"
+    shm_size: "512m"
+    tty: true
+    stdin_open: true
+    depends_on:
+      - "redroid"
+    environment:
+      ADB_DEVICE: "redroid:5555"
+      SCRCPY_FPS: ${MAX_FPS:-30}
+      SCRCPY_WIDTH: ${DEVICE_WIDTH:-1170}
+      SCRCPY_HEIGHT: ${DEVICE_HEIGHT:-2532}
+      # username: kasm_user
+      VNC_PW: ${VNC_PW:-password1234}
+networks:
+  default:
+    driver: bridge

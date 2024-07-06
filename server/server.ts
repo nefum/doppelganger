@@ -4,9 +4,12 @@ import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
-import { kasmVncWsEndpoint } from "./device-info/device-regex.ts";
+import {
+  audioWsEndpoint,
+  kasmVncWsEndpoint,
+} from "./device-info/device-regex.ts";
 import { WebSocket as WsWebSocket } from "ws";
-import { handleKasmVNC } from "./kasmvnc/route.ts";
+import { handleAudio, handleKasmVNC } from "./kasmvnc/route.ts";
 
 // for prod, see this file for reference: https://gist.github.com/regulad/9c5529137ebac136288f9627815d8933
 const dev = process.env.NODE_ENV !== "production";
@@ -40,10 +43,13 @@ app.prepare().then(() => {
           return;
         }
 
-        const match = pathname.match(kasmVncWsEndpoint);
+        const kasmVncMatch = pathname.match(kasmVncWsEndpoint);
+        const audioMatch = pathname.match(audioWsEndpoint);
 
-        if (match) {
-          await handleKasmVNC(req, res, match);
+        if (kasmVncMatch) {
+          await handleKasmVNC(req, res, kasmVncMatch);
+        } else if (audioMatch) {
+          await handleAudio(req, res, audioMatch);
         } else {
           await handle(req, res, parsedUrl);
         }

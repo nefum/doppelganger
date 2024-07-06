@@ -1,24 +1,31 @@
 {
   "tasks": {
+    "generate-prisma": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
     "build": {
-      "dependsOn": ["build-server"],
+      "dependsOn": ["build-server", "generate-prisma"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "build-server": {
+      "dependsOn": ["generate-prisma"],
       "inputs": ["server/**"],
       "outputs": ["dist/**"]
     },
     "dev": {
+      "dependsOn": ["generate-prisma"],
       "cache": false
     },
     "start": {
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "generate-prisma"],
       "cache": false
     },
     "lint": {
       "cache": false
     },
     "type-check": {
+      "dependsOn": ["generate-prisma"],
       "inputs": ["**/*.{ts,tsx}"],
       "cache": false
     },

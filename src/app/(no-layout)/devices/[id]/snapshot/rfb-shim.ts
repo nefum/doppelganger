@@ -29,7 +29,7 @@ export default async function createRfb(
   const RuntimeRFB = (await import("@/noVNC/core/rfb"))
     .default as unknown as typeof RFB;
 
-  const parsedTargetUrl = new URL(deviceInfo.url);
+  const parsedTargetUrl = new URL(deviceInfo.kasmUrl);
   const webSocketOpts = getWsWebSocketOptionForKasmVNC(
     parsedTargetUrl,
     deviceInfo.insecure,

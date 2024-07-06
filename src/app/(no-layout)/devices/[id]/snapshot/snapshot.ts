@@ -12,7 +12,7 @@ const globalWindowLock = new AsyncLock();
 export type CanvasOutput = `data:image/png;base64,${string}`;
 
 function createJSDOMForKasmVNC(deviceInfo: DeviceInfo) {
-  const referrerUrl = new URL(deviceInfo.url);
+  const referrerUrl = new URL(deviceInfo.kasmUrl);
   referrerUrl.protocol = referrerUrl.protocol.replace("ws", "http");
   referrerUrl.pathname = "/";
   const referrerString = referrerUrl.toString();
@@ -69,7 +69,7 @@ export default async function getSnapshotOfKasmVNCDevice(
         const rfb = await createRfb(
           screen,
           keyboardInput,
-          deviceInfo.url,
+          deviceInfo.kasmUrl,
           deviceInfo,
         );
         const canvas = (rfb as any)._canvas as HTMLCanvasElement;

@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum DeviceState {
+  ON
+  OFF
+  SUSPENDED
+  UNAVAILABLE
+}
+
+model Device {
+  id         String @id @unique @default(cuid()) @map(name: "id")
+  name       String @map(name: "name")
+  ownerEmail String @map(name: "owner_email")
+
+  redroidImage  String @map(name: "redroid_image")
+  redroidDpi    Int    @map(name: "redroid_dpi")
+  redroidWidth  Int    @map(name: "redroid_width")
+  redroidHeight Int    @map(name: "redroid_height")
+
+  adbPort      Int    @default(5555) @map(name: "adb_port")
+  vncWssPath   String @default("websockify") @map(name: "vnc_wss_path")
+  vncWssPort   Int    @default(6901) @map(name: "vnc_wss_port")
+  // https://github.com/kasmtech/workspaces-core-images/blob/develop/src/ubuntu/install/audio/install_audio.sh
+  audioWssPort Int    @default(4901) @map(name: "audio_ws_port")
+
+  basicAuthUsername       String  @default("kasm_user") @map(name: "basic_auth_username")
+  basicAuthPassword       String  @map(name: "basic_auth_password")
+  certificateIsSelfSigned Boolean @default(true) @map(name: "certificate_is_self_signed")
+
+  createdAt DateTime    @default(now()) @map(name: "created_at")
+  updatedAt DateTime    @default(now()) @updatedAt @map(name: "updated_at")
+  lastState DeviceState @default(OFF) @map(name: "last_state")
+
+  @@index([ownerEmail, id])
+  @@map(name: "devices")
+}

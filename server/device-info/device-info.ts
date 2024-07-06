@@ -26,7 +26,8 @@ export enum DeviceStates {
 export interface DeviceInfo {
   deviceName: string;
   id: string;
-  url: string;
+  kasmUrl: string;
+  audioUrl: string;
   state: DeviceStates;
   insecure: boolean;
   specs: {
@@ -46,7 +47,8 @@ export function getDeviceInfoForId(id: string): DeviceInfo | null {
     deviceName: "staging",
     id: id,
     state: DeviceStates.ON,
-    url: "wss://doppelganger.tail11540.ts.net:6901/websockify/", // trailing / is important
+    kasmUrl: "wss://doppelganger.tail11540.ts.net:6901/websockify/", // trailing / is important
+    audioUrl: "wss://doppelganger.tail11540.ts.net:4901",
     insecure: true, // self-signed certificate
     specs: {
       width: 590,

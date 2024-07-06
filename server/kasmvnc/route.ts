@@ -1,11 +1,21 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 import { getDeviceInfoForId } from "../device-info/device-info.ts";
-import createWebSocketProxy, { isWebSocketRequest } from "./wsproxy.ts";
+import {
+  createVncWebSocketProxy,
+  createAudioWsProxy,
+  isWebSocketRequest,
+} from "./wsproxy.ts";
 import { WebSocket as WsWebSocket } from "ws";
 
 const wss = new WsWebSocket.Server({ noServer: true });
 
-export async function handleKasmVNC(
+enum EndpointType {
+  KASMVNC,
+  AUDIO,
+}
+
+async function handleDeviceEndpoint(
+  type: EndpointType,
   req: IncomingMessage,
   res: ServerResponse,
   match: RegExpMatchArray,
@@ -34,12 +44,22 @@ export async function handleKasmVNC(
     return;
   }
 
-  // now create a WebSocket proxy to the KasmVNC server at url
-  const userWs = await createWebSocketProxy(wss, req, res, deviceInfo);
-
-  setTimeout(() => {
-    userWs.close();
-  }, 10_000);
+  // now create a WebSocket proxy to the audio server at url
+  let userWs: WsWebSocket;
+  switch (type) {
+    case EndpointType.KASMVNC:
+      userWs = await createVncWebSocketProxy(wss, req, res, deviceInfo);
+      break;
+    case EndpointType.AUDIO:
+      userWs = await createAudioWsProxy(wss, req, res, deviceInfo);
+      break;
+  }
 
   console.debug("ws connection established", userWs.readyState);
 }
+
+export const handleAudio = handleDeviceEndpoint.bind(null, EndpointType.AUDIO);
+export const handleKasmVNC = handleDeviceEndpoint.bind(
+  null,
+  EndpointType.KASMVNC,
+);

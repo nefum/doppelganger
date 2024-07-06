@@ -1,10 +1,12 @@
 import { WebSocket as WsWebSocket } from "ws";
 import { IncomingMessage, ServerResponse } from "node:http";
-import { DeviceInfo } from "../device-info/device-info.ts";
+import { BasicAuth, DeviceInfo } from "../device-info/device-info.ts";
 import { getWsWebSocketOptionForKasmVNC } from "./wsconnect.ts";
 
 // @ts-expect-error -- it is not a namespace but can be used as one
-type WebSocketServer = WsWebSocket.Server;
+type WsWebSocketServer = WsWebSocket.Server;
+// @ts-expect-error -- it is not a namespace but can be used as one
+type WsWebSocketOptions = WsWebSocket.ClientOptions;
 
 function isFatalWebSocketError(err: Error & { code?: string }): boolean {
   // Define a list of fatal error codes or messages
@@ -72,17 +74,16 @@ function setupHeartbeat(ws: WsWebSocket) {
   });
 }
 
-export default function createWebSocketProxy(
-  wss: WebSocketServer,
+function createWebSocketProxy(
+  url: URL,
+  res: ServerResponse<IncomingMessage>,
   req: IncomingMessage,
-  res: ServerResponse,
-  deviceInfo: DeviceInfo,
+  insecure: boolean,
+  basicAuth: BasicAuth,
+  wss: WsWebSocketServer,
+  options: WsWebSocketOptions,
 ): Promise<WsWebSocket> {
-  const { url, insecure, basicAuth } = deviceInfo;
-  console.debug("creating a websocket proxy to", url);
-
-  // parse the target url
-  const parsedTargetUrl = new URL(url);
+  console.debug("creating a websocket proxy to", url.toString());
 
   // get the underlying socket
   const { socket } = res;
@@ -97,12 +98,6 @@ export default function createWebSocketProxy(
     const protocols = req.headers["sec-websocket-protocol"]
       ?.split(",")
       .map((p) => p.trim());
-    const options = getWsWebSocketOptionForKasmVNC(
-      parsedTargetUrl,
-      insecure,
-      basicAuth,
-      req.headers,
-    );
     const targetWs = new WsWebSocket(url, protocols, options);
     // error
     targetWs.on("error", (err) => {
@@ -155,14 +150,64 @@ export default function createWebSocketProxy(
         targetWs.on("message", (data) => {
           userWs.send(data);
         });
-        // setup heartbeat
-        setupHeartbeat(userWs);
-        setupHeartbeat(targetWs);
+        // setup heartbeat (they never work😢)
+        // setupHeartbeat(userWs);
+        // setupHeartbeat(targetWs);
 
         resolve(userWs);
       });
     });
   });
+}
+
+export function createVncWebSocketProxy(
+  wss: WsWebSocketServer,
+  req: IncomingMessage,
+  res: ServerResponse,
+  deviceInfo: DeviceInfo,
+): Promise<WsWebSocket> {
+  const { kasmUrl, insecure, basicAuth } = deviceInfo;
+  const parsedTargetUrl = new URL(kasmUrl);
+  const options = getWsWebSocketOptionForKasmVNC(
+    parsedTargetUrl,
+    insecure,
+    basicAuth,
+    req.headers,
+  );
+  return createWebSocketProxy(
+    parsedTargetUrl,
+    res,
+    req,
+    insecure,
+    basicAuth,
+    wss,
+    options,
+  );
+}
+
+export function createAudioWsProxy(
+  wss: WsWebSocketServer,
+  req: IncomingMessage,
+  res: ServerResponse,
+  deviceInfo: DeviceInfo,
+): Promise<WsWebSocket> {
+  const { audioUrl, insecure, basicAuth } = deviceInfo;
+  const parsedTargetUrl = new URL(audioUrl);
+  const options = getWsWebSocketOptionForKasmVNC(
+    parsedTargetUrl,
+    insecure,
+    basicAuth,
+    req.headers,
+  );
+  return createWebSocketProxy(
+    parsedTargetUrl,
+    res,
+    req,
+    insecure,
+    basicAuth,
+    wss,
+    options,
+  );
 }
 
 export function isWebSocketRequest(req: IncomingMessage): boolean {

@@ -51,18 +51,28 @@ export default function NextVNCScreen({
   const ref = useRef<KasmVNCScreenHandle>(null);
   const [isFailed, setIsFailed] = useState<boolean>(false);
   const [failureReason, setFailureReason] = useState<string>("");
-  const [url, setUrl] = useState<string | null>(null);
+  const [vncUrl, setVncUrl] = useState<string | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   useEffect(() => {
     // the url will be the same url but kasmvnc instead of ios
     // ie. /devices/[id]/ios -> /devices/[id]/kasmvnc
-    const url = new URL(window.location.href);
-    url.pathname = url.pathname.replace(
+    const vncUrl = new URL(window.location.href);
+    vncUrl.pathname = vncUrl.pathname.replace(
       clientProps.thisPathname,
       `/devices/${clientProps.deviceInfo.id}/kasmvnc`,
     );
-    url.protocol = url.protocol.replace("http", "ws");
-    setUrl(url.toString());
+    vncUrl.protocol = vncUrl.protocol.replace("http", "ws");
+    setVncUrl(vncUrl.toString());
+
+    // audio is a different endpoint
+    const audioUrl = new URL(window.location.href);
+    audioUrl.pathname = audioUrl.pathname.replace(
+      clientProps.thisPathname,
+      `/devices/${clientProps.deviceInfo.id}/jsmpeg`,
+    );
+    audioUrl.protocol = audioUrl.protocol.replace("http", "ws");
+    setAudioUrl(audioUrl.toString());
   }, [clientProps.deviceInfo.id, clientProps.thisPathname]);
 
   function fail(reason: string) {
@@ -75,7 +85,7 @@ export default function NextVNCScreen({
   }
 
   function Screen() {
-    if (!url) {
+    if (!vncUrl || !audioUrl) {
       return null;
     }
 
@@ -90,7 +100,8 @@ export default function NextVNCScreen({
     return (
       <KasmVNCScreen
         ref={ref}
-        url={url}
+        url={vncUrl}
+        audioUrl={audioUrl}
         scaleViewport
         clipViewport
         dragViewport={false}
@@ -127,5 +138,5 @@ export default function NextVNCScreen({
   }
 
   // note: strict mode can break this by making it load twice; ignore the logs in this case
-  return (url && <Screen />) || loadingComponent;
+  return (vncUrl && <Screen />) || loadingComponent;
 }
