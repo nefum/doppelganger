@@ -3,22 +3,8 @@ repos:
     hooks:
       - id: lint
         name: lint
-        entry: "pnpm"
-        args: [ "run", "lint" ]
-        language: system
-        pass_filenames: false
-        files: \.(js|ts|tsx|json|yaml|yml|md|html|css|scss)$
-      - id: type-check
-        name: type-check
-        entry: "pnpm"
-        args: [ "run", "type-check" ]
-        language: system
-        pass_filenames: false
-        files: \.(js|ts|tsx)$
-      - id: format
-        name: format
-        entry: "pnpm"
-        args: [ "run", "format" ]
+        entry: "turbo"
+        args: [ "type-check", "lint", "format" ]
         language: system
         pass_filenames: false
         files: \.(js|ts|tsx|json|yaml|yml|md|html|css|scss)$

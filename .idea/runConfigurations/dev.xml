@@ -6,7 +6,9 @@
       <script value="dev" />
     </scripts>
     <node-interpreter value="/opt/homebrew/bin/node" />
-    <envs />
+    <envs>
+      <env name="PORT" value="3030" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>

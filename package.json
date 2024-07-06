@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "init": "git submodule update --init --recursive",
     "generate-prisma": "prisma generate",
     "migrate": "prisma migrate dev",
     "build-server": "rimraf -rf dist/ && babel --config-file \"./server/babel.config.server.json\" -x \".ts\" server -d dist",
