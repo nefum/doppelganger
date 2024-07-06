@@ -19,6 +19,10 @@ const hostname = process.env.HOSTNAME || "0.0.0.0";
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
+// note for future me, so I don't even try it: next-ws (https://github.com/apteryxxyz/next-ws) is TERRIBLE
+// it doesn't even support dynamic URLs, which is not only a fundamental feature of Next.js, but also required for
+// this project. i am implementing any WS communication manually
+
 app.prepare().then(() => {
   createServer(
     async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
