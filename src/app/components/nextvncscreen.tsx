@@ -97,6 +97,8 @@ export default function NextVNCScreen({
       height: "100vh",
     };
 
+    // if i ever need to adjust the volume of the audio stream, run this command on the docker container running the vnc
+    // sudo docker exec d31179134ece pactl set-sink-volume @DEFAULT_SINK@ 200
     return (
       <KasmVNCScreen
         ref={ref}
