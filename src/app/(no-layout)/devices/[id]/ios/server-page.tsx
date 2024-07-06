@@ -4,7 +4,7 @@ import { getDeviceForId } from "../../../../../../server/device-info/device-info
 import NotFound from "next/dist/client/components/not-found-error";
 import type { ClientProps } from "@/app/components/nextvncscreen.tsx";
 import IosFail from "@/app/(no-layout)/devices/[id]/ios/ios-fail.tsx";
-import { createClient } from "../../../../../../server/supabase/server.ts";
+import { createClient } from "../../../../../utils/supabase/server.ts";
 // import "./ios-client.css";
 // there is never a reason to manually hide the cursor because the cursor will not show in the WKWebView;
 // the cursor we view is from

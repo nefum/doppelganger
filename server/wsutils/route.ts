@@ -3,7 +3,7 @@ import { getDeviceForId } from "../device-info/device-info.ts";
 import { createAudioWsProxy, createVncWebSocketProxy } from "./wsproxy.ts";
 import { WebSocket as WsWebSocket, WebSocketServer } from "ws";
 import { isWebSocketRequest } from "./wsutils.ts";
-import { createClient } from "../supabase/server.ts";
+import { createClient } from "../supabase/ro-server.ts";
 
 enum EndpointType {
   KASMVNC,
@@ -50,7 +50,7 @@ async function handleDeviceEndpoint(
   }
 
   const jwt = authHeader.split(" ")[1];
-  const supabaseClient = createClient();
+  const supabaseClient = createClient(req);
   const supabaseUser = await supabaseClient.auth.getUser(jwt);
   const userEmail = supabaseUser.data.user!.email!;
 

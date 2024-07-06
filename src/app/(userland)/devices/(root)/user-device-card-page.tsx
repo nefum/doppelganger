@@ -1,8 +1,8 @@
 import { getDeviceForId } from "../../../../../server/device-info/device-info.ts";
 import { DeviceCardPage } from "@/components/device-cards/device-card-page.tsx";
 import { DeviceCard } from "@/components/device-cards/device-card.tsx";
-import prisma from "../../../../../prisma/prisma.ts";
-import { createClient } from "../../../../../server/supabase/server.ts";
+import prisma from "../../../../../server/database/prisma.ts";
+import { createClient } from "../../../../utils/supabase/server.ts";
 
 export default async function UserDeviceCardPage() {
   const supabaseClient = createClient();
