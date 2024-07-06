@@ -1,13 +1,9 @@
 import { IncomingMessage, ServerResponse } from "node:http";
-import { getDeviceInfoForId } from "../device-info/device-info.ts";
-import {
-  createVncWebSocketProxy,
-  createAudioWsProxy,
-  isWebSocketRequest,
-} from "./wsproxy.ts";
-import { WebSocket as WsWebSocket } from "ws";
-
-const wss = new WsWebSocket.Server({ noServer: true });
+import { getDeviceForId } from "../device-info/device-info.ts";
+import { createAudioWsProxy, createVncWebSocketProxy } from "./wsproxy.ts";
+import { WebSocket as WsWebSocket, WebSocketServer } from "ws";
+import { isWebSocketRequest } from "./wsutils.ts";
+import { createClient } from "../supabase/server.ts";
 
 enum EndpointType {
   KASMVNC,
@@ -16,6 +12,7 @@ enum EndpointType {
 
 async function handleDeviceEndpoint(
   type: EndpointType,
+  wss: WebSocketServer,
   req: IncomingMessage,
   res: ServerResponse,
   match: RegExpMatchArray,
@@ -33,11 +30,39 @@ async function handleDeviceEndpoint(
     return;
   }
 
-  // TODO: check to see if the user is authorized
+  const deviceInfo = await getDeviceForId(deviceId);
 
-  const deviceInfo = getDeviceInfoForId(deviceId);
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    res.statusCode = 401;
+    res.setHeader("Content-Type", "text/plain");
+    res.end("unauthorized");
+    return;
+  }
+
+  const isAuthHeaderValid = /Bearer .+/.test(authHeader);
+  if (!isAuthHeaderValid) {
+    res.statusCode = 401;
+    res.setHeader("Content-Type", "text/plain");
+    res.end("unauthorized");
+    return;
+  }
+
+  const jwt = authHeader.split(" ")[1];
+  const supabaseClient = createClient();
+  const supabaseUser = await supabaseClient.auth.getUser(jwt);
+  const userEmail = supabaseUser.data.user!.email!;
 
   if (!deviceInfo) {
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "text/plain");
+    res.end("not found");
+    return;
+  }
+
+  if (deviceInfo.ownerEmail !== userEmail) {
+    // 404, we don't even want the user to know this device exists
     res.statusCode = 404;
     res.setHeader("Content-Type", "text/plain");
     res.end("not found");

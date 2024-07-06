@@ -11,13 +11,13 @@ import type {
 } from "react-kasmvnc/dist/types/lib/VncScreen";
 // @ts-expect-error -- the types are exported wrong
 import type { RFB as KasmVNCRFB } from "react-kasmvnc/dist/types/noVNC/core/rfb";
-import { ComponentType, ReactNode, useEffect, useRef, useState } from "react";
-import { DeviceInfo } from "../../../server/device-info/device-info.ts";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { Device } from "@prisma/client";
 
 export interface ClientProps
   extends Partial<KasmVNCScreenProps | KasmVNCExtraRFBOptions> {
   thisPathname: string;
-  deviceInfo: DeviceInfo;
+  deviceInfo: Device;
   failComponent: ReactNode;
   loadingComponent: ReactNode;
   fullScreen?: boolean;

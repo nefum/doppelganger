@@ -37,3 +37,22 @@ pnpm run init
 ## Running
 
 When running jobs, use can use `turbo` instead of `pnpm run` to get a measurable speedup.
+
+### Testing
+
+```bash
+pnpm run dev
+```
+
+### Production
+
+```bash
+pnpm run build
+pnpm run start
+```
+
+## Development
+
+After making a change to the database, remember to run `db:generate` and then `db:migrate` to update the database schema.
+
+Consider installing pre-commit and then running `pre-commit install` so that all commits are automatically linted and tested. You may also run `turbo lint type-check format`.

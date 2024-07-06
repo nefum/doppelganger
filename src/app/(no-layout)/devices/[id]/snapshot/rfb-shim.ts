@@ -3,8 +3,9 @@ import MouseButtonMapper, {
   XVNC_BUTTONS,
 } from "@/noVNC/core/mousebuttonmapper";
 import type RFB from "@/noVNC/core/rfb";
-import { DeviceInfo } from "../../../../../../server/device-info/device-info";
-import { getWsWebSocketOptionForKasmVNC } from "../../../../../../server/kasmvnc/wsconnect"; // refers to window on import
+import { Device } from "@prisma/client";
+import { getWsWebSocketOptionForKasmVNC } from "../../../../../../server/wsutils/kasmvnc-connect.ts";
+import { getTargetVncWebsocketUrlForDevice } from "../../../../../../server/device-info/device-info.ts";
 
 function createDefaultMouseButtonMapper(): MouseButtonMapper {
   const mouseButtonMapper = new MouseButtonMapper();
@@ -23,17 +24,17 @@ export default async function createRfb(
   screen: HTMLDivElement,
   keyboardInput: HTMLTextAreaElement,
   target: string,
-  deviceInfo: DeviceInfo,
+  deviceInfo: Device,
 ): Promise<RFB> {
   // have to import it here because it makes a call to window
   const RuntimeRFB = (await import("@/noVNC/core/rfb"))
     .default as unknown as typeof RFB;
 
-  const parsedTargetUrl = new URL(deviceInfo.kasmUrl);
+  const parsedTargetUrl = new URL(target);
   const webSocketOpts = getWsWebSocketOptionForKasmVNC(
     parsedTargetUrl,
-    deviceInfo.insecure,
-    deviceInfo.basicAuth,
+    deviceInfo.certificateIsSelfSigned,
+    deviceInfo,
   );
 
   const _rfb = new RuntimeRFB(

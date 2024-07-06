@@ -27,18 +27,23 @@ model Device {
   ownerEmail String @map(name: "owner_email")
 
   redroidImage  String @map(name: "redroid_image")
+  redroidFps    Int    @map(name: "redroid_fps")
   redroidDpi    Int    @map(name: "redroid_dpi")
   redroidWidth  Int    @map(name: "redroid_width")
   redroidHeight Int    @map(name: "redroid_height")
 
-  adbPort      Int    @default(5555) @map(name: "adb_port")
-  vncWssPath   String @default("websockify") @map(name: "vnc_wss_path")
-  vncWssPort   Int    @default(6901) @map(name: "vnc_wss_port")
-  // https://github.com/kasmtech/workspaces-core-images/blob/develop/src/ubuntu/install/audio/install_audio.sh
-  audioWssPort Int    @default(4901) @map(name: "audio_ws_port")
+  adbHostname String @default("localhost") @map(name: "adb_hostname") // will be `${id}-adb` at runtime
+  adbPort     Int    @default(5555) @map(name: "adb_port")
 
-  basicAuthUsername       String  @default("kasm_user") @map(name: "basic_auth_username")
-  basicAuthPassword       String  @map(name: "basic_auth_password")
+  scrcpyHostname String  @default("localhost") @map(name: "device_hostname") // will be `${id}-scrcpy` at runtime
+  scrcpyTls      Boolean @default(true) @map(name: "device_tls")
+  vncWssPath     String  @default("/websockify") @map(name: "vnc_wss_path")
+  vncWssPort     Int     @default(6901) @map(name: "vnc_wss_port")
+  // https://github.com/kasmtech/workspaces-core-images/blob/develop/src/ubuntu/install/audio/install_audio.sh
+  audioWssPort   Int     @default(4901) @map(name: "audio_ws_port")
+
+  basicAuthUsername       String? @map(name: "basic_auth_username")
+  basicAuthPassword       String? @map(name: "basic_auth_password")
   certificateIsSelfSigned Boolean @default(true) @map(name: "certificate_is_self_signed")
 
   createdAt DateTime    @default(now()) @map(name: "created_at")

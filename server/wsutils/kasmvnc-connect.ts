@@ -26,7 +26,10 @@ export function getWsWebSocketOptionForKasmVNC(
     "Accept-Encoding": encodings,
   };
   if (basicAuth) {
-    wsHeaders["Authorization"] = generateBasicAuthHeader(basicAuth);
+    const maybeHeader = generateBasicAuthHeader(basicAuth);
+    if (maybeHeader) {
+      wsHeaders.Authorization = maybeHeader;
+    }
   }
   return {
     rejectUnauthorized: !targetIsUnsecure,
@@ -34,8 +37,12 @@ export function getWsWebSocketOptionForKasmVNC(
   };
 }
 
-function generateBasicAuthHeader(basicAuth: BasicAuth): string {
-  const { username, password } = basicAuth;
+function generateBasicAuthHeader(basicAuth: BasicAuth): string | null {
+  const { basicAuthUsername: username, basicAuthPassword: password } =
+    basicAuth;
+  if (!username || !password) {
+    return null;
+  }
   const basicAuthString = `${username}:${password}`;
   return `Basic ${Buffer.from(basicAuthString).toString("base64")}`;
 }

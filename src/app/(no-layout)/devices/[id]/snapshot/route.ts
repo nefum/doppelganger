@@ -3,9 +3,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   getDeviceIdFromUrl,
-  getDeviceInfoForId,
+  getDeviceForId,
 } from "../../../../../../server/device-info/device-info";
 import getSnapshotOfKasmVNCDevice from "@/app/(no-layout)/devices/[id]/snapshot/snapshot";
+import { createClient } from "../../../../../../server/supabase/server.ts";
 
 export async function GET(request: NextRequest) {
   // we need to connect to /devices/[id]/kasmvnc with RFB and then take a screenshot using node-canvas (jsdom has a node-canvas integ.)
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const deviceInfo = getDeviceInfoForId(id);
+  const deviceInfo = await getDeviceForId(id);
   if (!deviceInfo) {
     return NextResponse.json(
       {
@@ -34,7 +35,20 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // TODO: check authorization for device
+  const supabaseClient = createClient();
+  const supabaseUser = await supabaseClient.auth.getUser();
+  const userEmail = supabaseUser.data.user!.email!;
+  if (deviceInfo.ownerEmail !== userEmail) {
+    // don't even 401, 404 instead to hide the existence of the device
+    return NextResponse.json(
+      {
+        error: "Device not found",
+      },
+      {
+        status: 404,
+      },
+    );
+  }
 
   try {
     const outerCanvasOutput = await getSnapshotOfKasmVNCDevice(deviceInfo);
@@ -48,7 +62,7 @@ export async function GET(request: NextRequest) {
       headers: {
         "Content-Type": mimeType,
         "Cache-Control": "max-age=10", // don't request a new snapshot every time; the screen won't change that much between 10 seconds and this route is expensive
-        "Content-Disposition": `inline; filename=${deviceInfo.deviceName}.png`,
+        "Content-Disposition": `inline; filename=${deviceInfo.name}.png`,
         "Content-Length": buffer.length.toString(),
       },
     });

@@ -18,10 +18,6 @@
  - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
  **/
 import { Card } from "@/components/ui/card";
-import {
-  DeviceInfo,
-  DeviceStates,
-} from "../../../server/device-info/device-info";
 import { clsx } from "clsx";
 import {
   DeviceCardSnapshotClient,
@@ -30,26 +26,28 @@ import {
 import { Suspense } from "react";
 
 import { getSnapshotUrlOfDevice } from "@/app/(no-layout)/devices/[id]/snapshot/path.ts";
+import { Device, DeviceState } from "@prisma/client";
+import { toTitleCase } from "@/utils/misc.ts";
 
-export function DeviceCard({
-  deviceInfo,
-}: Readonly<{ deviceInfo: DeviceInfo }>) {
+export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
   return (
     <Card className="w-full max-w-sm">
       <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
         <div className="space-y-4">
           <div className="space-y-1">
-            <h3 className="text-2xl font-semibold">{deviceInfo.deviceName}</h3>
+            <h3 className="text-2xl font-semibold">{deviceInfo.name}</h3>
             <div className="flex items-center gap-2 text-muted-foreground">
               <div
                 className={clsx("h-2 w-2 rounded-full", {
-                  "bg-green-500": deviceInfo.state === DeviceStates.ON,
-                  "bg-red-500": deviceInfo.state === DeviceStates.OFF,
-                  "bg-yellow-500": deviceInfo.state === DeviceStates.SUSPENDED,
-                  "bg-gray-500": deviceInfo.state === DeviceStates.UNAVAILABLE,
+                  "bg-green-500": deviceInfo.lastState === DeviceState.ON,
+                  "bg-red-500": deviceInfo.lastState === DeviceState.OFF,
+                  "bg-yellow-500":
+                    deviceInfo.lastState === DeviceState.SUSPENDED,
+                  "bg-gray-500":
+                    deviceInfo.lastState === DeviceState.UNAVAILABLE,
                 })}
               />
-              <span>{deviceInfo.state}</span>
+              <span>{toTitleCase(deviceInfo.lastState)}</span>
             </div>
           </div>
           {/*TODO: properties of the device instead of placeholders like battery & storage*/}
@@ -70,7 +68,7 @@ export function DeviceCard({
           }
         >
           <DeviceCardSnapshotClient
-            deviceName={deviceInfo.deviceName}
+            deviceName={deviceInfo.name}
             id={deviceInfo.id}
           />
         </Suspense>

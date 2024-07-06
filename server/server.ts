@@ -6,10 +6,28 @@ import next from "next";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
 import {
   audioWsEndpoint,
+  eventsWsEndpoint,
   kasmVncWsEndpoint,
-} from "./device-info/device-regex.ts";
+} from "./endpoint-regex.ts";
+import { handleAudio, handleKasmVNC } from "./wsutils/route.ts";
 import { WebSocket as WsWebSocket } from "ws";
-import { handleAudio, handleKasmVNC } from "./kasmvnc/route.ts";
+
+// load environment variables
+import { config } from "dotenv";
+import { expand } from "dotenv-expand";
+import { existsSync } from "node:fs";
+import handleEventStream from "./events/route.ts";
+// we use dotenv-expand to allow passing through environment variables through runtime;
+// like during development the IDEA runner and during production the docker container
+const envPath = "./.env.local";
+if (existsSync(envPath)) {
+  console.log("loading environment variables from", envPath);
+  expand(
+    config({
+      path: envPath,
+    }),
+  );
+}
 
 // for prod, see this file for reference: https://gist.github.com/regulad/9c5529137ebac136288f9627815d8933
 const dev = process.env.NODE_ENV !== "production";
@@ -22,6 +40,11 @@ const handle = app.getRequestHandler();
 // note for future me, so I don't even try it: next-ws (https://github.com/apteryxxyz/next-ws) is TERRIBLE
 // it doesn't even support dynamic URLs, which is not only a fundamental feature of Next.js, but also required for
 // this project. i am implementing any WS communication manually
+
+const wss = new WsWebSocket.Server({
+  noServer: true,
+  perMessageDeflate: false, // https://www.npmjs.com/package/ws/v/8.0.0#websocket-compression
+});
 
 app.prepare().then(() => {
   createServer(
@@ -49,11 +72,14 @@ app.prepare().then(() => {
 
         const kasmVncMatch = pathname.match(kasmVncWsEndpoint);
         const audioMatch = pathname.match(audioWsEndpoint);
+        const eventsMatch = pathname.match(eventsWsEndpoint);
 
         if (kasmVncMatch) {
-          await handleKasmVNC(req, res, kasmVncMatch);
+          await handleKasmVNC(wss, req, res, kasmVncMatch);
         } else if (audioMatch) {
-          await handleAudio(req, res, audioMatch);
+          await handleAudio(wss, req, res, audioMatch);
+        } else if (eventsMatch) {
+          await handleEventStream(wss, req, res, eventsMatch);
         } else {
           await handle(req, res, parsedUrl);
         }

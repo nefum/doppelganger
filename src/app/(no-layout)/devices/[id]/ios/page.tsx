@@ -1,23 +1,18 @@
-import dynamic from "next/dynamic";
 import ISpinner from "@/app/(no-layout)/devices/[id]/ios/ispinner.tsx";
-import { getDeviceInfoForId } from "../../../../../../server/device-info/device-info.ts";
+import { getDeviceForId } from "../../../../../../server/device-info/device-info.ts";
 import NotFound from "next/dist/client/components/not-found-error";
-import type { ClientProps } from "@/app/components/nextvncscreen.tsx";
-import IosFail from "@/app/(no-layout)/devices/[id]/ios/ios-fail.tsx";
+import React, { Suspense } from "react";
+import ServerPage from "@/app/(no-layout)/devices/[id]/ios/server-page.tsx";
 // import "./ios-client.css";
 // there is never a reason to manually hide the cursor because the cursor will not show in the WKWebView;
 // the cursor we view is from
 
-const IosClient = dynamic<ClientProps>(
-  () => import("../../../../components/nextvncscreen.tsx"),
-  {
-    ssr: false,
-    loading: () => <ISpinner large />,
-  },
-);
-
-export default function Page({ params: { id } }: { params: { id: string } }) {
-  const deviceInfo = getDeviceInfoForId(id);
+export default async function Page({
+  params: { id },
+}: {
+  params: { id: string };
+}) {
+  const deviceInfo = await getDeviceForId(id);
 
   if (!deviceInfo) {
     return <NotFound />;
@@ -25,13 +20,9 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 
   return (
     <div className="flex justify-center items-center place-items-center h-screen w-screen">
-      <IosClient
-        fullScreen
-        loadingComponent={<ISpinner large />}
-        failComponent={<IosFail reason={"Failed to connect to device"} />}
-        thisPathname={`/devices/${id}/ios`}
-        deviceInfo={deviceInfo}
-      />
+      <Suspense fallback={<ISpinner large />}>
+        <ServerPage id={id} />
+      </Suspense>
     </div>
   );
 }

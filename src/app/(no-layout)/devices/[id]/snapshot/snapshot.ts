@@ -1,18 +1,19 @@
 // this lock will ensure that only one window is created per nodejs process
 import AsyncLock from "async-lock";
-import { DeviceInfo } from "../../../../../../server/device-info/device-info";
 import {
   depolyfillNode,
   polyfillNode,
 } from "@/app/(no-layout)/devices/[id]/snapshot/node-shim";
 import createRfb from "@/app/(no-layout)/devices/[id]/snapshot/rfb-shim";
 import { JSDOM } from "jsdom";
+import { Device } from "@prisma/client";
+import { getTargetVncWebsocketUrlForDevice } from "../../../../../../server/device-info/device-info.ts";
 
 const globalWindowLock = new AsyncLock();
 export type CanvasOutput = `data:image/png;base64,${string}`;
 
-function createJSDOMForKasmVNC(deviceInfo: DeviceInfo) {
-  const referrerUrl = new URL(deviceInfo.kasmUrl);
+function createJSDOMForKasmVNC(deviceInfo: Device) {
+  const referrerUrl = new URL(getTargetVncWebsocketUrlForDevice(deviceInfo));
   referrerUrl.protocol = referrerUrl.protocol.replace("ws", "http");
   referrerUrl.pathname = "/";
   const referrerString = referrerUrl.toString();
@@ -46,7 +47,7 @@ function createJSDOMForKasmVNC(deviceInfo: DeviceInfo) {
 const framesRequired: number = 1;
 
 export default async function getSnapshotOfKasmVNCDevice(
-  deviceInfo: DeviceInfo,
+  deviceInfo: Device,
 ): Promise<CanvasOutput> {
   const dom = createJSDOMForKasmVNC(deviceInfo);
 
@@ -69,7 +70,7 @@ export default async function getSnapshotOfKasmVNCDevice(
         const rfb = await createRfb(
           screen,
           keyboardInput,
-          deviceInfo.kasmUrl,
+          getTargetVncWebsocketUrlForDevice(deviceInfo),
           deviceInfo,
         );
         const canvas = (rfb as any)._canvas as HTMLCanvasElement;

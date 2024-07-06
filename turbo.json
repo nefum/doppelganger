@@ -1,31 +1,31 @@
 {
   "tasks": {
-    "generate-prisma": {
+    "db:generate": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
     "build": {
-      "dependsOn": ["build-server", "generate-prisma"],
+      "dependsOn": ["build-server", "db:generate"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "build-server": {
-      "dependsOn": ["generate-prisma"],
+      "dependsOn": ["db:generate"],
       "inputs": ["server/**"],
       "outputs": ["dist/**"]
     },
     "dev": {
-      "dependsOn": ["generate-prisma"],
+      "dependsOn": ["db:generate"],
       "cache": false
     },
     "start": {
-      "dependsOn": ["build", "generate-prisma"],
+      "dependsOn": ["build", "db:generate"],
       "cache": false
     },
     "lint": {
       "cache": false
     },
     "type-check": {
-      "dependsOn": ["generate-prisma"],
+      "dependsOn": ["db:generate"],
       "inputs": ["**/*.{ts,tsx}"],
       "cache": false
     },
