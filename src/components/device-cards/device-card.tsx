@@ -25,54 +25,82 @@ import {
 } from "@/components/device-cards/device-card-snapshot-client";
 import { Suspense } from "react";
 
-import { getSnapshotUrlOfDevice } from "@/app/(no-layout)/devices/[id]/snapshot/path.ts";
 import { Device, DeviceState } from "@prisma/client";
 import { toTitleCase } from "@/utils/misc.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { SettingsIcon, ShareIcon } from "lucide-react";
+import { DownloadIcon } from "@radix-ui/react-icons";
+import { IoPhonePortraitOutline } from "react-icons/io5";
+import Link from "next/link";
+import { getSnapshotUrlOfDevice } from "@/app/(strict-mode)/(userland)/devices/[id]/snapshot/path.ts";
 
 export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
   return (
-    <Card className="w-full max-w-sm">
-      <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-2xl font-semibold">{deviceInfo.name}</h3>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <div
-                className={clsx("h-2 w-2 rounded-full", {
-                  "bg-green-500": deviceInfo.lastState === DeviceState.ON,
-                  "bg-red-500": deviceInfo.lastState === DeviceState.OFF,
-                  "bg-yellow-500":
-                    deviceInfo.lastState === DeviceState.SUSPENDED,
-                  "bg-gray-500":
-                    deviceInfo.lastState === DeviceState.UNAVAILABLE,
-                })}
-              />
-              <span>{toTitleCase(deviceInfo.lastState)}</span>
+    <div className="w-full p-3">
+      <Card className="w-full max-w-sm">
+        <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <h3 className="text-2xl font-semibold">{deviceInfo.name}</h3>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <div
+                  className={clsx("h-2 w-2 rounded-full", {
+                    "bg-green-500": deviceInfo.lastState === DeviceState.ON,
+                    "bg-red-500": deviceInfo.lastState === DeviceState.OFF,
+                    "bg-yellow-500":
+                      deviceInfo.lastState === DeviceState.SUSPENDED,
+                    "bg-gray-500":
+                      deviceInfo.lastState === DeviceState.UNAVAILABLE,
+                  })}
+                />
+                <span>{toTitleCase(deviceInfo.lastState)}</span>
+              </div>
+            </div>
+            {/*TODO: properties of the device instead of placeholders like battery & storage*/}
+            <div className="space-y-1">
+              <h4 className="text-sm font-medium">Battery</h4>
+              <p className="text-muted-foreground">85%</p>
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-sm font-medium">Storage</h4>
+              <p className="text-muted-foreground">128GB</p>
+            </div>
+            {/*TODO: buttons for the device card*/}
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={`/devices/${deviceInfo.id}/ios`}>
+                  <IoPhonePortraitOutline className="h-5 w-5" />
+                  <span className="sr-only">Open Mobile-Optimized Client</span>
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon">
+                <SettingsIcon className="h-5 w-5" />
+                <span className="sr-only">Settings</span>
+              </Button>
+              <Button variant="ghost" size="icon">
+                <DownloadIcon className="h-5 w-5" />
+                <span className="sr-only">Download</span>
+              </Button>
+              <Button variant="ghost" size="icon">
+                <ShareIcon className="h-5 w-5" />
+                <span className="sr-only">Share</span>
+              </Button>
             </div>
           </div>
-          {/*TODO: properties of the device instead of placeholders like battery & storage*/}
-          <div className="space-y-1">
-            <h4 className="text-sm font-medium">Battery</h4>
-            <p className="text-muted-foreground">85%</p>
-          </div>
-          <div className="space-y-1">
-            <h4 className="text-sm font-medium">Storage</h4>
-            <p className="text-muted-foreground">128GB</p>
-          </div>
+          {/*because of the loading nightmare this snapshot is, we need to preload it manually*/}
+          <link rel="prefetch" href={getSnapshotUrlOfDevice(deviceInfo.id)} />
+          <Suspense
+            fallback={
+              <div className={clsx(PARENT_DIV_CLASSES, "animate-pulse")} />
+            }
+          >
+            <DeviceCardSnapshotClient
+              deviceName={deviceInfo.name}
+              id={deviceInfo.id}
+            />
+          </Suspense>
         </div>
-        {/*because of the loading nightmare this snapshot is, we need to preload it manually*/}
-        <link rel="prefetch" href={getSnapshotUrlOfDevice(deviceInfo.id)} />
-        <Suspense
-          fallback={
-            <div className={clsx(PARENT_DIV_CLASSES, "animate-pulse")} />
-          }
-        >
-          <DeviceCardSnapshotClient
-            deviceName={deviceInfo.name}
-            id={deviceInfo.id}
-          />
-        </Suspense>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

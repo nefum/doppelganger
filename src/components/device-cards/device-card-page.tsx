@@ -19,10 +19,11 @@
  **/
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 export function DeviceCardPage({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{ children: ReactNode }>) {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex items-center justify-between mb-8">
@@ -34,7 +35,7 @@ export function DeviceCardPage({
           </Link>
         </Button>
       </div>
-      <div className="grid gap-6">{children}</div>
+      <div className="flex flex-wrap -m-3">{children}</div>
     </div>
   );
 }

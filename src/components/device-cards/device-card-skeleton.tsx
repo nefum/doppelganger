@@ -1,36 +1,37 @@
 import { Card } from "@/components/ui/card";
-import { clsx } from "clsx";
-import { PARENT_DIV_CLASSES } from "@/components/device-cards/device-card-snapshot-client";
+import { Skeleton } from "@/components/ui/skeleton.tsx";
 
 export function DeviceCardSkeleton() {
   return (
-    <Card className="w-full max-w-sm animate-pulse">
-      <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <div className="h-6 bg-gray-300 rounded-md w-3/4"></div>{" "}
-            {/* Placeholder for device name */}
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-gray-300"></div>{" "}
-              {/* Placeholder for device state indicator */}
-              <div className="h-4 bg-gray-300 rounded-md w-1/4"></div>{" "}
-              {/* Placeholder for device state text */}
+    <div className="w-full sm:w-1/2 lg:w-1/3 p-3">
+      <Card className="w-full max-w-sm">
+        <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <Skeleton className="h-6 sm:w-12 md:w-22 lg:w-32" />
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Skeleton className="h-2 w-2 rounded-full" />
+                <Skeleton className="h-4 w-12" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-4 w-10 lg:w-20" />
+              <Skeleton className="h-4 w-8 lg:w-16" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="h-4 bg-gray-300 rounded-md w-1/2"></div>{" "}
-            {/* Placeholder for battery */}
-          </div>
-          <div className="space-y-1">
-            <div className="h-4 bg-gray-300 rounded-md w-1/2"></div>{" "}
-            {/* Placeholder for storage */}
-          </div>
+          <Skeleton className="rounded-lg object-cover aspect-[2/4]" />
         </div>
-        <div
-          className={clsx(PARENT_DIV_CLASSES, "bg-gray-300 rounded-lg")}
-        ></div>{" "}
-        {/* Placeholder for device snapshot */}
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

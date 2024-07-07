@@ -32,26 +32,8 @@ async function handleDeviceEndpoint(
 
   const deviceInfo = await getDeviceForId(deviceId);
 
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    res.statusCode = 401;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("unauthorized");
-    return;
-  }
-
-  const isAuthHeaderValid = /Bearer .+/.test(authHeader);
-  if (!isAuthHeaderValid) {
-    res.statusCode = 401;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("unauthorized");
-    return;
-  }
-
-  const jwt = authHeader.split(" ")[1];
   const supabaseClient = createClient(req);
-  const supabaseUser = await supabaseClient.auth.getUser(jwt);
+  const supabaseUser = await supabaseClient.auth.getUser();
   const userEmail = supabaseUser.data.user!.email!;
 
   if (!deviceInfo) {

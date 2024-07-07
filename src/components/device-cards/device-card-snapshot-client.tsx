@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import styles from "./fill.module.css";
-
-import { getSnapshotUrlOfDevice } from "@/app/(no-layout)/devices/[id]/snapshot/path.ts";
+import { getSnapshotUrlOfDevice } from "@/app/(strict-mode)/(userland)/devices/[id]/snapshot/path.ts";
 
 // https://stackoverflow.com/questions/14142378/how-can-i-fill-a-div-with-an-image-while-keeping-it-proportional for filling
 export const PARENT_DIV_CLASSES = clsx(

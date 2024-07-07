@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { clsx } from "clsx";
+import * as URl from "node:url";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,8 +20,11 @@ const fontBody = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Doppelganger",
-  description: "Doppelganger Android Phones",
+  title: {
+    template: "%s | Doppelganger",
+    default: "Doppelganger",
+  },
+  metadataBase: new URL("https://www.doppelgangerhq.com"),
 };
 
 export default function RootLayout({
@@ -38,6 +43,7 @@ export default function RootLayout({
         )}
       >
         {children}
+        <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
       </body>
     </html>
   );

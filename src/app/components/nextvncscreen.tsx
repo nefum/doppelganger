@@ -75,6 +75,42 @@ export default function NextVNCScreen({
     setAudioUrl(audioUrl.toString());
   }, [clientProps.deviceInfo.id, clientProps.thisPathname]);
 
+  useEffect(() => {
+    async function initAudio() {
+      if (!ref.current) {
+        return;
+      }
+
+      if (!ref.current.jsmpegPlayer) {
+        return;
+      }
+
+      if (!ref.current.jsmpegPlayer.audioOut) {
+        return;
+      }
+
+      if (!ref.current.jsmpegPlayer.audioOut.context) {
+        return;
+      }
+
+      if (
+        !ref.current.jsmpegPlayer.audioOut.context.state ||
+        ref.current.jsmpegPlayer.audioOut.context.state === "running"
+      ) {
+        return;
+      }
+
+      try {
+        await ref.current.jsmpegPlayer.audioOut.context.resume();
+      } catch (e) {
+        console.error("Failed to resume audio context", e);
+      }
+    }
+
+    document.addEventListener("click", initAudio);
+    return () => document.removeEventListener("click", initAudio);
+  }, [ref]);
+
   function fail(reason: string) {
     setIsFailed(true);
     setFailureReason(reason);

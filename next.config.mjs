@@ -5,6 +5,8 @@ const nextConfig = {
   experimental: {
     forceSwcTransforms: true,
   },
+  // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
+  reactStrictMode: false,
 };
 
 export default nextConfig;
