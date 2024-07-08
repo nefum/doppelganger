@@ -1,5 +1,5 @@
-import { WebSocket as WsWebSocket, WebSocketServer } from "ws";
 import { IncomingMessage, ServerResponse } from "node:http";
+import { WebSocketServer, WebSocket as WsWebSocket } from "ws";
 
 export default async function handleEventStream(
   wss: WebSocketServer,

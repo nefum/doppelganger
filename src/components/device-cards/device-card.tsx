@@ -17,22 +17,22 @@
  - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
  - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
  **/
-import { Card } from "@/components/ui/card";
-import { clsx } from "clsx";
 import {
   DeviceCardSnapshotClient,
   PARENT_DIV_CLASSES,
 } from "@/components/device-cards/device-card-snapshot-client";
+import { Card } from "@/components/ui/card";
+import { clsx } from "clsx";
 import { Suspense } from "react";
 
-import { Device, DeviceState } from "@prisma/client";
-import { toTitleCase } from "@/utils/misc.ts";
-import { Button } from "@/components/ui/button.tsx";
-import { SettingsIcon, ShareIcon } from "lucide-react";
-import { DownloadIcon } from "@radix-ui/react-icons";
-import { IoPhonePortraitOutline } from "react-icons/io5";
-import Link from "next/link";
 import { getSnapshotUrlOfDevice } from "@/app/(strict-mode)/(userland)/devices/[id]/snapshot/path.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { toTitleCase } from "@/utils/misc.ts";
+import { Device, DeviceState } from "@prisma/client";
+import { DownloadIcon } from "@radix-ui/react-icons";
+import { SettingsIcon, ShareIcon } from "lucide-react";
+import Link from "next/link";
+import { IoPhonePortraitOutline } from "react-icons/io5";
 
 export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
   return (

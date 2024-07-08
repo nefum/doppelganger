@@ -1,16 +1,16 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 
 import { createServer } from "http";
-import { parse } from "url";
 import next from "next";
+import { parse } from "url";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
+import { WebSocket as WsWebSocket } from "ws";
 import {
   audioWsEndpoint,
   eventsWsEndpoint,
   kasmVncWsEndpoint,
 } from "./endpoint-regex.ts";
 import { handleAudio, handleKasmVNC } from "./wsutils/route.ts";
-import { WebSocket as WsWebSocket } from "ws";
 
 // load environment variables
 import { config } from "dotenv";

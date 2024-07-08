@@ -1,16 +1,16 @@
-import { WebSocket as WsWebSocket } from "ws";
+import { Device } from "@prisma/client";
 import { IncomingMessage, ServerResponse } from "node:http";
+import { WebSocket as WsWebSocket } from "ws";
+import {
+  getTargetAudioWebsocketUrlForDevice,
+  getTargetVncWebsocketUrlForDevice,
+} from "../device-info/device-info.ts";
 import { getWsWebSocketOptionForKasmVNC } from "./kasmvnc-connect.ts";
 import {
   isFatalWebSocketError,
   WsWebSocketOptions,
   WsWebSocketServer,
 } from "./wsutils.ts";
-import { Device } from "@prisma/client";
-import {
-  getTargetAudioWebsocketUrlForDevice,
-  getTargetVncWebsocketUrlForDevice,
-} from "../device-info/device-info.ts";
 
 export function createWebSocketProxy(
   url: URL,

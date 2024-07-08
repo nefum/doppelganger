@@ -1,9 +1,8 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { clsx } from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
-import { clsx } from "clsx";
-import * as URl from "node:url";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,10 +1,10 @@
 // https://github.com/regulad/react-kasmvnc/blob/8b0c13060936c3d0455363442523ded19a36f6f8/src/lib/VncScreen.tsx
+import { getWsWebSocketOptionForKasmVNC } from "%/wsutils/kasmvnc-connect.ts";
 import MouseButtonMapper, {
   XVNC_BUTTONS,
 } from "@/noVNC/core/mousebuttonmapper";
 import type RFB from "@/noVNC/core/rfb";
 import { Device } from "@prisma/client";
-import { getWsWebSocketOptionForKasmVNC } from "%/wsutils/kasmvnc-connect.ts";
 
 function createDefaultMouseButtonMapper(): MouseButtonMapper {
   const mouseButtonMapper = new MouseButtonMapper();

@@ -1,10 +1,10 @@
-import dynamic from "next/dynamic";
-import ISpinner from "@/app/(not-strict)/devices/[id]/ios/ispinner.tsx";
 import { getDeviceForId } from "%/device-info/device-info.ts";
-import NotFound from "next/dist/client/components/not-found-error";
-import type { ClientProps } from "@/app/components/nextvncscreen.tsx";
 import IosFail from "@/app/(not-strict)/devices/[id]/ios/ios-fail.tsx";
+import ISpinner from "@/app/(not-strict)/devices/[id]/ios/ispinner.tsx";
+import type { ClientProps } from "@/app/components/nextvncscreen.tsx";
 import { createClient } from "@/utils/supabase/server.ts";
+import NotFound from "next/dist/client/components/not-found-error";
+import dynamic from "next/dynamic";
 // import "./ios-client.css";
 // there is never a reason to manually hide the cursor because the cursor will not show in the WKWebView;
 // the cursor we view is from

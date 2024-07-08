@@ -1,5 +1,5 @@
-import prisma from "./prisma.ts";
 import { DeviceState } from "@prisma/client";
+import prisma from "./prisma.ts";
 
 // https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/querying-the-database-typescript-postgresql
 async function main() {

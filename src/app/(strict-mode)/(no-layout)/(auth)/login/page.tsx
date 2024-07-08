@@ -1,5 +1,5 @@
-import Link from "next/link";
 import LoginForm from "@/app/(strict-mode)/(no-layout)/(auth)/login/form.tsx";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (

@@ -1,6 +1,6 @@
+import CanvasGlobals from "canvas";
 import { JSDOM } from "jsdom";
 import type MutationObserver from "mutation-observer";
-import CanvasGlobals from "canvas";
 
 export async function polyfillNode(dom: JSDOM) {
   // @ts-expect-error -- clash with what it expects, it's ok since we're just mocking

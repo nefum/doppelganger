@@ -1,12 +1,12 @@
 "use server";
 
-import { NextRequest, NextResponse } from "next/server";
 import {
   getDeviceForId,
   getDeviceIdFromUrl,
 } from "%/device-info/device-info.ts";
 import getSnapshotOfKasmVNCDevice from "@/app/(strict-mode)/(userland)/devices/[id]/snapshot/snapshot.ts";
 import { createClient } from "@/utils/supabase/server.ts";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   // we need to connect to /devices/[id]/kasmvnc with RFB and then take a screenshot using node-canvas (jsdom has a node-canvas integ.)

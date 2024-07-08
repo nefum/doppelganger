@@ -1,6 +1,6 @@
+import prisma from "%/database/prisma.ts";
 import { DeviceCardPage } from "@/components/device-cards/device-card-page.tsx";
 import { DeviceCard } from "@/components/device-cards/device-card.tsx";
-import prisma from "%/database/prisma.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 
 export default async function UserDeviceCardPage() {

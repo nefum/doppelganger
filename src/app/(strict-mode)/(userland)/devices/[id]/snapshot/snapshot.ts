@@ -1,13 +1,13 @@
 // this lock will ensure that only one window is created per nodejs process
-import AsyncLock from "async-lock";
+import { getTargetVncWebsocketUrlForDevice } from "%/device-info/device-info.ts";
 import {
   depolyfillNode,
   polyfillNode,
 } from "@/app/(strict-mode)/(userland)/devices/[id]/snapshot/node-shim.ts";
 import createRfb from "@/app/(strict-mode)/(userland)/devices/[id]/snapshot/rfb-shim.ts";
-import { JSDOM } from "jsdom";
 import { Device } from "@prisma/client";
-import { getTargetVncWebsocketUrlForDevice } from "%/device-info/device-info.ts";
+import AsyncLock from "async-lock";
+import { JSDOM } from "jsdom";
 
 const globalWindowLock = new AsyncLock();
 export type CanvasOutput = `data:image/png;base64,${string}`;

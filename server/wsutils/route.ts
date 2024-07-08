@@ -1,9 +1,9 @@
 import { IncomingMessage, ServerResponse } from "node:http";
+import { WebSocketServer, WebSocket as WsWebSocket } from "ws";
 import { getDeviceForId } from "../device-info/device-info.ts";
-import { createAudioWsProxy, createVncWebSocketProxy } from "./wsproxy.ts";
-import { WebSocket as WsWebSocket, WebSocketServer } from "ws";
-import { isWebSocketRequest } from "./wsutils.ts";
 import { createClient } from "../supabase/ro-server.ts";
+import { createAudioWsProxy, createVncWebSocketProxy } from "./wsproxy.ts";
+import { isWebSocketRequest } from "./wsutils.ts";
 
 enum EndpointType {
   KASMVNC,

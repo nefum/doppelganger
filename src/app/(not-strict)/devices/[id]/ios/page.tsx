@@ -1,8 +1,8 @@
-import ISpinner from "@/app/(not-strict)/devices/[id]/ios/ispinner.tsx";
 import { getDeviceForId } from "%/device-info/device-info.ts";
-import NotFound from "next/dist/client/components/not-found-error";
-import React, { Suspense } from "react";
+import ISpinner from "@/app/(not-strict)/devices/[id]/ios/ispinner.tsx";
 import ServerPage from "@/app/(not-strict)/devices/[id]/ios/server-page.tsx";
+import NotFound from "next/dist/client/components/not-found-error";
+import { Suspense } from "react";
 // import "./ios-client.css";
 // there is never a reason to manually hide the cursor because the cursor will not show in the WKWebView;
 // the cursor we view is from

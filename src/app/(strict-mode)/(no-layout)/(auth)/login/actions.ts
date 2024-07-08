@@ -1,10 +1,10 @@
 "use server";
 
+import { FIRST_PAGE_URL } from "@/app/(strict-mode)/(no-layout)/(auth)/constants.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { FIRST_PAGE_URL } from "@/app/(strict-mode)/(no-layout)/(auth)/constants.ts";
 
 const UsernamePasswordLoginSchema = z.object({
   email: z.string().email(),

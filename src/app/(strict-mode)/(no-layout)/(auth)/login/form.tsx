@@ -1,6 +1,11 @@
 "use client";
 
 import {
+  login,
+  type LoginFormState,
+} from "@/app/(strict-mode)/(no-layout)/(auth)/login/actions.ts";
+import { Button } from "@/components/ui/button.tsx";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -8,15 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label.tsx";
 import Link from "next/link";
-import { Button } from "@/components/ui/button.tsx";
 import { useFormState } from "react-dom";
-import {
-  login,
-  type LoginFormState,
-} from "@/app/(strict-mode)/(no-layout)/(auth)/login/actions.ts";
 
 const INITIAL_LOGIN_FORM_STATE = {
   message: null,

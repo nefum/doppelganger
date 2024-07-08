@@ -1,5 +1,5 @@
-import Link from "next/link";
 import SignupForm from "@/app/(strict-mode)/(no-layout)/(auth)/signup/form.tsx";
+import Link from "next/link";
 
 export default function Page() {
   return (

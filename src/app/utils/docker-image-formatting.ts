@@ -24,7 +24,7 @@ export interface CompleteDockerImageInfo extends DockerImageInfo {
   digest: DockerDigestType;
 }
 
-function getDockerImageInfoFromStringWithoutDigest(
+export function getDockerImageInfoFromStringWithoutDigest(
   imageAndTag: string,
 ): DockerImageInfo {
   // second step: split the image name and the tag if it exists
@@ -48,6 +48,7 @@ export function getDockerImageInfoFromStringWithDigest(
   fullImageNameAndDigest: string,
 ): DockerImageInfo {
   // example fullImageNameAndDigest: ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624
+  // example fullImageNameAndDigest: thing/ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624
 
   // from docker documentation: https://docs.docker.com/engine/reference/commandline/tag/#extended-description
 

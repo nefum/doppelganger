@@ -31,6 +31,10 @@
     },
     "format": {
       "cache": false
+    },
+    "test": {
+      "dependsOn": ["db:generate"],
+      "cache": false
     }
   }
 }

@@ -1,12 +1,12 @@
 "use client";
 
-import { type ReactNode, useState } from "react";
-import { FaCheck, FaXmark } from "react-icons/fa6";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover.tsx";
+import { type ReactNode, useState } from "react";
+import { FaCheck, FaXmark } from "react-icons/fa6";
 
 export default function PasswordPopover({
   password: passwordAttempt,

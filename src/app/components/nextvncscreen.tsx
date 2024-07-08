@@ -1,5 +1,6 @@
 "use client";
 
+// organize-imports-ignore // we need to use ts-expect-error in importing
 import {
   VncScreen as KasmVNCScreen,
   VncScreenHandle as KasmVNCScreenHandle,
@@ -9,10 +10,10 @@ import type {
   Props as KasmVNCScreenProps,
   // @ts-expect-error -- the types are exported wrong
 } from "react-kasmvnc/dist/types/lib/VncScreen";
+import { Device } from "@prisma/client";
+import { ReactNode, useEffect, useRef, useState } from "react";
 // @ts-expect-error -- the types are exported wrong
 import type { RFB as KasmVNCRFB } from "react-kasmvnc/dist/types/noVNC/core/rfb";
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { Device } from "@prisma/client";
 
 export interface ClientProps
   extends Partial<KasmVNCScreenProps | KasmVNCExtraRFBOptions> {
