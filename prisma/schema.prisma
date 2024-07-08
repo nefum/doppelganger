@@ -26,11 +26,14 @@ model Device {
   name       String @map(name: "name")
   ownerEmail String @map(name: "owner_email")
 
-  redroidImage  String @map(name: "redroid_image")
-  redroidFps    Int    @map(name: "redroid_fps")
-  redroidDpi    Int    @map(name: "redroid_dpi")
-  redroidWidth  Int    @map(name: "redroid_width")
-  redroidHeight Int    @map(name: "redroid_height")
+  // example: ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624
+  redroidImage       String  @map(name: "redroid_image")
+  redroidImageDigest String? @map(name: "redroid_image_digest")
+
+  redroidFps    Int @map(name: "redroid_fps")
+  redroidDpi    Int @map(name: "redroid_dpi")
+  redroidWidth  Int @map(name: "redroid_width")
+  redroidHeight Int @map(name: "redroid_height")
 
   adbHostname String @default("localhost") @map(name: "adb_hostname") // will be `${id}-adb` at runtime
   adbPort     Int    @default(5555) @map(name: "adb_port")

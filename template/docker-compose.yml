@@ -1,13 +1,13 @@
 name: test-scrcpy
 services:
   redroid:
-    image: "{{ redroid_image }}"
+    image: "{{ redroidImage }}"
     hostname: "{{ id }}-redroid"
-    ports:
-      - "5555:5555/tcp"
+#    ports:
+#      - "5555:5555/tcp"
     privileged: true  # required for redroid
     volumes:
-      - "/mnt/doppelganger/redroid14.0.0-base:/data-base"
+      - "{{ baseDir }}/redroid14.0.0-base:/data-base"
       - "/mnt/doppelganger/staging-diff:/data-diff"
     # https://github.com/remote-android/redroid-doc?tab=readme-ov-file#configuration
     command:
