@@ -2,7 +2,7 @@ import {
   getDockerImageInfoFromStringWithDigest,
   getDockerImageInfoFromStringWithoutDigest,
   getPathFriendlyStringForDockerImageInfo,
-} from "./docker-image-formatting";
+} from "./docker-image-parsing.ts";
 
 describe("docker image parser", () => {
   it("can get the docker image info from a string without a digest", () => {

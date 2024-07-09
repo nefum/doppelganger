@@ -13,21 +13,10 @@ import {
 import { handleAudio, handleKasmVNC } from "./wsutils/route.ts";
 
 // load environment variables
-import { config } from "dotenv";
-import { expand } from "dotenv-expand";
-import { existsSync } from "node:fs";
+import { loadEnvironment } from "%/load-environment.ts";
 import handleEventStream from "./events/route.ts";
-// we use dotenv-expand to allow passing through environment variables through runtime;
 // like during development the IDEA runner and during production the docker container
-const envPath = "./.env.local";
-if (existsSync(envPath)) {
-  console.log("loading environment variables from", envPath);
-  expand(
-    config({
-      path: envPath,
-    }),
-  );
-}
+loadEnvironment();
 
 // for prod, see this file for reference: https://gist.github.com/regulad/9c5529137ebac136288f9627815d8933
 const dev = process.env.NODE_ENV !== "production";

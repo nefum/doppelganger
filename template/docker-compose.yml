@@ -1,4 +1,4 @@
-name: test-scrcpy
+name: "{{ id }}"
 services:
   redroid:
     image: "{{ redroidImage }}"
@@ -6,38 +6,59 @@ services:
 #    ports:
 #      - "5555:5555/tcp"
     privileged: true  # required for redroid
+    networks:
+      - "{{ externalNetworkName }}"
     volumes:
-      - "{{ baseDir }}/redroid14.0.0-base:/data-base"
-      - "/mnt/doppelganger/staging-diff:/data-diff"
+      - "{{ baseDir }}/{{ redroidImageDataBasePath }}:/data-base"
+      - "{{ baseDir }}/{{ id }}-diff:/data-diff"
     # https://github.com/remote-android/redroid-doc?tab=readme-ov-file#configuration
     command:
       - "androidboot.use_redroid_overlayfs=1"
       - "androidboot.use_memfd=true"
-      - "androidboot.redroid_fps=${MAX_FPS:-30}"
-      - "androidboot.redroid_width=${DEVICE_WIDTH:-1170}"
-      - "androidboot.redroid_height=${DEVICE_HEIGHT:-2532}"
-      - "androidboot.redroid_dpi=${DEVICE_DPI:-460}"
+      - "androidboot.redroid_fps={{ redroidFps }}"
+      - "androidboot.redroid_width={{ redroidWidth }}"
+      - "androidboot.redroid_height={{ redroidHeight }}"
+      - "androidboot.redroid_dpi={{ redroidDpi }}"
       - "androidboot.redroid_net_ndns=2"
       - "androidboot.redroid_net_dns1=1.1.1.1"
       - "androidboot.redroid_net_dns2=1.0.0.1"
+#      TODO: proxy support
       - "androidboot.redroid_gpu_mode=guest"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.1'
+          memory: 700M
   scrcpy:
     image: "ghcr.io/regulad/workspaces-images:scrcpy"
-    ports:
-      - "6901:6901/tcp"
-      - "4901:4901/tcp"
+#    ports:
+#      - "6901:6901/tcp"
+#      - "4901:4901/tcp"
     shm_size: "512m"
     tty: true
     stdin_open: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 300M
+        reservations:
+          cpus: '0.1'
+          memory: 200M
     depends_on:
       - "redroid"
+    networks:
+      - "{{ externalNetworkName }}"
     environment:
-      ADB_DEVICE: "redroid:5555"
-      SCRCPY_FPS: ${MAX_FPS:-30}
-      SCRCPY_WIDTH: ${DEVICE_WIDTH:-1170}
-      SCRCPY_HEIGHT: ${DEVICE_HEIGHT:-2532}
+      ADB_DEVICE: "{{ id }}-redroid:5555"
+      SCRCPY_FPS: "{{ redroidFps }}"
+      SCRCPY_WIDTH: "{{ redroidWidth }}"
+      SCRCPY_HEIGHT: "{{ redroidHeight }}"
       # username: kasm_user
-      VNC_PW: ${VNC_PW:-password1234}
+      VNC_PW: "{{ basicAuthPassword }}"
 networks:
-  default:
-    driver: bridge
+  '{{ externalNetworkName }}':
+    external: true
