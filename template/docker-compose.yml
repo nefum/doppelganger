@@ -1,16 +1,17 @@
 name: "{{ id }}"
+# note: moustache has built-in anti-xss, so anything with a slash needs to have a & before it
 services:
   redroid:
-    image: "{{ redroidImage }}"
+    image: "{{ &redroidImage }}"
     hostname: "{{ id }}-redroid"
 #    ports:
 #      - "5555:5555/tcp"
     privileged: true  # required for redroid
     networks:
-      - "{{ externalNetworkName }}"
+      - "{{{ externalNetworkName }}}"
     volumes:
-      - "{{ baseDir }}/{{ redroidImageDataBasePath }}:/data-base"
-      - "{{ baseDir }}/{{ id }}-diff:/data-diff"
+      - "{{ &baseDir }}/{{ redroidImageDataBasePath }}:/data-base"
+      - "{{ &baseDir }}/{{ id }}-diff:/data-diff"
     # https://github.com/remote-android/redroid-doc?tab=readme-ov-file#configuration
     command:
       - "androidboot.use_redroid_overlayfs=1"

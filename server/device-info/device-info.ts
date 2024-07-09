@@ -16,11 +16,10 @@ export function getDeviceIdFromUrl(url: URL | string): string | null {
 export type BasicAuth = Pick<Device, "basicAuthPassword" | "basicAuthUsername">;
 export type DeviceSpecs = Pick<
   Device,
-  | "redroidImage"
   | "redroidFps"
   | "redroidDpi"
-  | "redroidWidth"
-  | "redroidHeight"
+  | "redroidWidth" // MUST be divisible by 2
+  | "redroidHeight" // MUST be divisible by 2
 >;
 
 export async function getDeviceForId(id: string): Promise<Device | null> {

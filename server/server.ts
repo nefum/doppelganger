@@ -13,8 +13,8 @@ import {
 import { handleAudio, handleKasmVNC } from "./wsutils/route.ts";
 
 // load environment variables
-import { loadEnvironment } from "%/load-environment.ts";
 import handleEventStream from "./events/route.ts";
+import { loadEnvironment } from "./load-environment.ts";
 // like during development the IDEA runner and during production the docker container
 loadEnvironment();
 

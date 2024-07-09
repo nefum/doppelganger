@@ -1,46 +1,27 @@
+/**
+ * @jest-environment node
+ */
+
 import {
-  getDockerImageInfoFromStringWithDigest,
-  getDockerImageInfoFromStringWithoutDigest,
+  getDockerImageInfo,
   getPathFriendlyStringForDockerImageInfo,
 } from "./docker-image-parsing.ts";
 
 describe("docker image parser", () => {
-  it("can get the docker image info from a string without a digest", () => {
-    const imageInfo =
-      getDockerImageInfoFromStringWithoutDigest("ubuntu:latest");
-    expect(imageInfo).toEqual({
-      imageName: "ubuntu",
-      tag: "latest",
-      digest: null,
-    });
-  });
-
-  it("returns only the image name if no tag is provided", () => {
-    const imageInfo = getDockerImageInfoFromStringWithoutDigest("nginx");
-    expect(imageInfo).toEqual({
-      imageName: "nginx",
-      tag: null,
-      digest: null,
-    });
-  });
-
   it("can get the docker image info from a string with a digest", () => {
-    const imageInfo = getDockerImageInfoFromStringWithDigest(
-      "ubuntu:18.04@sha256:12345",
-    );
+    const imageInfo = getDockerImageInfo("ubuntu:18.04@sha256:12345");
     expect(imageInfo).toEqual({
-      imageName: "ubuntu",
+      imageName: "library/ubuntu",
       tag: "18.04",
       digest: "sha256:12345",
     });
   });
 
   it("handles image with digest but no tag", () => {
-    const imageInfo =
-      getDockerImageInfoFromStringWithDigest("nginx@sha256:67890");
+    const imageInfo = getDockerImageInfo("nginx@sha256:67890");
     expect(imageInfo).toEqual({
-      imageName: "nginx",
-      tag: null,
+      imageName: "library/nginx",
+      tag: "latest",
       digest: "sha256:67890",
     });
   });

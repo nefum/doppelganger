@@ -1,0 +1,20 @@
+[
+  {
+    "name": "iPhone 13 (50%)",
+    "height": 1266,
+    "width": 536,
+    "dpi": 230
+  },
+  {
+    "name": "iPhone 13",
+    "height": 2532,
+    "width": 1170,
+    "dpi": 460
+  },
+  {
+    "name": "iPhone 15 (usable space) (50%)",
+    "width": 590,
+    "height": 1140,
+    "dpi": 230
+  }
+]

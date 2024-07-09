@@ -33,7 +33,7 @@ async function loadDockerComposeTemplate(): Promise<string> {
 /**
  * For the docker-compose.yml file at ./template/docker-compose.yml
  */
-interface DockerComposeMoustacheView extends Partial<Device> {
+export interface DockerComposeMoustacheView extends Partial<Device> {
   id: CUID;
 
   redroidImage: string; // includes both the image name and the tag

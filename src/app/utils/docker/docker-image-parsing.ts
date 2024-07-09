@@ -14,17 +14,15 @@ export type DockerDigestType = `sha256:${string}`;
 
 export interface DockerImageInfo {
   imageName: string;
-  tag: string | null;
+  tag: string;
   digest: DockerDigestType | null;
 }
 
 export interface CompleteDockerImageInfo extends DockerImageInfo {
-  imageName: string;
-  tag: string;
   digest: DockerDigestType;
 }
 
-export function getDockerImageInfoFromStringWithoutDigest(
+function getDockerImageInfoFromStringWithoutDigest(
   imageAndTag: string,
 ): DockerImageInfo {
   // second step: split the image name and the tag if it exists
@@ -38,15 +36,13 @@ export function getDockerImageInfoFromStringWithoutDigest(
     imageName = imageAndTagArray[0];
   }
   return {
-    imageName,
-    tag,
+    imageName: completeImageName(imageName, false),
+    tag: tag ?? "latest",
     digest: null,
   };
 }
 
-export function getDockerImageInfoFromStringWithDigest(
-  fullImageNameAndDigest: string,
-): DockerImageInfo {
+export function getDockerImageInfo(fullImageName: string): DockerImageInfo {
   // example fullImageNameAndDigest: ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624
   // example fullImageNameAndDigest: thing/ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624
 
@@ -58,7 +54,7 @@ export function getDockerImageInfoFromStringWithDigest(
   let digest = null;
 
   // first step: split the image name and the digest if it exists
-  const imageAndDigest = fullImageNameAndDigest.split("@");
+  const imageAndDigest = fullImageName.split("@");
   let imageAndTag;
   if (imageAndDigest.length === 2) {
     imageAndTag = imageAndDigest[0];
@@ -90,4 +86,19 @@ export function getPathFriendlyStringForDockerImageInfo(
   const imageNameComponent = imageName.replace("/", "___");
   const tagComponent = digest.replace(":", "___");
   return `${imageNameComponent}____${tag}____${tagComponent}`;
+}
+
+export function completeImageName(
+  fullImageString: string,
+  addTag: boolean,
+): string {
+  if (fullImageString.split("/").length === 1) {
+    fullImageString = `library/${fullImageString}`;
+  }
+
+  if (!fullImageString.includes(":") && addTag) {
+    fullImageString += ":latest";
+  }
+
+  return fullImageString;
 }
