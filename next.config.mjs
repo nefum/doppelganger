@@ -12,12 +12,12 @@ const nextConfig = {
   // https://webpack.js.org/loaders/node-loader/
   webpack: (config, {isServer}) => {
     if (isServer) {
-      config.modules.rules = [
+      config.module.rules = [
         {
           test: /\.node$/,
           loader: "node-loader",
         },
-        ...config.modules.rules,
+        ...config.module.rules,
       ]
     }
     return config;

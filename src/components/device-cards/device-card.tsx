@@ -26,11 +26,13 @@ import { clsx } from "clsx";
 import { Suspense } from "react";
 
 import { getSnapshotUrlOfDevice } from "@/app/(strict-mode)/(userland)/devices/[id]/snapshot/path.ts";
+import { getRedroidImageByName } from "@/app/utils/redroid/redroid-images.ts";
+import DeleteDeviceButton from "@/components/device-cards/delete-device-button.tsx";
+import EditDeviceButton from "@/components/device-cards/edit-device-button.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { toTitleCase } from "@/utils/misc.ts";
 import { Device, DeviceState } from "@prisma/client";
-import { DownloadIcon } from "@radix-ui/react-icons";
-import { SettingsIcon, ShareIcon } from "lucide-react";
+import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { IoPhonePortraitOutline } from "react-icons/io5";
 
@@ -56,14 +58,16 @@ export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
                 <span>{toTitleCase(deviceInfo.lastState)}</span>
               </div>
             </div>
-            {/*TODO: properties of the device instead of placeholders like battery & storage*/}
             <div className="space-y-1">
-              <h4 className="text-sm font-medium">Battery</h4>
-              <p className="text-muted-foreground">85%</p>
+              <h4 className="text-sm font-medium">Type</h4>
+              <p className="text-muted-foreground">
+                {getRedroidImageByName(deviceInfo.redroidImage)?.name ??
+                  "Unknown"}
+              </p>
             </div>
             <div className="space-y-1">
-              <h4 className="text-sm font-medium">Storage</h4>
-              <p className="text-muted-foreground">128GB</p>
+              <h4 className="text-sm font-medium">Max FPS</h4>
+              <p className="text-muted-foreground">{deviceInfo.redroidFps}</p>
             </div>
             {/*TODO: buttons for the device card*/}
             <div className="grid grid-cols-2 gap-2">
@@ -77,14 +81,8 @@ export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
                 <SettingsIcon className="h-5 w-5" />
                 <span className="sr-only">Settings</span>
               </Button>
-              <Button variant="ghost" size="icon">
-                <DownloadIcon className="h-5 w-5" />
-                <span className="sr-only">Download</span>
-              </Button>
-              <Button variant="ghost" size="icon">
-                <ShareIcon className="h-5 w-5" />
-                <span className="sr-only">Share</span>
-              </Button>
+              <EditDeviceButton deviceInfo={deviceInfo} />
+              <DeleteDeviceButton deviceInfo={deviceInfo} />
             </div>
           </div>
           {/*because of the loading nightmare this snapshot is, we need to preload it manually*/}

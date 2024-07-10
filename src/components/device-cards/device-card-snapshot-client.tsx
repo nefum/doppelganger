@@ -21,6 +21,7 @@ export function DeviceCardSnapshotClient(props: {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    // this doesn't make that big of a deal for performance because the url is already preloaded
     setStartLoading(true);
   }, []);
 

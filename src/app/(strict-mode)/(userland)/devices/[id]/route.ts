@@ -9,7 +9,7 @@ import { DeviceState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
-  const id = req.nextUrl.toString().match(anyDeviceEndpoint)![1];
+  const id = req.nextUrl.pathname.match(anyDeviceEndpoint)![1];
 
   const deviceInfo = await getDeviceForId(id);
 

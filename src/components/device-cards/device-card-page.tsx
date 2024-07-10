@@ -20,6 +20,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { RxPlus } from "react-icons/rx";
 
 export function DeviceCardPage({
   children,
@@ -30,32 +31,12 @@ export function DeviceCardPage({
         <h2 className="text-2xl font-semibold">My Devices</h2>
         <Button asChild variant="outline" className="flex items-center gap-2">
           <Link href={"/devices/new"}>
-            <PlusIcon className="w-4 h-4" />
-            Add Device
+            <RxPlus className="w-4 h-4" />
+            Create New Device
           </Link>
         </Button>
       </div>
       <div className="flex flex-wrap -m-3">{children}</div>
     </div>
-  );
-}
-
-function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
-    </svg>
   );
 }

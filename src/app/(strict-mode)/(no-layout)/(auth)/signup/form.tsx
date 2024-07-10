@@ -4,6 +4,7 @@ import {
   signup,
   type SignupFormState,
 } from "@/app/(strict-mode)/(no-layout)/(auth)/signup/actions.ts";
+import PasswordPopover from "@/app/components/password-popover.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -17,12 +18,14 @@ import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import Link from "next/link";
+import { useState } from "react";
 import { useFormState } from "react-dom";
 
 const initialState = { message: null, errors: {} } satisfies SignupFormState;
 
 export default function SignupForm() {
   const [state, dispatch] = useFormState(signup, initialState);
+  const [enteredPassword, setEnteredPassword] = useState("");
 
   return (
     <form action={dispatch} aria-describedby="overall-error">
@@ -52,16 +55,21 @@ export default function SignupForm() {
               </p>
             ))}
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              name="password"
-              id="password"
-              aria-describedby="password-error"
-              type="password"
-              required
-            />
-          </div>
+          <PasswordPopover password={enteredPassword}>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                name="password"
+                id="password"
+                aria-describedby="password-error"
+                type="password"
+                required
+                onChange={(e) => {
+                  setEnteredPassword(e.target.value);
+                }}
+              />
+            </div>
+          </PasswordPopover>
           <div aria-atomic="true" aria-live="polite" id="password-error">
             {state.errors?.password?.map((error: string) => (
               <p className="mt-2 text-sm text-red-500" key={error}>

@@ -19,4 +19,10 @@ export const defaultRedroidImage = allRedroidImages
   .toReversed()
   .find((image) => image.usable && !image.premium)!;
 
+export function getRedroidImageByName(imageName: string): RedroidImage | null {
+  return (
+    allRedroidImages.find((image) => image.imageName === imageName) ?? null
+  );
+}
+
 export default allRedroidImages;

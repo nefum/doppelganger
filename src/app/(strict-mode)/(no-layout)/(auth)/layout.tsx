@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <main className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[400px] w-full space-y-6">
         <div className="flex justify-center">
           <Image
@@ -16,6 +16,6 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
         {children}
       </div>
-    </main>
+    </div>
   );
 }
