@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster.tsx";
+import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { clsx } from "clsx";
 import type { Metadata } from "next";
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s | Doppelganger",
     default: "Doppelganger",
   },
-  description: "Free Android phones for everyone",
+  description: "Free cloud-based Android phones for everyone",
   metadataBase: new URL("https://www.doppelgangerhq.com"),
 };
 
@@ -43,7 +44,9 @@ export default function RootLayout({
           fontBody.variable,
         )}
       >
-        <main>{children}</main>
+        <main>
+          <TooltipProvider>{children}</TooltipProvider>
+        </main>
         <Toaster />
         <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
       </body>

@@ -6,8 +6,6 @@ const nextConfig = {
   experimental: {
     forceSwcTransforms: true,
   },
-  // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
-  reactStrictMode: false,
   // https://nextjs.org/docs/app/api-reference/next-config-js/webpack
   // https://webpack.js.org/loaders/node-loader/
   webpack: (config, {isServer}) => {
