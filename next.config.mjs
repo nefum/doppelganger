@@ -8,6 +8,20 @@ const nextConfig = {
   },
   // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
   reactStrictMode: false,
+  // https://nextjs.org/docs/app/api-reference/next-config-js/webpack
+  // https://webpack.js.org/loaders/node-loader/
+  webpack: (config, {isServer}) => {
+    if (isServer) {
+      config.modules.rules = [
+        {
+          test: /\.node$/,
+          loader: "node-loader",
+        },
+        ...config.modules.rules,
+      ]
+    }
+    return config;
+  }
 };
 
 export default withSentryConfig(nextConfig, {
