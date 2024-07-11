@@ -1,14 +1,14 @@
 import { Device } from "@prisma/client";
 import prisma from "../database/prisma.ts";
-import { anyDeviceEndpoint } from "../endpoint-regex.ts";
+import { deviceEndpoint } from "../endpoint-regex.ts";
 
 export function getDeviceIdFromUrl(url: URL | string): string | null {
   let match;
   if (typeof url === "string") {
-    match = url.match(anyDeviceEndpoint);
+    match = url.match(deviceEndpoint);
   } else {
     // might be "/devices/1/snapshot"
-    match = url.pathname.match(anyDeviceEndpoint);
+    match = url.pathname.match(deviceEndpoint);
   }
   return match ? match[1] : null;
 }

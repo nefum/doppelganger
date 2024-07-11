@@ -7,6 +7,7 @@ services:
 #    ports:
 #      - "5555:5555/tcp"
     privileged: true  # required for redroid
+    restart: unless-stopped
     networks:
       - "{{{ externalNetworkName }}}"
     volumes:
@@ -41,6 +42,7 @@ services:
     shm_size: "512m"
     tty: true
     stdin_open: true
+    restart: unless-stopped
     deploy:
       resources:
         limits:

@@ -1,5 +1,4 @@
 import { upgradeDockerImageInfo } from "@/app/utils/docker/docker-api-utils.ts";
-import dockerApiClient from "@/app/utils/docker/docker-api.ts";
 import {
   createDockerTemplateFromView,
   DockerComposeMoustacheView,
@@ -8,14 +7,16 @@ import {
 } from "@/app/utils/docker/docker-compose-moustache-formatting.ts";
 import {
   completeImageName,
+  createDockerPinnedString,
   getDockerImageInfo,
   getPathFriendlyStringForDockerImageInfo,
 } from "@/app/utils/docker/docker-image-parsing.ts";
 import { SampleDeviceSpecs } from "@/app/utils/redroid/device-specs.ts";
 import { RedroidImage } from "@/app/utils/redroid/redroid-images.ts";
 import { createId } from "@paralleldrive/cuid2";
-import DockerodeCompose from "dockerode-compose";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { mkdir, rm, writeFile } from "node:fs/promises";
+import { stderr as processStderr, stdout as processStdout } from "node:process";
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 
 function minifyYaml(yaml: string): string {
@@ -29,8 +30,6 @@ function getBaseDir(): string {
 function getExternalNetworkName(): string {
   return process.env.EXTERNAL_NETWORK_NAME ?? "doppelganger";
 }
-
-export const DEFAULT_FPS = 30; // may need to change this as server load increases
 
 type FunctionalDeviceSpecs = Pick<
   SampleDeviceSpecs,
@@ -54,7 +53,7 @@ export async function createView(
 
   return {
     id,
-    redroidImage: fullImageName,
+    redroidImage: createDockerPinnedString(completeDockerImageInfo),
     baseDir: getBaseDir(),
     externalNetworkName: getExternalNetworkName(),
     redroidImageDataBasePath: getPathFriendlyStringForDockerImageInfo(
@@ -105,7 +104,8 @@ export async function initializeDevice(
   await mkdir(stackFolder, { recursive: true });
 
   const dockerComposeFilePath = getDockerComposePathInFolder(stackFolder);
-  await writeFile(dockerComposeFilePath, minifyYaml(dockerCompose)); // write the created docker compose file to the stack folder
+  const minifiedYaml = minifyYaml(dockerCompose);
+  await writeFile(dockerComposeFilePath, minifiedYaml); // write the created docker compose file to the stack folder
 
   return getInsertableDeviceForView(
     view,
@@ -115,43 +115,53 @@ export async function initializeDevice(
   );
 }
 
-async function getDockerodeComposeForFilePath(
-  dockerComposeFilePath: string,
-): Promise<DockerodeCompose> {
-  const parentDirName = dockerComposeFilePath.split("/").slice(0, -1).join("/");
+function runDockerCommand(command: string, args: string[]) {
+  return new Promise((resolve, reject) => {
+    const dockerProcess = spawn("docker", [command, ...args], {
+      env: process.env,
+      stdio: ["inherit", "pipe", "pipe"],
+    });
 
-  const composeFile = await readFile(dockerComposeFilePath, "utf-8");
-  const parsedComposeFile = yamlParse(composeFile);
-  const stackName = parsedComposeFile.name ?? parentDirName;
+    let stdout = "";
+    let stderr = "";
 
-  return new DockerodeCompose(
-    dockerApiClient,
-    dockerComposeFilePath,
-    stackName,
-  );
-}
+    dockerProcess.stdout.on("data", function (data) {
+      stdout += data.toString();
+      processStdout.write(data); // Real-time output
+    });
 
-/**
- * Deploys a stack to the docker engine from a docker-compose definition
- * @param dockerComposeFilePath
- */
-async function deployStack(dockerComposeFilePath: string) {
-  // read the name from the file
-  const dockerodeCompose = await getDockerodeComposeForFilePath(
-    dockerComposeFilePath,
-  );
-  await dockerodeCompose.pull();
-  return await dockerodeCompose.up();
+    dockerProcess.stderr.on("data", function (data) {
+      stderr += data.toString();
+      processStderr.write(data); // Real-time error output
+    });
+
+    dockerProcess.on("close", function (code) {
+      if (code === 0) {
+        resolve(stdout);
+      } else {
+        reject(
+          new Error(
+            `Docker command failed with code ${code}\nStderr: ${stderr}`,
+          ),
+        );
+      }
+    });
+  });
 }
 
 /**
  * Brings up a device. Does *not* update the DB.
  * @param deviceId
  */
-export async function bringUpDevice(deviceId: string): Promise<boolean> {
-  const dockerComposeFilePath = getDockerComposeFilePath(deviceId);
-  const returnValue = await deployStack(dockerComposeFilePath);
-  return returnValue.services.length > 0;
+export async function bringUpDevice(deviceId: string): Promise<void> {
+  // https://gist.github.com/regulad/0cc0b5d92b35dcd2b679723b5701aacb
+  // https://gist.github.com/regulad/6024b520cc1b118088f21cd311133c38
+  await runDockerCommand("compose", [
+    "-f",
+    getDockerComposeFilePath(deviceId),
+    "up",
+    "-d",
+  ]);
 }
 
 /**
@@ -159,11 +169,14 @@ export async function bringUpDevice(deviceId: string): Promise<boolean> {
  * @param deviceId
  */
 export async function bringDownDevice(deviceId: string): Promise<void> {
-  const dockerComposeFilePath = getDockerComposeFilePath(deviceId);
-  const dockerodeCompose = await getDockerodeComposeForFilePath(
-    dockerComposeFilePath,
-  );
-  await dockerodeCompose.down({ volumes: true });
+  // https://gist.github.com/regulad/0cc0b5d92b35dcd2b679723b5701aacb
+  // https://gist.github.com/regulad/c88eb3c8bb9d8943bd6893438931a99a
+  await runDockerCommand("compose", [
+    "-f",
+    getDockerComposeFilePath(deviceId),
+    "down",
+    "-v",
+  ]);
 }
 
 function getFoldersOfDevice(deviceId: string): string[] {
@@ -178,7 +191,11 @@ function getFoldersOfDevice(deviceId: string): string[] {
  * @param deviceId
  */
 export async function destroyDevice(deviceId: string): Promise<void> {
-  await bringDownDevice(deviceId);
+  try {
+    await bringDownDevice(deviceId);
+  } catch (e: any) {
+    console.error(e);
+  }
   const folders = getFoldersOfDevice(deviceId);
   for (const folder of folders) {
     await rm(folder, { recursive: true, force: true });

@@ -36,7 +36,7 @@ async function loadDockerComposeTemplate(): Promise<string> {
 export interface DockerComposeMoustacheView extends Partial<Device> {
   id: CUID;
 
-  redroidImage: string; // includes both the image name and the tag
+  redroidImage: string; // includes image name, tag, & digest
 
   // this is where all of the files live
   baseDir: string; // ex: /mnt/doppelganger (no trailing slash!)
@@ -82,7 +82,7 @@ export function getInsertableDeviceForView(
     name: deviceName,
     ownerEmail,
 
-    redroidImage: view.redroidImage,
+    redroidImage: `${dockerImageInfo.imageName}:${dockerImageInfo.tag}`,
     redroidImageDigest: dockerImageInfo.digest,
 
     redroidFps: view.redroidFps,

@@ -5,7 +5,7 @@
     <scripts>
       <script value="dev" />
     </scripts>
-    <node-interpreter value="/opt/homebrew/bin/node" />
+    <node-interpreter value="project" />
     <envs>
       <env name="PORT" value="3030" />
     </envs>

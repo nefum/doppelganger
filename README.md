@@ -6,11 +6,17 @@ Because this is a commercial project, it is not licensed for reuse or attributio
 
 Illegal reuse/rehosting will be met with a DMCA takedown request, and litigation if necessary. Do the right thing.
 
+## Weird notes
+
+- `dockerode-compose` is really weird. It doesn't call the docker-compose backend, instead it recreates the container definiton. For this reason
+
 ## Installation
 
 This project requires a number of odd dependencies to run. They are listed below for macOS w/ brew. Linux dependencies are installed through the Dockerfile.
 
 ### `node-canvas`
+
+https://github.com/Automattic/node-canvas/wiki/_pages
 
 ```bash
 brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools

@@ -102,3 +102,9 @@ export function completeImageName(
 
   return fullImageString;
 }
+
+export function createDockerPinnedString(
+  completeDockerImageInfo: CompleteDockerImageInfo,
+): string {
+  return `${completeDockerImageInfo.imageName}:${completeDockerImageInfo.tag}@${completeDockerImageInfo.digest}`;
+}
