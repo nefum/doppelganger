@@ -1,0 +1,22 @@
+name: "doppelganger"
+services:
+  app:
+    image: "ghcr.io/regulad/doppelganger-front:latest"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      # ANDROID_RUNTIME_DIR
+      - "/mnt/doppelganger/prod:/mnt/doppelganger/prod"
+      # DOCKER_HOST
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    env_file:
+      - ".env.local"
+    networks:
+      # EXTERNAL_NETWORK_NAME
+      - "doppelganger"
+networks:
+  doppelganger:
+    external: true

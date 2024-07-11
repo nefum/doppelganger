@@ -132,8 +132,8 @@ dependencies:
     specifier: ^5.2.1
     version: 5.2.1(react@18.3.1)
   react-kasmvnc:
-    specifier: ^2.2.0
-    version: 2.2.0(react-dom@18.3.1)(react-scripts@5.0.1)(react@18.3.1)(rollup@2.79.1)(typescript@5.5.3)
+    specifier: ^2.2.1
+    version: 2.2.1(react-dom@18.3.1)(react-scripts@5.0.1)(react@18.3.1)(rollup@2.79.1)(typescript@5.5.3)
   sharp:
     specifier: ^0.33.4
     version: 0.33.4
@@ -353,8 +353,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@babel/eslint-parser@7.24.7(@babel/core@7.24.7)(eslint@8.57.0):
-    resolution: {integrity: sha512-SO5E3bVxDuxyNxM5agFv480YA2HO6ohZbGxbazZdIk3KQOPOGVNw6q78I9/lbviIf95eq6tPozeYnJLbjnC8IA==}
+  /@babel/eslint-parser@7.24.8(@babel/core@7.24.7)(eslint@8.57.0):
+    resolution: {integrity: sha512-nYAikI4XTGokU2QX7Jx+v4rxZKhKivaQaREZjuW3mrJrbdWJ5yUfohnoUULge+zEEaKjPYNxhoRgUKktjXtbwA==}
     engines: {node: ^10.13.0 || ^12.13.0 || >=14.0.0}
     peerDependencies:
       '@babel/core': ^7.11.0
@@ -8332,7 +8332,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.24.7
-      '@babel/eslint-parser': 7.24.7(@babel/core@7.24.7)(eslint@8.57.0)
+      '@babel/eslint-parser': 7.24.8(@babel/core@7.24.7)(eslint@8.57.0)
       '@rushstack/eslint-patch': 1.10.3
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/parser': 5.62.0(eslint@8.57.0)(typescript@5.5.3)
@@ -13493,8 +13493,8 @@ packages:
   /react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  /react-kasmvnc@2.2.0(react-dom@18.3.1)(react-scripts@5.0.1)(react@18.3.1)(rollup@2.79.1)(typescript@5.5.3):
-    resolution: {integrity: sha512-XYmn99Aj8Cv4UsO5uqMxmiFuWHv1MK8qVxGZUDljmsUXogE2evmMdsebmq9QCJgKXMIecs7Ox3bsI3zdB+Nurg==}
+  /react-kasmvnc@2.2.1(react-dom@18.3.1)(react-scripts@5.0.1)(react@18.3.1)(rollup@2.79.1)(typescript@5.5.3):
+    resolution: {integrity: sha512-08LLE3YzHLhKDh8CXUyDkEnN4BInB2ZurchBG4x30OFiJjfFMAXQKbv8edAiB47by25Lo0Ab2l65V//8CrEvMA==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'

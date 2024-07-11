@@ -6,6 +6,7 @@
     },
     "build": {
       "dependsOn": ["build-server", "db:generate"],
+      "inputs": ["**/*", "!dist/**", "!node_modules/**"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "build-server": {
