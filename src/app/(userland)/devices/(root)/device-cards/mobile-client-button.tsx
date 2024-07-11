@@ -34,31 +34,26 @@ export function MobileClientButton({
         <AlertDialogHeader>
           <AlertDialogTitle>Mobile-Optimized Client</AlertDialogTitle>
           <AlertDialogDescription>
-            {/*https://ui.shadcn.com/docs/components/typography*/}
-            <p className="leading-7 [&:not(:first-child)]:mt-6">
+            <p className="shadcn-p">
               Opening the mobile-optimized client will open a new tab isolated
               from this page.
             </p>
-            <p className="leading-7 [&:not(:first-child)]:mt-6">
+            <p className="shadcn-p">
               This mobile-optimized client supports installation as{" "}
               <a
                 href={"https://web.dev/explore/progressive-web-apps"}
-                className={
-                  "font-medium text-primary underline underline-offset-4"
-                }
+                className={"shadcn-link"}
               >
                 Progressive Web App (PWA)
               </a>
               , which provides a more immersive experience free of your
               browser&apos;s menu bar.
             </p>
-            <p className="leading-7 [&:not(:first-child)]:mt-6">
+            <p className="shadcn-p">
               See instructions{" "}
               <a
                 href="https://www.bitcot.com/how-to-install-a-pwa-to-your-device/#Installing_a_PWA_on_iOS"
-                className={
-                  "font-medium text-primary underline underline-offset-4"
-                }
+                className={"shadcn-link"}
               >
                 here
               </a>{" "}

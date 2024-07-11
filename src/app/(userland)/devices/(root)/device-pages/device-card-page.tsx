@@ -17,10 +17,9 @@
  - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
  - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
  **/
-import { Button } from "@/components/ui/button.tsx";
-import Link from "next/link";
-import { ReactNode } from "react";
-import { RxPlus } from "react-icons/rx";
+import { NewDeviceButtonServer } from "@/app/(userland)/devices/(root)/device-pages/new-device-button/new-device-button-server.tsx";
+import { NewDeviceButtonStatic } from "@/app/(userland)/devices/(root)/device-pages/new-device-button/new-device-button-static.tsx";
+import { ReactNode, Suspense } from "react";
 
 export function DeviceCardPage({
   children,
@@ -29,12 +28,11 @@ export function DeviceCardPage({
     <div className="container mx-auto px-4 py-12">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-semibold">My Devices</h2>
-        <Button asChild variant="outline" className="flex items-center gap-2">
-          <Link href={"/devices/new"}>
-            <RxPlus className="w-4 h-4" />
-            Create New Device
-          </Link>
-        </Button>
+        <Suspense
+          fallback={<NewDeviceButtonStatic className="animate-pulse" />}
+        >
+          <NewDeviceButtonServer />
+        </Suspense>
       </div>
       <div className="flex flex-wrap -m-3">{children}</div>
     </div>

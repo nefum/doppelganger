@@ -4,6 +4,7 @@ import {
   createDockerTemplateFromView,
   DockerComposeMoustacheView,
   getInsertableDeviceForView,
+  InsertableDevice,
 } from "@/app/utils/docker/docker-compose-moustache-formatting.ts";
 import {
   completeImageName,
@@ -13,7 +14,6 @@ import {
 import { SampleDeviceSpecs } from "@/app/utils/redroid/device-specs.ts";
 import { RedroidImage } from "@/app/utils/redroid/redroid-images.ts";
 import { createId } from "@paralleldrive/cuid2";
-import { Device } from "@prisma/client";
 import DockerodeCompose from "dockerode-compose";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
@@ -32,10 +32,15 @@ function getExternalNetworkName(): string {
 
 export const DEFAULT_FPS = 30; // may need to change this as server load increases
 
+type FunctionalDeviceSpecs = Pick<
+  SampleDeviceSpecs,
+  "dpi" | "height" | "width"
+>;
+
 export async function createView(
   selectedImage: RedroidImage,
   fps: number,
-  specs: SampleDeviceSpecs,
+  specs: FunctionalDeviceSpecs,
 ): Promise<DockerComposeMoustacheView> {
   if (!selectedImage.usable) {
     throw new Error("Selected image is not usable");
@@ -88,8 +93,8 @@ export async function initializeDevice(
   deviceName: string,
   selectedImage: RedroidImage,
   fps: number,
-  specs: SampleDeviceSpecs,
-): Promise<Partial<Device>> {
+  specs: FunctionalDeviceSpecs,
+): Promise<InsertableDevice> {
   const fullImageName = completeImageName(selectedImage.imageName, true);
   const dockerImageInfo = getDockerImageInfo(fullImageName);
 

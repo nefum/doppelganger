@@ -29,7 +29,7 @@ import EditDeviceButton from "@/app/(userland)/devices/(root)/device-cards/edit-
 import styles from "@/app/(userland)/devices/(root)/device-cards/fill.module.css";
 import { MobileClientButton } from "@/app/(userland)/devices/(root)/device-cards/mobile-client-button.tsx";
 import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
-import { getRedroidImageByName } from "@/app/utils/redroid/redroid-images.ts";
+import { getRedroidImage } from "@/app/utils/redroid/redroid-images.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { toTitleCase } from "@/utils/misc.ts";
 import { Device, DeviceState } from "@prisma/client";
@@ -72,8 +72,7 @@ export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
             <div className="space-y-1">
               <h4 className="text-sm font-medium">Type</h4>
               <p className="text-muted-foreground">
-                {getRedroidImageByName(deviceInfo.redroidImage)?.name ??
-                  "Unknown"}
+                {getRedroidImage(deviceInfo.redroidImage)?.name ?? "Unknown"}
               </p>
             </div>
             <div className="space-y-1">

@@ -1,6 +1,6 @@
 "use server";
 
-import { FIRST_PAGE_URL } from "@/app/(no-layout)/(auth)/constants.ts";
+import { FIRST_PAGE_PATHNAME } from "@/app/(no-layout)/(auth)/constants.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -51,5 +51,5 @@ export async function login(
   }
 
   revalidatePath("/", "layout");
-  redirect(FIRST_PAGE_URL);
+  redirect(FIRST_PAGE_PATHNAME);
 }

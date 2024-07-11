@@ -75,3 +75,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*https://ui.shadcn.com/docs/components/typography*/
+@layer components {
+  .shadcn-link {
+    @apply font-medium text-primary underline underline-offset-4;
+  }
+  .shadcn-p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
+  }
+  .shadcn-muted {
+    @apply text-sm text-muted-foreground;
+  }
+}

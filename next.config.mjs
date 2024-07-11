@@ -20,6 +20,7 @@ const nextConfig = {
     }
     return config;
   }
+  // turbopack is too experimental; let's not use it
 };
 
 export default withSentryConfig(nextConfig, {

@@ -1,1 +1,1 @@
-export const FIRST_PAGE_URL = "/devices";
+export const FIRST_PAGE_PATHNAME = "/devices";

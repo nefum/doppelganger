@@ -68,12 +68,14 @@ export async function createDockerTemplateFromView(
   return Mustache.render(template, view);
 }
 
+export type InsertableDevice = Omit<Device, "createdAt" | "updatedAt">;
+
 export function getInsertableDeviceForView(
   view: DockerComposeMoustacheView,
   dockerImageInfo: DockerImageInfo,
   ownerEmail: string,
   deviceName: string,
-): Partial<Device> {
+): InsertableDevice {
   const { id } = view;
   return {
     id,
@@ -101,6 +103,6 @@ export function getInsertableDeviceForView(
     basicAuthPassword: view.basicAuthPassword,
     certificateIsSelfSigned: true,
 
-    lastState: DeviceState.ON,
+    lastState: DeviceState.OFF,
   };
 }

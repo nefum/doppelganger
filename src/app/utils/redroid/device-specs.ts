@@ -9,6 +9,7 @@ export interface SampleDeviceSpecs {
 
 const allSampleDeviceSpecs: SampleDeviceSpecs[] = allSampleDeviceSpecsJson;
 
-export const defaultSampleDeviceSpecs = allSampleDeviceSpecs[-1]; // most practical one last
+export const defaultSampleDeviceSpecs =
+  allSampleDeviceSpecs[allSampleDeviceSpecs.length - 1]; // most practical one last
 
 export default allSampleDeviceSpecs;

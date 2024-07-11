@@ -1,6 +1,6 @@
-import { DeviceCardPage } from "@/app/(userland)/devices/(root)/device-cards/device-card-page.tsx";
 import { DeviceCardSkeleton } from "@/app/(userland)/devices/(root)/device-cards/device-card-skeleton.tsx";
-import UserDevices from "@/app/(userland)/devices/(root)/user-devices.tsx";
+import { DeviceCardPage } from "@/app/(userland)/devices/(root)/device-pages/device-card-page.tsx";
+import UserDevices from "@/app/(userland)/devices/(root)/device-pages/user-devices.tsx";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
