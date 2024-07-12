@@ -65,6 +65,7 @@ export default async function getSnapshotOfKasmVNCDevice(
         dom.window.document.body.appendChild(screen);
 
         const targetUrlString = getTargetVncWebsocketUrlForDevice(deviceInfo);
+        console.log("Creating a VNC connection to: ", targetUrlString);
 
         // create the RFB (this will init a connection to the VNC server)
         const rfb = await createRfb(

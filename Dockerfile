@@ -12,7 +12,20 @@ RUN apk add --no-cache \
     pango-dev \
     giflib-dev \
     librsvg-dev \
-    docker-cli
+    docker-cli \
+    curl
+
+# Install docker-compsoe plugin for deployment
+RUN mkdir -p /usr/local/lib/docker/cli-plugins && \
+    ARCH=$(uname -m) && \
+    case ${ARCH} in \
+        x86_64) COMPOSE_ARCH="x86_64" ;; \
+        aarch64) COMPOSE_ARCH="aarch64" ;; \
+        armv7l) COMPOSE_ARCH="armv7" ;; \
+        *) echo "Unsupported architecture: ${ARCH}"; exit 1 ;; \
+    esac && \
+    curl -SL "https://github.com/docker/compose/releases/download/v2.28.0/docker-compose-linux-${COMPOSE_ARCH}" -o /usr/local/lib/docker/cli-plugins/docker-compose && \
+    chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 # Copy package.json and pnpm-lock.yaml for installing dependencies
 COPY package.json pnpm-lock.yaml ./
