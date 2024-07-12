@@ -43,7 +43,7 @@ export default function DeleteDeviceButton({
     () => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
       setLoading(true);
-      const response = await fetch(`/devices/${deviceInfo.id}/`, {
+      const response = await fetch(`/api/devices/${deviceInfo.id}/`, {
         method: "DELETE",
       });
       if (response.ok) {
