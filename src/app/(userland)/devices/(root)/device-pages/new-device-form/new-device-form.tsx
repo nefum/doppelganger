@@ -6,15 +6,6 @@ import {
   newDeviceFormSchema,
 } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
 import { FREE_MAX_FPS, MIN_FPS, PREMIUM_MAX_FPS } from "@/app/constants.ts";
-import allSampleDeviceSpecs, {
-  defaultSampleDeviceSpecs,
-  SampleDeviceSpecs,
-} from "@/app/utils/redroid/device-specs.ts";
-import allRedroidImages, {
-  defaultRedroidImage,
-  RedroidImage,
-} from "@/app/utils/redroid/redroid-images.ts";
-import { SubscriptionStatus } from "@/app/utils/subscriptions.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Command,
@@ -67,6 +58,15 @@ import {
   useToast,
 } from "@/components/ui/use-toast.ts";
 import { cn } from "@/lib/utils.ts";
+import allSampleDeviceSpecs, {
+  defaultSampleDeviceSpecs,
+  SampleDeviceSpecs,
+} from "@/utils/redroid/device-specs.ts";
+import allRedroidImages, {
+  defaultRedroidImage,
+  RedroidImage,
+} from "@/utils/redroid/redroid-images.ts";
+import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { ReactNode, useMemo, useState } from "react";

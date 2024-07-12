@@ -1,9 +1,10 @@
-import prisma from "%/database/prisma.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
-import { bringUpDevice } from "@/app/utils/redroid/deployment.ts";
+import {
+  bringDownDevice,
+  getIsDeviceRunning,
+} from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
-import { DeviceState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
@@ -23,20 +24,11 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({}, { status: 404 });
   }
 
-  if (device.lastState === DeviceState.ON) {
+  if (!(await getIsDeviceRunning(device.id))) {
     return NextResponse.json({}, { status: 400 });
   }
 
-  await bringUpDevice(device.id);
-
-  await prisma.device.update({
-    where: {
-      id: device.id,
-    },
-    data: {
-      lastState: DeviceState.ON,
-    },
-  });
+  await bringDownDevice(device.id);
 
   return NextResponse.json({}, { status: 200 });
 }

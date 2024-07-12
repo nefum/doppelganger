@@ -1,8 +1,8 @@
 "use client";
 
 import { NewDeviceButtonStatic } from "@/app/(userland)/devices/(root)/device-pages/new-device-button/new-device-button-static.tsx";
-import { SubscriptionStatus } from "@/app/utils/subscriptions.ts";
 import { useToast } from "@/components/ui/use-toast.ts";
+import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import React, { ReactNode } from "react";
 
 export default function NewDeviceButtonClient({

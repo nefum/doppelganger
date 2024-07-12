@@ -1,11 +1,11 @@
-import dockerApiClient from "@/app/utils/docker/docker-api.ts";
+import dockerApiClient from "@/utils/docker/docker-api.ts";
 import {
   CompleteDockerImageInfo,
   completeImageName,
   DockerDigestType,
   DockerImageInfo,
   getDockerImageInfo,
-} from "@/app/utils/docker/docker-image-parsing.ts";
+} from "@/utils/docker/docker-image-parsing.ts";
 
 interface DockerStreamMessage {
   status: string;

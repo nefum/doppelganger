@@ -1,23 +1,12 @@
-import { Device } from "@prisma/client";
 import { IncomingMessage, ServerResponse } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
-import {
-  getTargetAudioWebsocketUrlForDevice,
-  getTargetVncWebsocketUrlForDevice,
-} from "../device-info/device-info.ts";
-import { getWsWebSocketOptionForKasmVNC } from "./kasmvnc-connect.ts";
-import {
-  isFatalWebSocketError,
-  WsWebSocketOptions,
-  WsWebSocketServer,
-} from "./wsutils.ts";
+import { isFatalWebSocketError, WsWebSocketServer } from "./wsutils.ts";
 
 export function createWebSocketProxy(
   url: URL,
-  res: ServerResponse<IncomingMessage>,
+  res: ServerResponse,
   req: IncomingMessage,
   wss: WsWebSocketServer,
-  options: WsWebSocketOptions,
 ): Promise<WsWebSocket> {
   console.debug("creating a websocket proxy to", url.toString());
 
@@ -30,11 +19,7 @@ export function createWebSocketProxy(
   // now create a WebSocket proxy to the KasmVNC server at url
 
   return new Promise<WsWebSocket>((resolve, reject) => {
-    // get the protocols from the req['sec-websocket-protocol']
-    const protocols = req.headers["sec-websocket-protocol"]
-      ?.split(",")
-      .map((p) => p.trim());
-    const targetWs = new WsWebSocket(url, protocols, options);
+    const targetWs = new WsWebSocket(url);
     // error
     targetWs.on("error", (err) => {
       if (targetWs.readyState === WsWebSocket.CONNECTING) {
@@ -94,40 +79,4 @@ export function createWebSocketProxy(
       });
     });
   });
-}
-
-export function createVncWebSocketProxy(
-  wss: WsWebSocketServer,
-  req: IncomingMessage,
-  res: ServerResponse,
-  deviceInfo: Device,
-): Promise<WsWebSocket> {
-  const { certificateIsSelfSigned: insecure, ...basicAuth } = deviceInfo;
-  const kasmUrl = getTargetVncWebsocketUrlForDevice(deviceInfo);
-  const parsedTargetUrl = new URL(kasmUrl);
-  const options = getWsWebSocketOptionForKasmVNC(
-    parsedTargetUrl,
-    insecure,
-    basicAuth,
-    req.headers,
-  );
-  return createWebSocketProxy(parsedTargetUrl, res, req, wss, options);
-}
-
-export function createAudioWsProxy(
-  wss: WsWebSocketServer,
-  req: IncomingMessage,
-  res: ServerResponse,
-  deviceInfo: Device,
-): Promise<WsWebSocket> {
-  const { certificateIsSelfSigned: insecure, ...basicAuth } = deviceInfo;
-  const audioUrl = getTargetAudioWebsocketUrlForDevice(deviceInfo);
-  const parsedTargetUrl = new URL(audioUrl);
-  const options = getWsWebSocketOptionForKasmVNC(
-    parsedTargetUrl,
-    insecure,
-    basicAuth,
-    req.headers,
-  );
-  return createWebSocketProxy(parsedTargetUrl, res, req, wss, options);
 }

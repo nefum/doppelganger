@@ -29,13 +29,16 @@ import EditDeviceButton from "@/app/(userland)/devices/(root)/device-cards/edit-
 import styles from "@/app/(userland)/devices/(root)/device-cards/fill.module.css";
 import { MobileClientButton } from "@/app/(userland)/devices/(root)/device-cards/mobile-client-button.tsx";
 import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
-import { getRedroidImage } from "@/app/utils/redroid/redroid-images.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { toTitleCase } from "@/utils/misc.ts";
+import { getRedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { Device, DeviceState } from "@prisma/client";
 import { LuMousePointer2 } from "react-icons/lu";
 
-export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
+export function DeviceCard({
+  deviceInfo,
+  deviceIsUp,
+}: Readonly<{ deviceInfo: Device; deviceIsUp: boolean }>) {
   const [screenDialogOpen, setScreenDialogOpen] = useState(false);
 
   // interesting problem: sometimes the image loads so fast that the onload event never fires,
@@ -58,15 +61,24 @@ export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
               <div className="flex items-center gap-2 text-muted-foreground">
                 <div
                   className={clsx("h-2 w-2 rounded-full", {
-                    "bg-green-500": deviceInfo.lastState === DeviceState.ON,
-                    "bg-red-500": deviceInfo.lastState === DeviceState.OFF,
+                    "bg-green-500":
+                      deviceInfo.lastState === DeviceState.USABLE && deviceIsUp,
+                    "bg-red-500":
+                      deviceInfo.lastState === DeviceState.USABLE &&
+                      !deviceIsUp,
                     "bg-yellow-500":
                       deviceInfo.lastState === DeviceState.SUSPENDED,
                     "bg-gray-500":
                       deviceInfo.lastState === DeviceState.UNAVAILABLE,
                   })}
                 />
-                <span>{toTitleCase(deviceInfo.lastState)}</span>
+                <span>
+                  {deviceInfo.lastState === DeviceState.USABLE
+                    ? deviceIsUp
+                      ? "Online"
+                      : "Offline"
+                    : toTitleCase(deviceInfo.lastState)}
+                </span>
               </div>
             </div>
             <div className="space-y-1">
@@ -109,6 +121,7 @@ export function DeviceCard({ deviceInfo }: Readonly<{ deviceInfo: Device }>) {
                 })}
                 alt={`${deviceInfo.name} snapshot`}
                 src={getSnapshotUrlOfDevice(deviceInfo.id)}
+                onError={() => setLoaded(true)}
                 onLoad={() => setLoaded(true)}
               />
             )}

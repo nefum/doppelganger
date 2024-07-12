@@ -1,18 +1,19 @@
-import { upgradeDockerImageInfo } from "@/app/utils/docker/docker-api-utils.ts";
+import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
 import {
   createDockerTemplateFromView,
   DockerComposeMoustacheView,
   getInsertableDeviceForView,
+  getRedroidHostnameForDevice,
   InsertableDevice,
-} from "@/app/utils/docker/docker-compose-moustache-formatting.ts";
+} from "@/utils/docker/docker-compose-moustache-formatting.ts";
 import {
   completeImageName,
   createDockerPinnedString,
   getDockerImageInfo,
   getPathFriendlyStringForDockerImageInfo,
-} from "@/app/utils/docker/docker-image-parsing.ts";
-import { SampleDeviceSpecs } from "@/app/utils/redroid/device-specs.ts";
-import { RedroidImage } from "@/app/utils/redroid/redroid-images.ts";
+} from "@/utils/docker/docker-image-parsing.ts";
+import { SampleDeviceSpecs } from "@/utils/redroid/device-specs.ts";
+import { RedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { createId } from "@paralleldrive/cuid2";
 import { spawn } from "node:child_process";
 import { mkdir, rm, writeFile } from "node:fs/promises";
@@ -59,7 +60,6 @@ export async function createView(
     redroidImageDataBasePath: getPathFriendlyStringForDockerImageInfo(
       completeDockerImageInfo,
     ),
-    basicAuthPassword: id.slice(0, 8), // 8 characters of the id should be enough
     redroidFps: fps,
     redroidDpi: specs.dpi,
     redroidWidth: specs.width,
@@ -81,14 +81,14 @@ function getDockerComposeFilePath(id: string): string {
 
 /**
  * Initializes a device with the given parameters. The returned Device's ID can then be passed into bringUpDevice to start the device.
- * @param ownerEmail The email of the owner of the device
+ * @param ownerId The id of the owner of the device
  * @param deviceName The name of the device (user side)
  * @param selectedImage The image to use for the device
  * @param fps The FPS of the device
  * @param specs The specs of the device
  */
 export async function initializeDevice(
-  ownerEmail: string,
+  ownerId: string,
   deviceName: string,
   selectedImage: RedroidImage,
   fps: number,
@@ -107,15 +107,10 @@ export async function initializeDevice(
   const minifiedYaml = minifyYaml(dockerCompose);
   await writeFile(dockerComposeFilePath, minifiedYaml); // write the created docker compose file to the stack folder
 
-  return getInsertableDeviceForView(
-    view,
-    dockerImageInfo,
-    ownerEmail,
-    deviceName,
-  );
+  return getInsertableDeviceForView(view, dockerImageInfo, ownerId, deviceName);
 }
 
-function runDockerCommand(command: string, args: string[]) {
+function runDockerCommand(command: string, args: string[]): Promise<string> {
   return new Promise((resolve, reject) => {
     const dockerProcess = spawn("docker", [command, ...args], {
       env: process.env,
@@ -200,4 +195,19 @@ export async function destroyDevice(deviceId: string): Promise<void> {
   for (const folder of folders) {
     await rm(folder, { recursive: true, force: true });
   }
+}
+
+async function getIsContainerRunning(containerName: string): Promise<boolean> {
+  try {
+    const result = await runDockerCommand("ps", ["--format", "{{.Names}}"]);
+    const runningContainers = result.trim().split("\n");
+    return runningContainers.includes(containerName);
+  } catch (error: any) {
+    console.error("Error checking container status:", error.message);
+    throw error;
+  }
+}
+
+export async function getIsDeviceRunning(deviceId: string): Promise<boolean> {
+  return getIsContainerRunning(getRedroidHostnameForDevice(deviceId));
 }

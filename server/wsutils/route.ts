@@ -1,17 +1,15 @@
 import { IncomingMessage, ServerResponse } from "node:http";
-import { WebSocketServer, WebSocket as WsWebSocket } from "ws";
+import { WebSocketServer } from "ws";
+import {
+  getWsUrlStringForDevice,
+  runScrcpyServerOnDevice,
+} from "../adb/scrcpy.ts";
 import { getDeviceForId } from "../device-info/device-info.ts";
 import { createClient } from "../supabase/ro-server.ts";
-import { createAudioWsProxy, createVncWebSocketProxy } from "./wsproxy.ts";
+import { createWebSocketProxy } from "./wsproxy.ts";
 import { isWebSocketRequest } from "./wsutils.ts";
 
-enum EndpointType {
-  KASMVNC,
-  AUDIO,
-}
-
-async function handleDeviceEndpoint(
-  type: EndpointType,
+export async function handleDeviceStream(
   wss: WebSocketServer,
   req: IncomingMessage,
   res: ServerResponse,
@@ -33,8 +31,16 @@ async function handleDeviceEndpoint(
   const deviceInfo = await getDeviceForId(deviceId);
 
   const supabaseClient = createClient(req);
-  const supabaseUser = await supabaseClient.auth.getUser();
-  const userEmail = supabaseUser.data.user!.email!;
+  const {
+    data: { user },
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    res.statusCode = 401;
+    res.setHeader("Content-Type", "text/plain");
+    res.end("unauthorized");
+    return;
+  }
 
   if (!deviceInfo) {
     res.statusCode = 404;
@@ -43,7 +49,7 @@ async function handleDeviceEndpoint(
     return;
   }
 
-  if (deviceInfo.ownerEmail !== userEmail) {
+  if (deviceInfo.ownerId !== user.id) {
     // 404, we don't even want the user to know this device exists
     res.statusCode = 404;
     res.setHeader("Content-Type", "text/plain");
@@ -52,21 +58,10 @@ async function handleDeviceEndpoint(
   }
 
   // now create a WebSocket proxy to the audio server at url
-  let userWs: WsWebSocket;
-  switch (type) {
-    case EndpointType.KASMVNC:
-      userWs = await createVncWebSocketProxy(wss, req, res, deviceInfo);
-      break;
-    case EndpointType.AUDIO:
-      userWs = await createAudioWsProxy(wss, req, res, deviceInfo);
-      break;
-  }
+  await runScrcpyServerOnDevice(deviceInfo);
+  const wsUrlString = getWsUrlStringForDevice(deviceInfo);
+  const wsUrl = new URL(wsUrlString);
+  const userWs = await createWebSocketProxy(wsUrl, res, req, wss);
 
   console.debug("ws connection established", userWs.readyState);
 }
-
-export const handleAudio = handleDeviceEndpoint.bind(null, EndpointType.AUDIO);
-export const handleKasmVNC = handleDeviceEndpoint.bind(
-  null,
-  EndpointType.KASMVNC,
-);

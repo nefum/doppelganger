@@ -1,12 +1,8 @@
 import prisma from "%/database/prisma.ts";
 import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
-import {
-  bringUpDevice,
-  initializeDevice,
-} from "@/app/utils/redroid/deployment.ts";
-import { getRedroidImage } from "@/app/utils/redroid/redroid-images.ts";
+import { bringUpDevice, initializeDevice } from "@/utils/redroid/deployment.ts";
+import { getRedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { createClient } from "@/utils/supabase/server.ts";
-import { DeviceState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -62,15 +58,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   });
 
   await bringUpDevice(device.id);
-
-  await prisma.device.update({
-    where: {
-      id: device.id,
-    },
-    data: {
-      lastState: DeviceState.ON,
-    },
-  });
 
   return NextResponse.redirect("/devices");
 }

@@ -9,8 +9,8 @@ import {
   CUID,
   DockerImageInfo,
   PathFriendlyString,
-} from "@/app/utils/docker/docker-image-parsing.ts";
-import { Device, DeviceState } from "@prisma/client";
+} from "@/utils/docker/docker-image-parsing.ts";
+import { Device } from "@prisma/client";
 import Mustache from "mustache";
 import { readFile } from "node:fs/promises";
 
@@ -47,17 +47,11 @@ export interface DockerComposeMoustacheView extends Partial<Device> {
   redroidWidth: number;
   redroidHeight: number;
 
-  basicAuthPassword: string;
-
   externalNetworkName: string;
 }
 
-function getRedroidHostnameForDevice(id: CUID): string {
+export function getRedroidHostnameForDevice(id: CUID): string {
   return `${id}-redroid`;
-}
-
-function getScrcpyHostnameForDevice(id: CUID): string {
-  return `${id}-scrcpy`;
 }
 
 export async function createDockerTemplateFromView(
@@ -68,19 +62,22 @@ export async function createDockerTemplateFromView(
   return Mustache.render(template, view);
 }
 
-export type InsertableDevice = Omit<Device, "createdAt" | "updatedAt">;
+export type InsertableDevice = Omit<
+  Device,
+  "createdAt" | "updatedAt" | "lastState"
+>;
 
 export function getInsertableDeviceForView(
   view: DockerComposeMoustacheView,
   dockerImageInfo: DockerImageInfo,
-  ownerEmail: string,
+  ownerId: string,
   deviceName: string,
 ): InsertableDevice {
   const { id } = view;
   return {
     id,
     name: deviceName,
-    ownerEmail,
+    ownerId,
 
     redroidImage: `${dockerImageInfo.imageName}:${dockerImageInfo.tag}`,
     redroidImageDigest: dockerImageInfo.digest,
@@ -92,17 +89,5 @@ export function getInsertableDeviceForView(
 
     adbHostname: getRedroidHostnameForDevice(id),
     adbPort: 5555,
-
-    scrcpyHostname: getScrcpyHostnameForDevice(id),
-    scrcpyTls: true,
-    vncWssPath: "/websockify",
-    vncWssPort: 6901,
-    audioWssPort: 4901,
-
-    basicAuthUsername: "kasm_user",
-    basicAuthPassword: view.basicAuthPassword,
-    certificateIsSelfSigned: true,
-
-    lastState: DeviceState.OFF,
   };
 }

@@ -1,80 +1,45 @@
-"use server";
-
-import {
-  getDeviceForId,
-  getDeviceIdFromUrl,
-} from "%/device-info/device-info.ts";
-import getSnapshotOfKasmVNCDevice from "@/app/(userland)/devices/[id]/snapshot/snapshot.ts";
+import { AdbDevice } from "%/adb/scrcpy.ts";
+import { getDeviceForId } from "%/device-info/device-info.ts";
+import { deviceEndpoint } from "%/endpoint-regex.ts";
 import { createClient } from "@/utils/supabase/server.ts";
+import Util from "@devicefarmer/adbkit/dist/src/adb/util";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  // we need to connect to /devices/[id]/kasmvnc with RFB and then take a screenshot using node-canvas (jsdom has a node-canvas integ.)
-
-  const id = getDeviceIdFromUrl(request.nextUrl);
-  if (!id) {
-    return NextResponse.json(
-      {
-        error: "Bad Request",
-      },
-      {
-        status: 400,
-      },
-    );
-  }
-
-  const deviceInfo = await getDeviceForId(id);
-  if (!deviceInfo) {
-    return NextResponse.json(
-      {
-        error: "Device not found",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  const id = req.nextUrl.pathname.match(deviceEndpoint)![1];
 
   const supabaseClient = createClient();
-  const supabaseUser = await supabaseClient.auth.getUser();
-  const userEmail = supabaseUser.data.user!.email!;
-  if (deviceInfo.ownerEmail !== userEmail) {
-    // don't even 401, 404 instead to hide the existence of the device
-    return NextResponse.json(
-      {
-        error: "Device not found",
-      },
-      {
-        status: 404,
-      },
-    );
+  const {
+    data: { user },
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    // don't 401 because we are in userland
+    return NextResponse.redirect("/login");
   }
 
-  try {
-    const outerCanvasOutput = await getSnapshotOfKasmVNCDevice(deviceInfo);
-    const mimeType = outerCanvasOutput
-      .split(",")[0]
-      .split(":")[1]
-      .split(";")[0];
-    const base64 = outerCanvasOutput.split(",")[1];
-    const buffer = Buffer.from(base64, "base64");
-    return new NextResponse(buffer, {
-      headers: {
-        "Content-Type": mimeType,
-        "Cache-Control": "max-age=10", // don't request a new snapshot every time; the screen won't change that much between 10 seconds and this route is expensive
-        "Content-Disposition": `inline; filename=${deviceInfo.name}.png`,
-        "Content-Length": buffer.length.toString(),
-      },
-    });
-  } catch (e: any) {
-    console.error(e);
-    return NextResponse.json(
-      {
-        error: "Internal Server Error",
-      },
-      {
-        status: 500,
-      },
-    );
+  const device = await getDeviceForId(id);
+
+  if (!device) {
+    return NextResponse.json({}, { status: 404 });
   }
+
+  if (device.ownerId !== user.id) {
+    // don't 403, we don't want to leak device existence
+    return NextResponse.json({}, { status: 404 });
+  }
+
+  const adbDevice = new AdbDevice(device);
+  await adbDevice.connect();
+  const screencapConnection = await adbDevice.adbClient!.screencap();
+  const outputBuffer = await Util.readAll(screencapConnection);
+
+  return new NextResponse(outputBuffer, {
+    headers: {
+      "Content-Type": "image/png",
+      "Content-Length": outputBuffer.length.toString(),
+      "Content-Disposition": "inline; filename=screenshot.png",
+      "Cache-Control": "max-age=30", // 30 seconds, let preload work
+    },
+  });
 }

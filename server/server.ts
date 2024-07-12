@@ -5,16 +5,12 @@ import next from "next";
 import { parse } from "url";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
 import { WebSocket as WsWebSocket } from "ws";
-import {
-  audioWsEndpoint,
-  eventsWsEndpoint,
-  kasmVncWsEndpoint,
-} from "./endpoint-regex.ts";
-import { handleAudio, handleKasmVNC } from "./wsutils/route.ts";
+import { eventsWsEndpoint, streamWsRegex } from "./endpoint-regex.ts";
 
 // load environment variables
 import handleEventStream from "./events/route.ts";
 import { loadEnvironment } from "./load-environment.ts";
+import { handleDeviceStream } from "./wsutils/route.ts";
 // like during development the IDEA runner and during production the docker container
 loadEnvironment();
 
@@ -59,14 +55,11 @@ app.prepare().then(() => {
           return;
         }
 
-        const kasmVncMatch = pathname.match(kasmVncWsEndpoint);
-        const audioMatch = pathname.match(audioWsEndpoint);
+        const streamMatch = pathname.match(streamWsRegex);
         const eventsMatch = pathname.match(eventsWsEndpoint);
 
-        if (kasmVncMatch) {
-          await handleKasmVNC(wss, req, res, kasmVncMatch);
-        } else if (audioMatch) {
-          await handleAudio(wss, req, res, audioMatch);
+        if (streamMatch) {
+          await handleDeviceStream(wss, req, res, streamMatch);
         } else if (eventsMatch) {
           await handleEventStream(wss, req, res, eventsMatch);
         } else {

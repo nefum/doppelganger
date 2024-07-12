@@ -34,34 +34,6 @@ services:
         reservations:
           cpus: '0.1'
           memory: 700M
-  scrcpy:
-    image: "ghcr.io/regulad/workspaces-images:scrcpy"
-#    ports:
-#      - "6901:6901/tcp"
-#      - "4901:4901/tcp"
-    shm_size: "512m"
-    tty: true
-    stdin_open: true
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 300M
-        reservations:
-          cpus: '0.1'
-          memory: 200M
-    depends_on:
-      - "redroid"
-    networks:
-      - "{{ externalNetworkName }}"
-    environment:
-      ADB_DEVICE: "{{ id }}-redroid:5555"
-      SCRCPY_FPS: "{{ redroidFps }}"
-      SCRCPY_WIDTH: "{{ redroidWidth }}"
-      SCRCPY_HEIGHT: "{{ redroidHeight }}"
-      # username: kasm_user
-      VNC_PW: "{{ basicAuthPassword }}"
 networks:
   '{{ externalNetworkName }}':
     external: true

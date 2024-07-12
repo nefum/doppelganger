@@ -15,16 +15,15 @@ datasource db {
 }
 
 enum DeviceState {
-  ON
-  OFF
+  USABLE
   SUSPENDED
   UNAVAILABLE
 }
 
 model Device {
-  id         String @id @unique @default(cuid()) @map(name: "id")
-  name       String @map(name: "name")
-  ownerEmail String @map(name: "owner_email")
+  id      String @id @unique @default(cuid()) @map(name: "id")
+  name    String @map(name: "name")
+  ownerId String @map(name: "owner")
 
   // example: ubuntu:18.04@sha256:98706f0f213dbd440021993a82d2f70451a73698315370ae8615cc468ac06624
   redroidImage       String  @map(name: "redroid_image")
@@ -38,21 +37,10 @@ model Device {
   adbHostname String @default("localhost") @map(name: "adb_hostname") // will be `${id}-adb` at runtime
   adbPort     Int    @default(5555) @map(name: "adb_port")
 
-  scrcpyHostname String  @default("localhost") @map(name: "device_hostname") // will be `${id}-scrcpy` at runtime
-  scrcpyTls      Boolean @default(true) @map(name: "device_tls")
-  vncWssPath     String  @default("/websockify") @map(name: "vnc_wss_path")
-  vncWssPort     Int     @default(6901) @map(name: "vnc_wss_port")
-  // https://github.com/kasmtech/workspaces-core-images/blob/develop/src/ubuntu/install/audio/install_audio.sh
-  audioWssPort   Int     @default(4901) @map(name: "audio_ws_port")
-
-  basicAuthUsername       String? @map(name: "basic_auth_username")
-  basicAuthPassword       String? @map(name: "basic_auth_password")
-  certificateIsSelfSigned Boolean @default(true) @map(name: "certificate_is_self_signed")
-
   createdAt DateTime    @default(now()) @map(name: "created_at")
   updatedAt DateTime    @default(now()) @updatedAt @map(name: "updated_at")
-  lastState DeviceState @default(OFF) @map(name: "last_state")
+  lastState DeviceState @default(USABLE) @map(name: "last_state")
 
-  @@index([ownerEmail, id])
+  @@index([ownerId, id])
   @@map(name: "devices")
 }

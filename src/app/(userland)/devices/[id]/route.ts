@@ -3,7 +3,7 @@
 import prisma from "%/database/prisma.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceEndpoint } from "%/endpoint-regex.ts";
-import { destroyDevice } from "@/app/utils/redroid/deployment.ts";
+import { destroyDevice } from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { DeviceState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,10 +18,15 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
   }
 
   const supabaseClient = createClient();
-  const user = await supabaseClient.auth.getUser();
-  const userEmail = user.data!.user!.email!;
+  const {
+    data: { user },
+  } = await supabaseClient.auth.getUser();
 
-  if (userEmail !== deviceInfo.ownerEmail) {
+  if (!user) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  if (user.id !== deviceInfo.ownerId) {
     return NextResponse.json({ error: "Device not found" }, { status: 404 });
   }
 

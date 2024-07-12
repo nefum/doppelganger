@@ -4,7 +4,7 @@ import {
   signup,
   type SignupFormState,
 } from "@/app/(no-layout)/(auth)/signup/actions.ts";
-import PasswordPopover from "@/app/components/password-popover.tsx";
+import PasswordPopover from "@/components/password-popover.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,

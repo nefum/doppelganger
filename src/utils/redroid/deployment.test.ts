@@ -2,11 +2,11 @@
  * @jest-environment node
  */
 
-import { createDockerTemplateFromView } from "@/app/utils/docker/docker-compose-moustache-formatting.ts";
-import { SampleDeviceSpecs } from "@/app/utils/redroid/device-specs";
-import { defaultRedroidImage } from "@/app/utils/redroid/redroid-images.ts";
+import { createDockerTemplateFromView } from "@/utils/docker/docker-compose-moustache-formatting.ts";
+import { SampleDeviceSpecs } from "@/utils/redroid/device-specs.ts";
+import { defaultRedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { stringify as stringifyYaml, parse as yamlParse } from "yaml";
-import { createView } from "./deployment";
+import { createView } from "./deployment.ts";
 
 describe("createView", () => {
   it("should create a valid DockerComposeMoustacheView with explicit settings", async () => {
@@ -25,12 +25,11 @@ describe("createView", () => {
     expect(view.baseDir).toBeDefined();
     expect(view.externalNetworkName).toBeDefined();
     expect(view.redroidImageDataBasePath).toBeDefined();
-    expect(view.basicAuthPassword).toBeDefined();
     expect(view.redroidFps).toEqual(fps);
     expect(view.redroidDpi).toEqual(specs.dpi);
     expect(view.redroidWidth).toEqual(specs.width);
     expect(view.redroidHeight).toEqual(specs.height);
-  });
+  }, 60_000); // needs time to fetch the digest
 
   it("should create a view that can create a valid YAML file", async () => {
     const fps = 30;
@@ -45,5 +44,5 @@ describe("createView", () => {
     const parsedYaml = yamlParse(yaml);
     const stringifiedYaml = stringifyYaml(parsedYaml);
     console.log(stringifiedYaml);
-  });
+  }, 60_000); // needs time to fetch the digest
 });

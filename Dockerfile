@@ -6,14 +6,9 @@ WORKDIR /usr/src/app
 
 # Install system dependencies for node-canvas & as a replacement for dockerode-compose
 RUN apk add --no-cache \
-    build-base \
-    cairo-dev \
-    jpeg-dev \
-    pango-dev \
-    giflib-dev \
-    librsvg-dev \
     docker-cli \
-    curl
+    curl \
+    android-tools
 
 # Install docker-compsoe plugin for deployment
 RUN mkdir -p /usr/local/lib/docker/cli-plugins && \

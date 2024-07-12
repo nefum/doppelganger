@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { getLatestDigestOfImage } from "./docker-api-utils";
+import { getLatestDigestOfImage } from "./docker-api-utils.ts";
 
 describe("getDigestOfLatestImage Integration Test", () => {
   it("should fetch digest for a real image name without a tag", async () => {
@@ -11,7 +11,7 @@ describe("getDigestOfLatestImage Integration Test", () => {
     );
     expect(digest).toBeDefined();
     console.log(digest);
-  });
+  }, 60_000); // needs time to fetch the digest
 
   it("should fetch digest for a real image name with a tag", async () => {
     const digest = await getLatestDigestOfImage(
@@ -19,11 +19,11 @@ describe("getDigestOfLatestImage Integration Test", () => {
     );
     expect(digest).toBeDefined();
     console.log(digest);
-  });
+  }, 60_000); // needs time to fetch the digest
 
   it("should fetch digest for a real image from the library", async () => {
     const digest = await getLatestDigestOfImage("ubuntu");
     expect(digest).toBeDefined();
     console.log(digest);
-  });
+  }, 60_000); // needs time to fetch the digest
 });

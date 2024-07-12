@@ -13,7 +13,6 @@ export function getDeviceIdFromUrl(url: URL | string): string | null {
   return match ? match[1] : null;
 }
 
-export type BasicAuth = Pick<Device, "basicAuthPassword" | "basicAuthUsername">;
 export type DeviceSpecs = Pick<
   Device,
   | "redroidFps"
@@ -37,13 +36,4 @@ export async function getDeviceForId(id: string): Promise<Device | null> {
 
 export function getAdbConnectionUrlForDevice(device: Device): string {
   return `${device.adbHostname}:${device.adbPort}`;
-}
-
-export function getTargetVncWebsocketUrlForDevice(device: Device): string {
-  return `${device.scrcpyTls ? "wss" : "ws"}://${device.scrcpyHostname}:${device.vncWssPort}${device.vncWssPath}`;
-}
-
-export function getTargetAudioWebsocketUrlForDevice(device: Device): string {
-  // never runs without TLS
-  return `wss://${device.scrcpyHostname}:${device.audioWssPort}`;
 }
