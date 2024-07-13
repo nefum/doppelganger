@@ -35,7 +35,9 @@ services:
           cpus: '0.1'
           memory: 700M
   scrcpy:
-    image: "ghcr.io/regulad/workspaces-images:scrcpy"
+    # implementation note: this is a custom version of my scrcpy image that only runs sndcpy since scrcpy cannot accept a WS connection while it is already connected to
+    image: "ghcr.io/regulad/workspaces-images:sndcpy"
+    hostname: "{{ id }}-scrcpy"
     #    ports:
     #      - "6901:6901/tcp"
     #      - "4901:4901/tcp"
@@ -61,7 +63,8 @@ services:
       SCRCPY_WIDTH: "{{ redroidWidth }}"
       SCRCPY_HEIGHT: "{{ redroidHeight }}"
       # username: kasm_user
-      VNC_PW: "password"  # we never plan to connect to this, only use the pulseaudio for audio streaming
+      VNC_PW: "password"
+      # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
 networks:
   '{{ externalNetworkName }}':
     external: true

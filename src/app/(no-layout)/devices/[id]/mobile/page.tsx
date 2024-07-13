@@ -1,5 +1,6 @@
 import { getDeviceForId } from "%/device-info/device-info.ts";
-import MobileClient from "@/app/(no-layout)/devices/[id]/mobile/mobile-client.tsx";
+import ISpinner from "@/app/(no-layout)/devices/[id]/mobile/ispinner.tsx";
+import DeviceClient from "@/components/device-client.tsx";
 import { createClient } from "@/utils/supabase/server.ts";
 import NotFound from "next/dist/client/components/not-found-error";
 // import "./ios-client.css";
@@ -32,7 +33,7 @@ export default async function Page({
 
   return (
     <div className="flex justify-center items-center place-items-center h-screen w-screen">
-      <MobileClient device={deviceInfo} />
+      <DeviceClient device={deviceInfo} loadingNode={<ISpinner large />} />
     </div>
   );
 }

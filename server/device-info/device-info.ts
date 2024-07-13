@@ -50,6 +50,12 @@ export function getUdidForDevice(device: Device): string {
   return `${device.adbHostname ?? getRedroidHostnameForDevice(device.id)}:${device.adbPort}`;
 }
 
+export function getTargetVncWebsocketUrlForDevice(device: Device): string {
+  // never runs without TLS (self-signed)
+  // always runs on port 6901, path /websockify
+  return `wss://${device.adbHostname ?? getRedroidHostnameForDevice(device.id)}:6901/websockify`;
+}
+
 export function getTargetAudioWebsocketUrlForDevice(device: Device): string {
   // never runs without TLS
   // always runs on port 4901

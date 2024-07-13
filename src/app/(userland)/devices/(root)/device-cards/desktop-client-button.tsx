@@ -1,3 +1,4 @@
+import DeviceClient from "@/components/device-client.tsx";
 import { AspectRatio } from "@/components/ui/aspect-ratio.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -11,7 +12,7 @@ import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useEffect, useState } from "react";
-import { LuMousePointer2 } from "react-icons/lu";
+import { LuLoader2, LuMousePointer2 } from "react-icons/lu";
 
 const desktopClientTooltip = "Interact";
 
@@ -66,9 +67,10 @@ export default function DesktopClientButton({
               {/*do *not* render this if the dialog isn't open, it will hog resources and network traffic*/}
               {/*TODO: implement a better client that supports rotation*/}
               {dialogOpen && (
-                <iframe
-                  src={`/devices/${deviceInfo.id}/mobile`}
-                  className="h-full w-full"
+                <DeviceClient
+                  className="flex justify-center items-center place-items-center"
+                  device={deviceInfo}
+                  loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
                 />
               )}
             </AspectRatio>

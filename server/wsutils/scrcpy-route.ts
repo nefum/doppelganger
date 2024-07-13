@@ -5,7 +5,7 @@ import {
   runScrcpyServerOnDevice,
 } from "../adb/scrcpy.ts";
 import { getDeviceForId } from "../device-info/device-info.ts";
-import { streamWsEndpoint } from "../endpoint-regex.ts";
+import { scrcpyWsEndpoint } from "../endpoint-regex.ts";
 import { createClient } from "../supabase/ro-server.ts";
 import { createWebSocketProxy } from "./wsproxy.ts";
 
@@ -14,9 +14,9 @@ export async function handleDeviceStream(
   ws: WsWebSocket,
 ): Promise<void> {
   const pathname = req.url!;
-  const deviceId = pathname.match(streamWsEndpoint)![1];
+  const deviceId = pathname.match(scrcpyWsEndpoint)![1];
 
-  console.log("ws connection received", req.url, deviceId);
+  console.debug("ws connection received", req.url, deviceId);
 
   // check to see if this is a websocket connection
 
@@ -39,13 +39,13 @@ export async function handleDeviceStream(
   }
 
   // now create a WebSocket proxy to the audio server at url
-  await runScrcpyServerOnDevice(deviceInfo);
-  const wsUrlString = getWsUrlStringForDevice(deviceInfo);
-  const wsUrl = new URL(wsUrlString);
 
   let targetWs: WsWebSocket;
 
   try {
+    await runScrcpyServerOnDevice(deviceInfo);
+    const wsUrlString = getWsUrlStringForDevice(deviceInfo);
+    const wsUrl = new URL(wsUrlString);
     targetWs = await createWebSocketProxy(wsUrl, req, ws);
   } catch (e) {
     console.error("error creating websocket proxy", e);

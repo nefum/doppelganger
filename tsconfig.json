@@ -36,8 +36,7 @@
     "src/lib/**/*.ts",
     "src/pages/**/*.ts",
     "src/utils/**/*.ts",
-    "src/middleware.ts",
-    "src/instrumentation.ts",
+    "src/*.ts",
     "src/*.d.ts"
   ],
   "exclude": [

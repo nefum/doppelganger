@@ -5,12 +5,19 @@ import next from "next";
 import { parse } from "url";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
 import { WebSocket as WsWebSocket } from "ws";
-import { eventsWsEndpoint, streamWsEndpoint } from "./endpoint-regex.ts";
+import {
+  audioWsEndpoint,
+  eventsWsEndpoint,
+  kasmVncWsEndpoint,
+  scrcpyWsEndpoint,
+} from "./endpoint-regex.ts";
 
 // load environment variables
+import { Duplex } from "node:stream";
 import handleEventStream from "./events/route.ts";
 import { loadEnvironment } from "./load-environment.ts";
-import { handleDeviceStream } from "./wsutils/route.ts";
+import { handleAudio, handleKasmVNC } from "./wsutils/kasmvnc-route.ts";
+import { handleDeviceStream } from "./wsutils/scrcpy-route.ts";
 import { isWebSocketRequest } from "./wsutils/wsutils.ts";
 // like during development the IDEA runner and during production the docker container
 loadEnvironment();
@@ -29,8 +36,30 @@ const handle = app.getRequestHandler();
 
 const wss = new WsWebSocket.Server({
   noServer: true,
-  // perMessageDeflate: false, // https://www.npmjs.com/package/ws/v/8.0.0#websocket-compression
+  perMessageDeflate: false, // https://www.npmjs.com/package/ws/v/8.0.0#websocket-compression
 });
+
+function disableNextJsShuttingDownSocket(socket: Duplex): void {
+  const ogSocketEnd = socket.end.bind(socket);
+  socket.end = function (chunk?, encoding?, cb?) {
+    // https://github.com/vercel/next.js/blob/9e817bc032824d2f6f1cd3883a416b2f2dce1007/packages/next/src/server/lib/router-server.ts#L716
+    // we are trying to reject this closing
+    const fauxError = new Error();
+    const fauxStack = fauxError.stack!.split("\n");
+
+    // if router-server is in the stack at all, just return
+    const isRouterServerCall = fauxStack.some((line) =>
+      line.includes("router-server.js"),
+    );
+
+    if (isRouterServerCall) {
+      return socket;
+    }
+
+    // @ts-expect-error -- doesn't matter
+    return ogSocketEnd(chunk, encoding, cb);
+  };
+}
 
 app.prepare().then(() => {
   createServer((req: IncomingMessage, res: ServerResponse) => {
@@ -54,38 +83,31 @@ app.prepare().then(() => {
     // i was a bonehead and handled upgrades in the regular request handler for the longest time,
     // i was stuck wondering why half of the routes bounced and never figured it out!
     .on("upgrade", (request, socket, head) => {
+      // monkeypatch the socket to ignore ends from next (it will try to kill our socket)
+      disableNextJsShuttingDownSocket(socket);
+
       const pathname = request.url!;
-      const hitsStream = !!pathname.match(streamWsEndpoint);
+
+      const hitsScrcpy = !!pathname.match(scrcpyWsEndpoint);
       const hitsEvents = !!pathname.match(eventsWsEndpoint);
-      if (hitsStream || hitsEvents) {
-        // monkeypatch the socket to ignore ends from next (it will try to kill our socket
-        const ogSocketEnd = socket.end.bind(socket);
-        socket.end = function (chunk?, encoding?, cb?) {
-          // https://github.com/vercel/next.js/blob/9e817bc032824d2f6f1cd3883a416b2f2dce1007/packages/next/src/server/lib/router-server.ts#L716
-          // we are trying to reject this closing
-          const fauxError = new Error();
-          const fauxStack = fauxError.stack!.split("\n");
+      const hitsKasmVnc = !!pathname.match(kasmVncWsEndpoint);
+      const hitsAudio = !!pathname.match(audioWsEndpoint);
 
-          // if router-server is in the stack at all, just return
-          const isRouterServerCall = fauxStack.some((line) =>
-            line.includes("router-server.js"),
-          );
+      const hits = [hitsScrcpy, hitsEvents, hitsKasmVnc, hitsAudio].filter(
+        (hit) => hit,
+      ).length;
 
-          if (isRouterServerCall) {
-            // do not end
-            return socket;
-          }
-
-          // @ts-expect-error -- doesn't matter
-          return ogSocketEnd(chunk, encoding, cb);
-        };
-
+      if (hits) {
         wss.handleUpgrade(request, socket, head, (ws) => {
           // open the websocket asap, do our processing lazily
-          if (hitsStream) {
+          if (hitsScrcpy) {
             handleDeviceStream(request, ws);
           } else if (hitsEvents) {
             handleEventStream(request, ws);
+          } else if (hitsKasmVnc) {
+            handleKasmVNC(request, ws);
+          } else if (hitsAudio) {
+            handleAudio(request, ws);
           }
         });
       }

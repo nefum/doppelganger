@@ -23,6 +23,7 @@
   },
   "packageManager": "pnpm@8.15.5",
   "dependencies": {
+    "@cycjimmy/jsmpeg-player": "^6.0.5",
     "@devicefarmer/adbkit": "^3.2.6",
     "@dotenvx/dotenvx": "^1.5.0",
     "@hookform/resolvers": "^3.9.0",
@@ -71,6 +72,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
     "react-icons": "^5.2.1",
+    "react-resize-detector": "^11.0.1",
     "sharp": "^0.33.4",
     "svg-inline-loader": "^0.8.2",
     "tailwind-merge": "^2.3.0",
