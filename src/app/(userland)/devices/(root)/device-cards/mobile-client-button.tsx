@@ -64,7 +64,7 @@ export function MobileClientButton({
         <AlertDialogFooter>
           <AlertDialogCancel>Dismiss</AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Link href={`/devices/${deviceInfo.id}/ios`} target="_blank">
+            <Link href={`/devices/${deviceInfo.id}/mobile`} target="_blank">
               {" "}
               {/*target="_blank" opens in new tab*/}
               Open

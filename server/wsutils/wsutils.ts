@@ -1,11 +1,6 @@
 import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
 
-// @ts-expect-error -- it is not a namespace but can be used as one
-export type WsWebSocketServer = WsWebSocket.Server;
-// @ts-expect-error -- it is not a namespace but can be used as one
-export type WsWebSocketOptions = WsWebSocket.ClientOptions;
-
 export function isFatalWebSocketError(err: Error & { code?: string }): boolean {
   // Define a list of fatal error codes or messages
   const fatalErrors = ["ECONNREFUSED", "EHOSTUNREACH", "ENOTFOUND"];
@@ -73,6 +68,6 @@ function setupHeartbeat(ws: WsWebSocket) {
 
 export function isWebSocketRequest(req: IncomingMessage): boolean {
   return (
-    !req.headers.upgrade || req.headers.upgrade.toLowerCase() !== "websocket"
+    !!req.headers.upgrade && req.headers.upgrade.toLowerCase() === "websocket"
   );
 }

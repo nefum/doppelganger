@@ -34,8 +34,8 @@ model Device {
   redroidWidth  Int @map(name: "redroid_width")
   redroidHeight Int @map(name: "redroid_height")
 
-  adbHostname String @default("localhost") @map(name: "adb_hostname") // will be `${id}-adb` at runtime
-  adbPort     Int    @default(5555) @map(name: "adb_port")
+  adbHostname String? @map(name: "adb_hostname") // will be `${id}-redroid` at runtime, likely
+  adbPort     Int     @default(5555) @map(name: "adb_port")
 
   createdAt DateTime    @default(now()) @map(name: "created_at")
   updatedAt DateTime    @default(now()) @updatedAt @map(name: "updated_at")

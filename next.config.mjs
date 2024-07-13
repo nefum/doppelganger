@@ -6,6 +6,8 @@ const nextConfig = {
   experimental: {
     forceSwcTransforms: true,
   },
+  // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
+  reactStrictMode: true,
   // https://nextjs.org/docs/app/api-reference/next-config-js/webpack
   // https://webpack.js.org/loaders/node-loader/
   webpack: (config, {isServer}) => {
@@ -18,6 +20,13 @@ const nextConfig = {
         ...config.module.rules,
       ]
     }
+    config.module.rules = [
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader',
+      },
+      ...config.module.rules,
+    ]
     return config;
   }
   // turbopack is too experimental; let's not use it

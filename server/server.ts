@@ -5,12 +5,13 @@ import next from "next";
 import { parse } from "url";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
 import { WebSocket as WsWebSocket } from "ws";
-import { eventsWsEndpoint, streamWsRegex } from "./endpoint-regex.ts";
+import { eventsWsEndpoint, streamWsEndpoint } from "./endpoint-regex.ts";
 
 // load environment variables
 import handleEventStream from "./events/route.ts";
 import { loadEnvironment } from "./load-environment.ts";
 import { handleDeviceStream } from "./wsutils/route.ts";
+import { isWebSocketRequest } from "./wsutils/wsutils.ts";
 // like during development the IDEA runner and during production the docker container
 loadEnvironment();
 
@@ -28,51 +29,68 @@ const handle = app.getRequestHandler();
 
 const wss = new WsWebSocket.Server({
   noServer: true,
-  perMessageDeflate: false, // https://www.npmjs.com/package/ws/v/8.0.0#websocket-compression
+  // perMessageDeflate: false, // https://www.npmjs.com/package/ws/v/8.0.0#websocket-compression
 });
 
 app.prepare().then(() => {
-  createServer(
-    async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
-      try {
-        // Be sure to pass `true` as the second argument to `url.parse`.
-        // This tells it to parse the query portion of the URL.
+  createServer((req: IncomingMessage, res: ServerResponse) => {
+    try {
+      // Be sure to pass `true` as the second argument to `url.parse`.
+      // This tells it to parse the query portion of the URL.
+      const parsedUrl = parse(req.url!, true);
 
-        if (!req.url) {
-          res.statusCode = 404;
-          res.setHeader("Content-Type", "text/plain");
-          res.end("not found");
-          return;
-        }
-
-        const parsedUrl = parse(req.url, true);
-        const { pathname, query } = parsedUrl;
-
-        if (!pathname) {
-          res.statusCode = 404;
-          res.setHeader("Content-Type", "text/plain");
-          res.end("not found");
-          return;
-        }
-
-        const streamMatch = pathname.match(streamWsRegex);
-        const eventsMatch = pathname.match(eventsWsEndpoint);
-
-        if (streamMatch) {
-          await handleDeviceStream(wss, req, res, streamMatch);
-        } else if (eventsMatch) {
-          await handleEventStream(wss, req, res, eventsMatch);
-        } else {
-          await handle(req, res, parsedUrl);
-        }
-      } catch (err) {
-        console.error("Error occurred handling", req.url, err);
-        res.statusCode = 500;
-        res.setHeader("Content-Type", "text/plain");
-        res.end("internal server error");
+      if (isWebSocketRequest(req) && wss.shouldHandle(req)) {
+        return;
       }
-    },
-  )
+
+      handle(req, res, parsedUrl);
+    } catch (err) {
+      console.error("Error occurred handling", req.url, err);
+      res.statusCode = 500;
+      res.setHeader("Content-Type", "text/plain");
+      res.end("internal server error");
+    }
+  })
+    // i was a bonehead and handled upgrades in the regular request handler for the longest time,
+    // i was stuck wondering why half of the routes bounced and never figured it out!
+    .on("upgrade", (request, socket, head) => {
+      const pathname = request.url!;
+      const hitsStream = !!pathname.match(streamWsEndpoint);
+      const hitsEvents = !!pathname.match(eventsWsEndpoint);
+      if (hitsStream || hitsEvents) {
+        // monkeypatch the socket to ignore ends from next (it will try to kill our socket
+        const ogSocketEnd = socket.end.bind(socket);
+        socket.end = function (chunk?, encoding?, cb?) {
+          // https://github.com/vercel/next.js/blob/9e817bc032824d2f6f1cd3883a416b2f2dce1007/packages/next/src/server/lib/router-server.ts#L716
+          // we are trying to reject this closing
+          const fauxError = new Error();
+          const fauxStack = fauxError.stack!.split("\n");
+
+          // if router-server is in the stack at all, just return
+          const isRouterServerCall = fauxStack.some((line) =>
+            line.includes("router-server.js"),
+          );
+
+          if (isRouterServerCall) {
+            // do not end
+            return socket;
+          }
+
+          // @ts-expect-error -- doesn't matter
+          return ogSocketEnd(chunk, encoding, cb);
+        };
+
+        wss.handleUpgrade(request, socket, head, (ws) => {
+          // open the websocket asap, do our processing lazily
+          if (hitsStream) {
+            handleDeviceStream(request, ws);
+          } else if (hitsEvents) {
+            handleEventStream(request, ws);
+          }
+        });
+      }
+      // don't destroy the socket, something else may be listening for it
+    })
     .once("error", (err: Error) => {
       console.error(err);
       process.exit(1);

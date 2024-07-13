@@ -1,9 +1,9 @@
+import { getRedroidHostnameForDevice } from "%/device-info/device-info.ts";
 import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
 import {
   createDockerTemplateFromView,
   DockerComposeMoustacheView,
   getInsertableDeviceForView,
-  getRedroidHostnameForDevice,
   InsertableDevice,
 } from "@/utils/docker/docker-compose-moustache-formatting.ts";
 import {

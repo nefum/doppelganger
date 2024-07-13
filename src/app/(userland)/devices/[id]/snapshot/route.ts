@@ -2,7 +2,6 @@ import { AdbDevice } from "%/adb/scrcpy.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceEndpoint } from "%/endpoint-regex.ts";
 import { createClient } from "@/utils/supabase/server.ts";
-import Util from "@devicefarmer/adbkit/dist/src/adb/util";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -32,12 +31,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const adbDevice = new AdbDevice(device);
   await adbDevice.connect();
   const screencapConnection = await adbDevice.adbClient!.screencap();
-  const outputBuffer = await Util.readAll(screencapConnection);
-
-  return new NextResponse(outputBuffer, {
+  // stream the bytes straight from device to response
+  return new NextResponse(screencapConnection, {
     headers: {
       "Content-Type": "image/png",
-      "Content-Length": outputBuffer.length.toString(),
       "Content-Disposition": "inline; filename=screenshot.png",
       "Cache-Control": "max-age=30", // 30 seconds, let preload work
     },

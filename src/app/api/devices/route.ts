@@ -44,7 +44,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const specs = { width, height, dpi };
 
   const device = await initializeDevice(
-    user.email!,
+    user.id,
     deviceName,
     getRedroidImage(redroidImage)!,
     fps,

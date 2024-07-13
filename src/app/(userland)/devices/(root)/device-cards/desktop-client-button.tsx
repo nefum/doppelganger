@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useEffect, useState } from "react";
 import { LuMousePointer2 } from "react-icons/lu";
 
@@ -53,6 +55,11 @@ export default function DesktopClientButton({
       </SimpleTooltip>
       <DialogContent>
         <DialogHeader>{deviceInfo.name}</DialogHeader>
+        <VisuallyHidden.Root>
+          <DialogDescription>
+            Interactive stream for {deviceInfo.name}
+          </DialogDescription>
+        </VisuallyHidden.Root>
         <div className="flex justify-center">
           <div className="90vh" style={{ width: aspectRatioWidth }}>
             <AspectRatio ratio={aspectRatio}>
@@ -60,7 +67,7 @@ export default function DesktopClientButton({
               {/*TODO: implement a better client that supports rotation*/}
               {dialogOpen && (
                 <iframe
-                  src={`/devices/${deviceInfo.id}/ios`}
+                  src={`/devices/${deviceInfo.id}/mobile`}
                   className="h-full w-full"
                 />
               )}

@@ -26,6 +26,23 @@
   "ts-node": {
     "esm": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", ".next"]
+  "include": [
+    "next-env.d.ts",
+    "*.ts", "**/*.tsx",
+    ".next/types/**/*.ts",
+    "server/**/*.ts",
+    "src/app/**/*.ts",
+    "src/components/**/*.ts",
+    "src/lib/**/*.ts",
+    "src/pages/**/*.ts",
+    "src/utils/**/*.ts",
+    "src/middleware.ts",
+    "src/instrumentation.ts",
+    "src/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "src/ws-scrcpy-native/**/*.ts",
+  ]
 }

@@ -2,6 +2,11 @@ import { DeviceClient } from "@devicefarmer/adbkit";
 import Util from "@devicefarmer/adbkit/dist/src/adb/util";
 import { Device } from "@prisma/client";
 import { spawn } from "child_process";
+import path from "path";
+import {
+  getRedroidHostnameForDevice,
+  getUdidForDevice,
+} from "../device-info/device-info.ts";
 import adb from "./adb.ts";
 
 enum PID_DETECTION_METHOD {
@@ -12,7 +17,11 @@ enum PID_DETECTION_METHOD {
   LS_PROC,
 }
 
-const LOCAL_SCRCPY_SERVER_PATH = "./scrcpy/scrcpy-server.jar";
+const localScrcpyServerJarRelative = "../../scrcpy/scrcpy-server.jar";
+const LOCAL_SCRCPY_SERVER_PATH = path.resolve(
+  __dirname,
+  localScrcpyServerJarRelative,
+);
 const SCRCPY_WS_PORT = 8886;
 // this is a temporary path in android, it can be used to store the scrcpy server binary
 const TEMP_PATH = "/data/local/tmp/";
@@ -27,7 +36,7 @@ const SERVER_CLASS = "com.genymobile.scrcpy.Server";
 // Scrcpy server version
 const SERVER_VERSION = "1.19-ws5";
 // the command that is issued to android to start the scrcpy server
-const RUN_COMMAND = `CLASSPATH=${TEMP_PATH}${FILE_NAME} nohup ${APP_PROCESS} ${SERVER_CLASS} ${SERVER_VERSION} web ERROR ${SCRCPY_WS_PORT} true 2>&1 > /dev/null`;
+const RUN_COMMAND = `CLASSPATH=${TEMP_PATH}${FILE_NAME} nohup ${APP_PROCESS} / ${SERVER_CLASS} ${SERVER_VERSION} web ERROR ${SCRCPY_WS_PORT} true 2>&1 > /dev/null`;
 
 export type WaitForPidParams = {
   tryCounter: number;
@@ -57,7 +66,7 @@ export class AdbDevice {
       return;
     }
     this.deviceId = await adb.connect(
-      this.device.adbHostname,
+      this.device.adbHostname ?? getRedroidHostnameForDevice(this.device.id),
       this.device.adbPort,
     );
     this.adbClient = adb.getDevice(this.deviceId!);
@@ -68,11 +77,13 @@ export class AdbDevice {
       return false;
     }
     const allDevices = await adb.listDevices();
-    return allDevices.some((device: string) => device === this.deviceId);
+    return allDevices.some(
+      (device: { id: string; type: string }) => device.id === this.deviceId,
+    );
   }
 
   get udid(): string {
-    return `${this.device.adbHostname}:${this.device.adbPort}`;
+    return getUdidForDevice(this.device);
   }
 
   public async runShellCommandAdbKit(command: string): Promise<string> {
@@ -237,7 +248,7 @@ export class AdbDevice {
     return list;
   }
 
-  public async runShellCommandAdb(command: string): Promise<string> {
+  public async runShellCommandHostShell(command: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       const cmd = "adb";
       const args = ["-s", `${this.udid}`, "shell", command];
@@ -390,7 +401,7 @@ export async function runScrcpyServerOnDevice(
     processExited: false,
     lookPidFile: true,
   };
-  const scrcpyServerPromise = adbDevice.runShellCommandAdb(RUN_COMMAND);
+  const scrcpyServerPromise = adbDevice.runShellCommandAdbKit(RUN_COMMAND);
   const waitForServerPidPromise = adbDevice.waitForServerPid(
     waitForServerPidParams,
   );

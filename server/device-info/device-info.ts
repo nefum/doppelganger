@@ -34,6 +34,24 @@ export async function getDeviceForId(id: string): Promise<Device | null> {
   });
 }
 
-export function getAdbConnectionUrlForDevice(device: Device): string {
-  return `${device.adbHostname}:${device.adbPort}`;
+export function getRedroidHostnameForDevice(id: string): string {
+  return `${id}-redroid`;
+}
+
+export function getScrcpyHostnameForDevice(id: string): string {
+  return `${id}-scrcpy`;
+}
+
+/**
+ * Gets the ADB udid for a device. This can be used to open a connection.
+ * @param device
+ */
+export function getUdidForDevice(device: Device): string {
+  return `${device.adbHostname ?? getRedroidHostnameForDevice(device.id)}:${device.adbPort}`;
+}
+
+export function getTargetAudioWebsocketUrlForDevice(device: Device): string {
+  // never runs without TLS
+  // always runs on port 4901
+  return `wss://${device.adbHostname ?? getScrcpyHostnameForDevice(device.id)}:4901`;
 }

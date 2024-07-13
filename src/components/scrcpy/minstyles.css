@@ -1,0 +1,9 @@
+.video canvas {
+  position: absolute;
+  z-index: 0;
+}
+
+.touch-layer {
+  position: absolute;
+  z-index: 1;
+}

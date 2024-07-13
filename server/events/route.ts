@@ -1,20 +1,13 @@
-import { IncomingMessage, ServerResponse } from "node:http";
-import { WebSocketServer, WebSocket as WsWebSocket } from "ws";
+import { IncomingMessage } from "node:http";
+import { WebSocket as WsWebSocket } from "ws";
 
 export default async function handleEventStream(
-  wss: WebSocketServer,
   req: IncomingMessage,
-  res: ServerResponse,
-  match: RegExpMatchArray,
-): Promise<WsWebSocket> {
+  ws: WsWebSocket,
+) {
   // both the client & the server will be sending messages to each other through this like a message bus
 
   // TODO: implement message server (ephemerality is more than ok)
 
-  return await new Promise<WsWebSocket>((resolve, reject) => {
-    wss.handleUpgrade(req, req.socket, Buffer.alloc(0), (ws) => {
-      wss.emit("connection", ws, req);
-      resolve(ws);
-    });
-  });
+  ws.close();
 }

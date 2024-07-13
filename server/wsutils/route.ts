@@ -1,32 +1,24 @@
-import { IncomingMessage, ServerResponse } from "node:http";
-import { WebSocketServer } from "ws";
+import { IncomingMessage } from "node:http";
+import { WebSocket as WsWebSocket } from "ws";
 import {
   getWsUrlStringForDevice,
   runScrcpyServerOnDevice,
 } from "../adb/scrcpy.ts";
 import { getDeviceForId } from "../device-info/device-info.ts";
+import { streamWsEndpoint } from "../endpoint-regex.ts";
 import { createClient } from "../supabase/ro-server.ts";
 import { createWebSocketProxy } from "./wsproxy.ts";
-import { isWebSocketRequest } from "./wsutils.ts";
 
 export async function handleDeviceStream(
-  wss: WebSocketServer,
   req: IncomingMessage,
-  res: ServerResponse,
-  match: RegExpMatchArray,
+  ws: WsWebSocket,
 ): Promise<void> {
-  const deviceId: string = match[1];
+  const pathname = req.url!;
+  const deviceId = pathname.match(streamWsEndpoint)![1];
 
   console.log("ws connection received", req.url, deviceId);
 
   // check to see if this is a websocket connection
-  if (isWebSocketRequest(req)) {
-    // invalid method; upgrade required
-    res.statusCode = 426;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("upgrade required");
-    return;
-  }
 
   const deviceInfo = await getDeviceForId(deviceId);
 
@@ -35,25 +27,14 @@ export async function handleDeviceStream(
     data: { user },
   } = await supabaseClient.auth.getUser();
 
+  // https://github.com/Luka967/websocket-close-codes#websocket-close-codes
   if (!user) {
-    res.statusCode = 401;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("unauthorized");
+    ws.close(3000);
     return;
   }
 
-  if (!deviceInfo) {
-    res.statusCode = 404;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("not found");
-    return;
-  }
-
-  if (deviceInfo.ownerId !== user.id) {
-    // 404, we don't even want the user to know this device exists
-    res.statusCode = 404;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("not found");
+  if (!deviceInfo || deviceInfo.ownerId !== user.id) {
+    ws.close(4404); // app: equiv to http 404
     return;
   }
 
@@ -61,7 +42,16 @@ export async function handleDeviceStream(
   await runScrcpyServerOnDevice(deviceInfo);
   const wsUrlString = getWsUrlStringForDevice(deviceInfo);
   const wsUrl = new URL(wsUrlString);
-  const userWs = await createWebSocketProxy(wsUrl, res, req, wss);
 
-  console.debug("ws connection established", userWs.readyState);
+  let targetWs: WsWebSocket;
+
+  try {
+    targetWs = await createWebSocketProxy(wsUrl, req, ws);
+  } catch (e) {
+    console.error("error creating websocket proxy", e);
+    ws.close(1014);
+    return;
+  }
+
+  console.debug("ws proxy established", ws.readyState, targetWs.readyState);
 }

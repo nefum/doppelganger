@@ -50,10 +50,6 @@ export interface DockerComposeMoustacheView extends Partial<Device> {
   externalNetworkName: string;
 }
 
-export function getRedroidHostnameForDevice(id: CUID): string {
-  return `${id}-redroid`;
-}
-
 export async function createDockerTemplateFromView(
   view: DockerComposeMoustacheView,
 ): Promise<string> {
@@ -64,7 +60,7 @@ export async function createDockerTemplateFromView(
 
 export type InsertableDevice = Omit<
   Device,
-  "createdAt" | "updatedAt" | "lastState"
+  "createdAt" | "updatedAt" | "lastState" | "adbHostname" | "adbPort"
 >;
 
 export function getInsertableDeviceForView(
@@ -86,8 +82,5 @@ export function getInsertableDeviceForView(
     redroidDpi: view.redroidDpi,
     redroidWidth: view.redroidWidth,
     redroidHeight: view.redroidHeight,
-
-    adbHostname: getRedroidHostnameForDevice(id),
-    adbPort: 5555,
   };
 }

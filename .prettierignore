@@ -1,4 +1,4 @@
-src/noVNC
+src/ws-scrcpy-native/
 dist/
 node_modules/
 .next/
