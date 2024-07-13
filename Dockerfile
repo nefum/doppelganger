@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 
 # Install system dependencies for node-canvas & as a replacement for dockerode-compose
 RUN apk add --no-cache \
+    build-base \
     docker-cli \
     curl \
     android-tools
