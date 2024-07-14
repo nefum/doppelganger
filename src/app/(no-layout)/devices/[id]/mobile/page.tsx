@@ -1,6 +1,6 @@
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import ISpinner from "@/app/(no-layout)/devices/[id]/mobile/ispinner.tsx";
-import DeviceClient from "@/components/device-client.tsx";
+import DeviceClient from "@/components/client/device-client.tsx";
 import { createClient } from "@/utils/supabase/server.ts";
 import NotFound from "next/dist/client/components/not-found-error";
 // import "./ios-client.css";

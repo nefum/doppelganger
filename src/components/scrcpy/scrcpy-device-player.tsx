@@ -13,7 +13,14 @@ import ScreenInfo from "@/ws-scrcpy-native/app/ScreenInfo.ts";
 import VideoSettings from "@/ws-scrcpy-native/app/VideoSettings.ts";
 import { ACTION } from "@/ws-scrcpy-native/common/Action.ts";
 import { ParamsStreamScrcpy } from "@/ws-scrcpy-native/types/ParamsStreamScrcpy";
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { clsx } from "clsx";
+import {
+  forwardRef,
+  RefObject,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import "./minstyles.css";
 
 interface ScrcpyDevicePlayerProps {
@@ -24,6 +31,8 @@ interface ScrcpyDevicePlayerProps {
   name?: string;
   fitToScreen?: boolean;
   onDisconnect?: (closeEvent: CloseEvent) => void;
+  onReady?: () => void;
+  className?: string;
 }
 
 export interface ScrcpyDevicePlayerHandle {
@@ -48,6 +57,8 @@ export interface ScrcpyDevicePlayerHandle {
   pressDeviceAppSwitchButton: (action: "down" | "up") => void;
 
   setKeyboardCapture: (capture: boolean) => void;
+
+  containerRef: RefObject<HTMLDivElement>;
 }
 
 // eslint-disable-next-line react/display-name --  set into ScrcpyDevicePlayer
@@ -55,6 +66,18 @@ const ScrcpyDevicePlayer = forwardRef<
   ScrcpyDevicePlayerHandle,
   ScrcpyDevicePlayerProps
 >((props: ScrcpyDevicePlayerProps, ref) => {
+  const {
+    wsPath,
+    udid,
+    displayInfo,
+    videoSettings,
+    name,
+    fitToScreen,
+    onReady,
+    onDisconnect,
+    className,
+  } = props;
+
   const wcReady = useWebCodecs();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,22 +102,18 @@ const ScrcpyDevicePlayer = forwardRef<
     const paramsStreamScrcpy = {
       action: ACTION.STREAM_SCRCPY,
       player: "webcodecs",
-      udid: props.udid,
-      ws: props.wsPath,
-      fitToScreen: props.fitToScreen,
-      videoSettings: props.videoSettings,
+      udid: udid,
+      ws: wsPath,
+      fitToScreen: fitToScreen,
+      videoSettings: videoSettings,
     } satisfies ParamsStreamScrcpy;
 
-    const newPlayer = new WebCodecsPlayer(
-      props.udid,
-      props.displayInfo,
-      canvas,
-    );
+    const newPlayer = new WebCodecsPlayer(udid, displayInfo, canvas);
 
     const newStreamReceiver = new StreamReceiverScrcpy(paramsStreamScrcpy);
 
-    if (props.onDisconnect) {
-      newStreamReceiver.on("disconnected", props.onDisconnect);
+    if (onDisconnect) {
+      newStreamReceiver.on("disconnected", onDisconnect);
     }
 
     const newStreamClient = StreamClientScrcpy.start(
@@ -109,14 +128,15 @@ const ScrcpyDevicePlayer = forwardRef<
     player.current = newPlayer;
     streamReceiver.current = newStreamReceiver;
 
-    return () => {
-      if (props.onDisconnect) {
-        newStreamReceiver.removeEventListener(
-          "disconnected",
-          props.onDisconnect,
-        );
-      }
+    if (onDisconnect) {
+      newStreamReceiver.once("disconnected", onDisconnect);
+    }
 
+    if (onReady) {
+      onReady();
+    }
+
+    return () => {
       newStreamReceiver.destroy();
 
       streamClient.current = null;
@@ -130,15 +150,16 @@ const ScrcpyDevicePlayer = forwardRef<
       }
     };
   }, [
+    displayInfo,
+    fitToScreen,
+    onDisconnect,
+    onReady,
     player,
-    props.displayInfo,
-    props.fitToScreen,
-    props.onDisconnect,
-    props.udid,
-    props.videoSettings,
-    props.wsPath,
     streamClient,
+    udid,
+    videoSettings,
     wcReady,
+    wsPath,
   ]);
 
   useImperativeHandle(ref, () => {
@@ -309,11 +330,13 @@ const ScrcpyDevicePlayer = forwardRef<
           streamClient.current.setHandleKeyboardEvents(capture);
         }
       },
+
+      containerRef,
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="device-view">
+    <div ref={containerRef} className={clsx("device-view", className)}>
       <canvas ref={canvasRef} />
     </div>
   );

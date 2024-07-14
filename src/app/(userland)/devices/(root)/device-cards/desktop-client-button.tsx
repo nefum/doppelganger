@@ -1,5 +1,6 @@
-import DeviceClient from "@/components/device-client.tsx";
-import { AspectRatio } from "@/components/ui/aspect-ratio.tsx";
+import DeviceClient, {
+  DeviceClientHandle,
+} from "@/components/client/device-client.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -11,10 +12,182 @@ import {
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { useEffect, useState } from "react";
-import { LuLoader2, LuMousePointer2 } from "react-icons/lu";
+import { ReactNode, RefObject, useRef } from "react";
+import { BsVolumeDown, BsVolumeUp } from "react-icons/bs";
+import { FaArrowsRotate } from "react-icons/fa6";
+import {
+  LuCircle,
+  LuLoader2,
+  LuMousePointer2,
+  LuPower,
+  LuSettings2,
+  LuSquare,
+  LuTriangle,
+} from "react-icons/lu";
+import { RiNotification2Line } from "react-icons/ri";
 
 const desktopClientTooltip = "Interact";
+
+function ButtonbarButton({
+  onPress,
+  onRelease,
+  children,
+  label,
+}: Readonly<{
+  onPress: () => void;
+  onRelease?: () => void;
+  children: ReactNode;
+  label: string;
+}>): ReactNode {
+  return (
+    <SimpleTooltip content={label}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="my-2"
+        onMouseDown={onPress}
+        onMouseUp={onRelease}
+        onTouchStart={onPress}
+        onTouchEnd={onRelease}
+        onTouchCancel={onRelease}
+      >
+        {children}
+      </Button>
+    </SimpleTooltip>
+  );
+}
+
+function ButtonBar({
+  clientRef,
+}: Readonly<{ clientRef: RefObject<DeviceClientHandle> }>): ReactNode {
+  return (
+    <div className="flex flex-row justify-center">
+      {/*no option to show quality stats, don't expose that to the user*/}
+
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.expandNotification();
+          }
+        }}
+        label={"Show Notifications"}
+      >
+        <RiNotification2Line className="h-5 w-5" />
+      </ButtonbarButton>
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.expandSettings();
+          }
+        }}
+        label={"Show Quick Settings"}
+      >
+        <LuSettings2 className="h-5 w-5" />
+      </ButtonbarButton>
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.rotateDevice();
+          }
+        }}
+        label={"Rotate Device"}
+      >
+        <FaArrowsRotate className="h-5 w-5" />
+      </ButtonbarButton>
+
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDevicePowerButton("down");
+          }
+        }}
+        onRelease={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDevicePowerButton("up");
+          }
+        }}
+        label={"Press Power Button"}
+      >
+        <LuPower className="h-5 w-5" />
+      </ButtonbarButton>
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceVolumeUpButton("down");
+          }
+        }}
+        onRelease={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceVolumeUpButton("up");
+          }
+        }}
+        label={"Volume Up"}
+      >
+        <BsVolumeUp className="h-5 w-5" />
+      </ButtonbarButton>
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceVolumeDownButton("down");
+          }
+        }}
+        onRelease={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceVolumeDownButton("up");
+          }
+        }}
+        label={"Volume Down"}
+      >
+        <BsVolumeDown className="h-5 w-5" />
+      </ButtonbarButton>
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceBackButton("down");
+          }
+        }}
+        onRelease={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceBackButton("up");
+          }
+        }}
+        label={"Back"}
+      >
+        <LuTriangle className="h-5 w-5 -rotate-90" />
+      </ButtonbarButton>
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceHomeButton("down");
+          }
+        }}
+        onRelease={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceHomeButton("up");
+          }
+        }}
+        label={"Home"}
+      >
+        <LuCircle className="h-5 w-5" />
+      </ButtonbarButton>
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceAppSwitchButton("down");
+          }
+        }}
+        onRelease={() => {
+          if (clientRef.current) {
+            clientRef.current.pressDeviceAppSwitchButton("up");
+          }
+        }}
+        label={"App Switch"}
+      >
+        <LuSquare className="h-5 w-5" />
+      </ButtonbarButton>
+    </div>
+  );
+}
 
 export default function DesktopClientButton({
   deviceInfo,
@@ -25,24 +198,7 @@ export default function DesktopClientButton({
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
 }>) {
-  // implementation note of the @shadcn/ui AspectRatio: you can only size it with width, not height
-  // we need to calculate the width based on the radio and the target 80vh
-  const aspectRatio = deviceInfo.redroidWidth / deviceInfo.redroidHeight;
-  const [aspectRatioWidth, setAspectRatioWidth] = useState("100%"); // Default width
-
-  useEffect(() => {
-    const calculateWidth = () => {
-      const viewportHeight = window.innerHeight;
-      const targetHeightPx = viewportHeight * 0.9; // 90vh
-      const widthPx = aspectRatio * targetHeightPx;
-      return `${widthPx}px`;
-    };
-
-    if (dialogOpen) {
-      const width = calculateWidth();
-      setAspectRatioWidth(width);
-    }
-  }, [dialogOpen, aspectRatio]);
+  const ref = useRef<DeviceClientHandle>(null);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -62,20 +218,17 @@ export default function DesktopClientButton({
           </DialogDescription>
         </VisuallyHidden.Root>
         <div className="flex justify-center">
-          <div className="90vh" style={{ width: aspectRatioWidth }}>
-            <AspectRatio ratio={aspectRatio}>
-              {/*do *not* render this if the dialog isn't open, it will hog resources and network traffic*/}
-              {/*TODO: implement a better client that supports rotation*/}
-              {dialogOpen && (
-                <DeviceClient
-                  className="flex justify-center items-center place-items-center"
-                  device={deviceInfo}
-                  loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
-                />
-              )}
-            </AspectRatio>
+          <div className="h-[60vh]">
+            {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
+            <DeviceClient
+              ref={ref}
+              className="flex justify-center items-center place-items-center"
+              device={deviceInfo}
+              loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
+            />
           </div>
         </div>
+        <ButtonBar clientRef={ref} />
       </DialogContent>
     </Dialog>
   );
