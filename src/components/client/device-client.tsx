@@ -225,7 +225,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
           const acceptableMaxWidth = givenMaxWidth ?? maxWidth + 30; // give it a little bit of room for resizing
 
           if (requestedWidthPx > acceptableMaxWidth) {
-            setAspectRatioWidth(`${givenMaxWidth ?? maxWidth}px`);
+            setAspectRatioWidth(`${givenMaxWidth ?? acceptableMaxWidth}px`);
             return;
           }
         }
