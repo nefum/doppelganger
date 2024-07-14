@@ -12,7 +12,7 @@ import {
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { ReactNode, RefObject, useRef } from "react";
+import { ReactNode, RefObject, useEffect, useRef, useState } from "react";
 import { BsVolumeDown, BsVolumeUp } from "react-icons/bs";
 import { FaArrowsRotate } from "react-icons/fa6";
 import {
@@ -189,6 +189,24 @@ function ButtonBar({
   );
 }
 
+function MaxWidthSetter({
+  containerRef,
+  maxWidth,
+  setMaxWidth,
+}: Readonly<{
+  containerRef: RefObject<HTMLDivElement>;
+  maxWidth: number | undefined;
+  setMaxWidth: (maxWidth: number) => void;
+}>): ReactNode {
+  useEffect(() => {
+    if (containerRef.current && maxWidth === undefined) {
+      setMaxWidth(containerRef.current.clientWidth);
+    }
+  }, [containerRef, maxWidth, setMaxWidth]);
+
+  return null;
+}
+
 export default function DesktopClientButton({
   deviceInfo,
   dialogOpen,
@@ -199,6 +217,12 @@ export default function DesktopClientButton({
   setDialogOpen: (open: boolean) => void;
 }>) {
   const ref = useRef<DeviceClientHandle>(null);
+  const clientContainerRef = useRef<HTMLDivElement>(null);
+  const [clientMaxWidth, setClientMaxWidth] = useState<number | undefined>(
+    undefined,
+  );
+
+  // top-level effects in this component will run when the dialog is first loaded, but won't be very effective.
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -217,16 +241,23 @@ export default function DesktopClientButton({
             Interactive stream for {deviceInfo.name}
           </DialogDescription>
         </VisuallyHidden.Root>
-        <div className="flex justify-center">
-          <div className="h-[60vh]">
-            {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
-            <DeviceClient
-              ref={ref}
-              className="flex justify-center items-center place-items-center"
-              device={deviceInfo}
-              loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
-            />
-          </div>
+        <div
+          className="flex justify-center w-full min-h-[25vh] max-h-[70vh]"
+          ref={clientContainerRef}
+        >
+          <MaxWidthSetter
+            containerRef={clientContainerRef}
+            maxWidth={clientMaxWidth}
+            setMaxWidth={setClientMaxWidth}
+          />
+          {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
+          <DeviceClient
+            ref={ref}
+            className="flex justify-center items-center place-items-center"
+            device={deviceInfo}
+            loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
+            givenMaxWidth={clientMaxWidth}
+          />
         </div>
         <ButtonBar clientRef={ref} />
       </DialogContent>

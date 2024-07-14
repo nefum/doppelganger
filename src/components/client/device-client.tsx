@@ -37,6 +37,7 @@ interface DeviceClientProps {
   device: Device;
   loadingNode: ReactNode;
   className?: string;
+  givenMaxWidth?: number;
 }
 
 function getInitialMaxSize(device: Device): Size {
@@ -55,7 +56,7 @@ export type DeviceClientHandle = Omit<
 // eslint-disable-next-line react/display-name -- there is a display name
 const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
   (props, ref) => {
-    const { device, loadingNode, className } = props;
+    const { device, loadingNode, className, givenMaxWidth } = props;
 
     const { toast } = useToast();
 
@@ -216,17 +217,17 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
           // don't allow it to overflow
           const requestedWidthPx = parseInt(requestedWidth.slice(0, -2));
           const maxWidth = parentParent.clientWidth;
-          const acceptableMaxWidth = maxWidth + 20; // give it a little bit of room for resizing
+          const acceptableMaxWidth = givenMaxWidth ?? maxWidth + 30; // give it a little bit of room for resizing
 
           if (requestedWidthPx > acceptableMaxWidth) {
-            setAspectRatioWidth(`${acceptableMaxWidth}px`);
+            setAspectRatioWidth(`${givenMaxWidth ?? maxWidth}px`);
             return;
           }
         }
 
         setAspectRatioWidth(requestedWidth);
       };
-    }, []);
+    }, [givenMaxWidth]);
 
     useEffect(() => {
       if (!parentRef.current) {
