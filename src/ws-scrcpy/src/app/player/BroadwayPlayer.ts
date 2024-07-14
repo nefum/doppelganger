@@ -29,8 +29,8 @@ export class BroadwayPlayer extends BaseCanvasBasedPlayer {
         return typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function';
     }
 
-    constructor(udid: string, displayInfo?: DisplayInfo, name = BroadwayPlayer.playerFullName) {
-        super(udid, displayInfo, name, BroadwayPlayer.storageKeyPrefix);
+    constructor(udid: string, displayInfo?: DisplayInfo, tag?: HTMLCanvasElement) {
+        super(udid, displayInfo, BroadwayPlayer.playerFullName, BroadwayPlayer.storageKeyPrefix, tag);
     }
 
     protected initCanvas(width: number, height: number): void {

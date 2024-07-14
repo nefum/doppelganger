@@ -4,6 +4,6 @@
     "dist/**",
     ".next/**",
     "node_modules/**",
-    "src/ws-scrcpy-native/**"
+    "src/ws-scrcpy/**"
   ]
 }

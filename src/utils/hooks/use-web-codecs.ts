@@ -20,7 +20,7 @@ const webCodecsApis = [
   "ImageTrack",
 ];
 
-async function loadWebCodecsPolyfill(): Promise<void> {
+async function loadWebCodecsPolyfill(): Promise<boolean> {
   let isWebCodecsProvided = true;
 
   for (const api of webCodecsApis) {
@@ -31,10 +31,10 @@ async function loadWebCodecsPolyfill(): Promise<void> {
   }
 
   if (isWebCodecsProvided) {
-    return; // no need to polyfill
+    return true;
   }
 
-  console.log("Browser does not fully support WebCodecs, loading polyfill...");
+  console.warn("Browser does not fully support WebCodecs, loading polyfill...");
 
   const libAvWrapper = LibAV.LibAV();
 
@@ -46,22 +46,37 @@ async function loadWebCodecsPolyfill(): Promise<void> {
     });
 
     console.log("WebCodecs polyfill loaded successfully");
+
+    return true;
   } catch (error) {
     console.error("Failed to load WebCodecs polyfill:", error);
+
+    return false;
+
     // throw error; // Re-throw the error so it can be caught by the caller if needed
     // the show must go on, we can try to continue without the polyfill
   }
 }
 
-export default function useWebCodecs(): boolean {
+/**
+ * Hook to check if the browser supports WebCodecs and load the polyfill if needed.
+ * @returns Returns a tuple with two booleans: [ready, supportsWebCodecs].
+ *          supportsWebCodecs will be true if the browser supports WebCodecs or the polyfill was loaded successfully.
+ *          ready will be true when the polyfill has been loaded and the check is complete.
+ */
+export default function useWebCodecs(): [boolean, boolean | null] {
   const [ready, setReady] = useState(false);
+  const [supportsWebCodecs, setSupportsWebCodecs] = useState<boolean | null>(
+    null,
+  );
 
   // Load the WebCodecs polyfill
   useEffect(() => {
-    loadWebCodecsPolyfill().then(() => {
+    loadWebCodecsPolyfill().then((result) => {
       setReady(true);
+      setSupportsWebCodecs(result);
     });
   });
 
-  return ready;
+  return [ready, supportsWebCodecs];
 }

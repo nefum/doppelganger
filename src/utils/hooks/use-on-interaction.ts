@@ -35,6 +35,10 @@ const interactionEvents = [
   "pointercancel", // Fired when a pointer event is canceled
 ];
 
+/**
+ * Hook to detect if the user has interacted with the element at least once, best used for waiting for interaction before starting video or audio that cannot run without user interaction.
+ * @param ref The Element to watch
+ */
 export default function useOnInteraction(
   ref: RefObject<HTMLDivElement>,
 ): boolean {

@@ -1,5 +1,10 @@
 import { useEffect, useRef } from "react";
 
+/**
+ * Debounce a function to prevent it from being called too often. If a function is called during the timeout, the function will *NOT* be run.
+ * @param func
+ * @param delay The timeout, in milliseconds, between successive function calls
+ */
 function useDebouncedFunction<T extends (...args: any[]) => void>(
   func: T,
   delay: number,

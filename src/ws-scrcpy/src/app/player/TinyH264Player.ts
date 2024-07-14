@@ -1,10 +1,11 @@
 import { BaseCanvasBasedPlayer } from './BaseCanvasBasedPlayer';
-import TinyH264Worker from 'worker-loader!./../../../vendor/tinyh264/H264NALDecoder.worker';
 import VideoSettings from '../VideoSettings';
 import YUVWebGLCanvas from '../../../vendor/tinyh264/YUVWebGLCanvas';
 import YUVCanvas from '../../../vendor/tinyh264/YUVCanvas';
 import Size from '../Size';
 import { DisplayInfo } from '../DisplayInfo';
+
+const tinyH264workerUrl = new URL('./../../../vendor/tinyh264/H264NALDecoder.worker', import.meta.url);
 
 type WorkerMessage = {
     type: string;
@@ -28,7 +29,7 @@ export class TinyH264Player extends BaseCanvasBasedPlayer {
         sendFrameMeta: false,
     });
 
-    private worker?: TinyH264Worker;
+    private worker?: Worker;
     private isDecoderReady = false;
     protected canvas?: YUVWebGLCanvas | YUVCanvas;
     public readonly supportsScreenshot: boolean = true;
@@ -37,8 +38,8 @@ export class TinyH264Player extends BaseCanvasBasedPlayer {
         return typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function';
     }
 
-    constructor(udid: string, displayInfo?: DisplayInfo, name = TinyH264Player.playerFullName) {
-        super(udid, displayInfo, name, TinyH264Player.storageKeyPrefix);
+    constructor(udid: string, displayInfo?: DisplayInfo, tag?: HTMLCanvasElement) {
+        super(udid, displayInfo, TinyH264Player.playerFullName, TinyH264Player.storageKeyPrefix, tag);
     }
 
     private onWorkerMessage = (event: MessageEvent): void => {
@@ -57,7 +58,7 @@ export class TinyH264Player extends BaseCanvasBasedPlayer {
     };
 
     private initWorker(): void {
-        this.worker = new TinyH264Worker();
+        this.worker = new Worker(tinyH264workerUrl);
         this.worker.addEventListener('message', this.onWorkerMessage);
     }
 

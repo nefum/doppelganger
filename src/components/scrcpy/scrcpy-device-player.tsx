@@ -1,18 +1,20 @@
 "use client";
 
-import useWebCodecs from "@/components/scrcpy/use-web-codecs.ts";
-import { CommandControlMessage } from "@/ws-scrcpy-native/app/controlMessage/CommandControlMessage.ts";
-import { ControlMessage } from "@/ws-scrcpy-native/app/controlMessage/ControlMessage.ts";
-import { KeyCodeControlMessage } from "@/ws-scrcpy-native/app/controlMessage/KeyCodeControlMessage.ts";
-import { DisplayInfo } from "@/ws-scrcpy-native/app/DisplayInfo.ts";
-import KeyEvent from "@/ws-scrcpy-native/app/googDevice/android/KeyEvent.ts";
-import { StreamClientScrcpy } from "@/ws-scrcpy-native/app/googDevice/client/StreamClientScrcpy.ts";
-import { StreamReceiverScrcpy } from "@/ws-scrcpy-native/app/googDevice/client/StreamReceiverScrcpy.ts";
-import { WebCodecsPlayer } from "@/ws-scrcpy-native/app/player/WebCodecsPlayer.ts";
-import ScreenInfo from "@/ws-scrcpy-native/app/ScreenInfo.ts";
-import VideoSettings from "@/ws-scrcpy-native/app/VideoSettings.ts";
-import { ACTION } from "@/ws-scrcpy-native/common/Action.ts";
-import { ParamsStreamScrcpy } from "@/ws-scrcpy-native/types/ParamsStreamScrcpy";
+import useWebCodecs from "@/utils/hooks/use-web-codecs.ts";
+import { CommandControlMessage } from "@/ws-scrcpy/src/app/controlMessage/CommandControlMessage.ts";
+import { ControlMessage } from "@/ws-scrcpy/src/app/controlMessage/ControlMessage.ts";
+import { KeyCodeControlMessage } from "@/ws-scrcpy/src/app/controlMessage/KeyCodeControlMessage.ts";
+import { DisplayInfo } from "@/ws-scrcpy/src/app/DisplayInfo.ts";
+import KeyEvent from "@/ws-scrcpy/src/app/googDevice/android/KeyEvent.ts";
+import { StreamClientScrcpy } from "@/ws-scrcpy/src/app/googDevice/client/StreamClientScrcpy.ts";
+import { StreamReceiverScrcpy } from "@/ws-scrcpy/src/app/googDevice/client/StreamReceiverScrcpy.ts";
+import { BasePlayer } from "@/ws-scrcpy/src/app/player/BasePlayer.ts";
+import { TinyH264Player } from "@/ws-scrcpy/src/app/player/TinyH264Player.ts";
+import { WebCodecsPlayer } from "@/ws-scrcpy/src/app/player/WebCodecsPlayer.ts";
+import ScreenInfo from "@/ws-scrcpy/src/app/ScreenInfo.ts";
+import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
+import { ACTION } from "@/ws-scrcpy/src/common/Action.ts";
+import { ParamsStreamScrcpy } from "@/ws-scrcpy/src/types/ParamsStreamScrcpy";
 import { clsx } from "clsx";
 import {
   forwardRef,
@@ -20,6 +22,7 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from "react";
 import "./minstyles.css";
 
@@ -56,12 +59,12 @@ export interface ScrcpyDevicePlayerHandle {
   pressDeviceHomeButton: (action: "down" | "up") => void;
   pressDeviceAppSwitchButton: (action: "down" | "up") => void;
 
+  getKeyboardCapture: () => boolean;
   setKeyboardCapture: (capture: boolean) => void;
 
   containerRef: RefObject<HTMLDivElement>;
 }
 
-// eslint-disable-next-line react/display-name --  set into ScrcpyDevicePlayer
 const ScrcpyDevicePlayer = forwardRef<
   ScrcpyDevicePlayerHandle,
   ScrcpyDevicePlayerProps
@@ -78,17 +81,20 @@ const ScrcpyDevicePlayer = forwardRef<
     className,
   } = props;
 
-  const wcReady = useWebCodecs();
+  const [wcReady, wcSupported] = useWebCodecs();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const streamClient = useRef<StreamClientScrcpy | null>(null);
-  const player = useRef<WebCodecsPlayer | null>(null);
+  const player = useRef<BasePlayer | null>(null);
   const streamReceiver = useRef<StreamReceiverScrcpy | null>(null);
 
+  // we are the only one who can change keyboard events, so this state must therefore always be accurate
+  const [keyboardListening, setKeyboardListening] = useState(false);
+
   useEffect(() => {
-    if (!wcReady) {
+    if (!wcReady || wcSupported === null) {
       return;
     }
 
@@ -99,16 +105,55 @@ const ScrcpyDevicePlayer = forwardRef<
     const canvas = canvasRef.current;
     const container = containerRef.current;
 
+    // options for the non-webcodecs player are either tinyh264 or broadway
+    // both have been untouched for ages and neither are production-viable
+
+    // tinyh264 is faster and uses webworkers
+    // broadway isn't even on npm
+
+    // and also broadway is broken in webpack5 and it will take forever to fix ‼️
+
+    // the choice is relatively obvious
+
+    type ScrcpySupportedPlayerName = "webcodecs" | "tinyh264" | "broadway";
+    let playerName: ScrcpySupportedPlayerName;
+
+    if (wcSupported && WebCodecsPlayer.isSupported()) {
+      playerName = "webcodecs";
+    } else {
+      console.warn(
+        "tinyh264 is not production-viable, consider using a browser that natively supports webcodecs",
+      );
+      playerName = "tinyh264";
+    }
+
+    if (playerName == "tinyh264" && !TinyH264Player.isSupported()) {
+      console.warn(
+        "had to fallback to tinyh264 and we aren't sure if its supported, possible failure imbound",
+      );
+    }
+
     const paramsStreamScrcpy = {
       action: ACTION.STREAM_SCRCPY,
-      player: "webcodecs",
+      player: playerName,
       udid: udid,
       ws: wsPath,
       fitToScreen: fitToScreen,
       videoSettings: videoSettings,
     } satisfies ParamsStreamScrcpy;
 
-    const newPlayer = new WebCodecsPlayer(udid, displayInfo, canvas);
+    let newPlayer: BasePlayer;
+    switch (playerName) {
+      // case "broadway":
+      //   newPlayer = new BroadwayPlayer(udid, displayInfo, canvas);
+      //   break;
+      case "webcodecs":
+        newPlayer = new WebCodecsPlayer(udid, displayInfo, canvas);
+        break;
+      case "tinyh264":
+        newPlayer = new TinyH264Player(udid, displayInfo, canvas);
+        break;
+    }
 
     const newStreamReceiver = new StreamReceiverScrcpy(paramsStreamScrcpy);
 
@@ -313,15 +358,19 @@ const ScrcpyDevicePlayer = forwardRef<
         }
       },
 
+      getKeyboardCapture: () => {
+        return keyboardListening;
+      },
       setKeyboardCapture: (capture: boolean) => {
         if (streamClient.current) {
+          setKeyboardListening(capture);
           streamClient.current.setHandleKeyboardEvents(capture);
         }
       },
 
       containerRef,
     };
-  }, []);
+  }, [keyboardListening]);
 
   return (
     <div ref={containerRef} className={clsx("device-view", className)}>
@@ -329,5 +378,6 @@ const ScrcpyDevicePlayer = forwardRef<
     </div>
   );
 });
+ScrcpyDevicePlayer.displayName = "ScrcpyDevicePlayer";
 
 export default ScrcpyDevicePlayer;

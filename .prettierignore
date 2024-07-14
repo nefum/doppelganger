@@ -1,4 +1,4 @@
-src/ws-scrcpy-native/
+src/ws-scrcpy/
 dist/
 node_modules/
 .next/

@@ -257,6 +257,7 @@ export default function DesktopClientButton({
             device={deviceInfo}
             loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
             givenMaxWidth={clientMaxWidth}
+            autoCaptureKeyboard
           />
         </div>
         <ButtonBar clientRef={ref} />

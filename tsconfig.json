@@ -42,6 +42,6 @@
   "exclude": [
     "node_modules",
     ".next",
-    "src/ws-scrcpy-native/**/*.ts",
+    "src/ws-scrcpy/**/*.ts"
   ]
 }

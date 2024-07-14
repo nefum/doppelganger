@@ -7,9 +7,9 @@ import ScrcpyDevicePlayer, {
 import { AspectRatio } from "@/components/ui/aspect-ratio.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
-import useOnInteraction from "@/utils/use-on-interaction.ts"; // doesn't exist at runtime; type-only
-import Size from "@/ws-scrcpy-native/app/Size.ts";
-import VideoSettings from "@/ws-scrcpy-native/app/VideoSettings.ts";
+import useOnInteraction from "@/utils/hooks/use-on-interaction.ts"; // doesn't exist at runtime; type-only
+import Size from "@/ws-scrcpy/src/app/Size.ts";
+import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
 import { Device } from "@prisma/client";
 import type { Player } from "jsmpeg";
@@ -36,8 +36,11 @@ const RESIZE_DEBOUNCE = 100;
 interface DeviceClientProps {
   device: Device;
   loadingNode: ReactNode;
+
   className?: string;
   givenMaxWidth?: number;
+
+  autoCaptureKeyboard?: boolean;
 }
 
 function getInitialMaxSize(device: Device): Size {
@@ -46,17 +49,21 @@ function getInitialMaxSize(device: Device): Size {
 
 export type DeviceClientHandle = Omit<
   ScrcpyDevicePlayerHandle,
-  | "getVideoSettings"
-  | "setVideoSettings"
-  | "setKeyboardCapture"
-  | "containerRef"
-  | "getName"
+  "getVideoSettings" | "setVideoSettings" | "containerRef" | "getName"
 >;
 
-// eslint-disable-next-line react/display-name -- there is a display name
+/**
+ * A client to connect to an Android device using ws-scrcpy. See the full props list and the handle for customizable behaviour.
+ */
 const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
   (props, ref) => {
-    const { device, loadingNode, className, givenMaxWidth } = props;
+    const {
+      device,
+      loadingNode,
+      className,
+      givenMaxWidth,
+      autoCaptureKeyboard,
+    } = props;
 
     const { toast } = useToast();
 
@@ -82,8 +89,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     const [connected, setConnected] = useState(false);
 
     const interacted = useOnInteraction(containerRef);
-    // not safe to do a state that is updated by the rendering, causes a loop
-    // const [ready, setReady] = useState(false);
 
     useEffect(() => {
       const scrcpyWsUrl = new URL(window.location.href);
@@ -298,6 +303,10 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
 
     // turn on keyboard processing when a key is pressed
     useEffect(() => {
+      if (!autoCaptureKeyboard) {
+        return;
+      }
+
       function keydown(e: KeyboardEvent) {
         if (!scrcpyClientRef.current) {
           return;
@@ -308,7 +317,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
 
       document.addEventListener("keydown", keydown);
       return () => document.removeEventListener("keydown", keydown);
-    }, []);
+    }, [autoCaptureKeyboard]);
 
     useImperativeHandle(ref, () => {
       return {
@@ -318,6 +327,21 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
         setShowQualityStats: (show: boolean) => {
           if (scrcpyClientRef.current) {
             scrcpyClientRef.current.setShowQualityStats(show);
+          }
+        },
+
+        getKeyboardCapture: () => {
+          return scrcpyClientRef.current?.getKeyboardCapture() ?? false;
+        },
+        setKeyboardCapture: (capture: boolean) => {
+          if (autoCaptureKeyboard) {
+            console.warn(
+              "setKeyboardCapture is disabled because autoListenToKeyboard is enabled",
+            );
+            return;
+          }
+          if (scrcpyClientRef.current) {
+            scrcpyClientRef.current.setKeyboardCapture(capture);
           }
         },
 
@@ -373,7 +397,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
           }
         },
       };
-    }, []);
+    }, [autoCaptureKeyboard]);
 
     return (
       <div ref={parentRef} style={{ width: aspectRatioWidth }}>
@@ -412,6 +436,9 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
 
                     setConnected(false);
                   }}
+                  videoSettings={createVideoSettingsWithBound(
+                    getInitialMaxSize(device),
+                  )}
                   onConnect={() => {
                     updateBoundsRuntime();
 
@@ -429,5 +456,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     );
   },
 );
+DeviceClient.displayName = "DeviceClient";
 
 export default DeviceClient;
