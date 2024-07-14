@@ -31,6 +31,7 @@ const JSMpegPlayer = JSMpeg.Player || JSMpegVideoElement.player;
 const MOBILE_BITRATE_BYTES = 800_0000;
 const MOBILE_IFRAME_INTERVAL = 10;
 const OVERSCAN_MULTIPLIER = 1.05;
+const RESIZE_DEBOUNCE = 100;
 
 interface DeviceClientProps {
   device: Device;
@@ -243,7 +244,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       };
 
       const width = calculateWidth()!;
-      setAspectRatioWidthWithoutOverflow(width);
+      setAspectRatioWidth(width);
 
       const resizeObserver = new ResizeObserver(() => {
         setAspectRatioWidthWithoutOverflow(calculateWidth()!);
@@ -404,13 +405,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
                       // this library does normal exits with 1005, so dumb
                       toast({
                         title: "Disconnected Abnormally",
-                        description: (
-                          <>
-                            <p className="shadcn-p">
-                              Attempting reconnection...
-                            </p>
-                          </>
-                        ),
+                        description: "Attempting reconnection...",
                       });
                     }
 
