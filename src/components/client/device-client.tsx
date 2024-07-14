@@ -77,6 +77,8 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       null,
     );
 
+    const [connected, setConnected] = useState(false);
+
     const interacted = useOnInteraction(containerRef);
     // not safe to do a state that is updated by the rendering, causes a loop
     // const [ready, setReady] = useState(false);
@@ -200,6 +202,31 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     }, [sizerResizeObserver]);
 
     const [aspectRatioWidth, setAspectRatioWidth] = useState("100%"); // Default width
+
+    const setAspectRatioWidthWithoutOverflow = useMemo(() => {
+      return (requestedWidth: string) => {
+        if (!parentRef.current) {
+          return;
+        }
+
+        const parentParent = parentRef.current.parentElement!;
+
+        if (requestedWidth.endsWith("px")) {
+          // don't allow it to overflow
+          const requestedWidthPx = parseInt(requestedWidth.slice(0, -2));
+          const maxWidth = parentParent.clientWidth;
+          const acceptableMaxWidth = maxWidth + 20; // give it a little bit of room for resizing
+
+          if (requestedWidthPx > acceptableMaxWidth) {
+            setAspectRatioWidth(`${acceptableMaxWidth}px`);
+            return;
+          }
+        }
+
+        setAspectRatioWidth(requestedWidth);
+      };
+    }, []);
+
     useEffect(() => {
       if (!parentRef.current) {
         return;
@@ -216,10 +243,10 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       };
 
       const width = calculateWidth()!;
-      setAspectRatioWidth(width);
+      setAspectRatioWidthWithoutOverflow(width);
 
       const resizeObserver = new ResizeObserver(() => {
-        setAspectRatioWidth(calculateWidth()!);
+        setAspectRatioWidthWithoutOverflow(calculateWidth()!);
       });
 
       resizeObserver.observe(parentRef.current!);
@@ -227,7 +254,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       return () => {
         resizeObserver.disconnect();
       };
-    }, [aspectRatio]);
+    }, [aspectRatio, setAspectRatioWidthWithoutOverflow]);
 
     const handleRatioChange = useMemo(
       () => () => {
@@ -248,6 +275,24 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       },
       [aspectRatio],
     );
+
+    const scrcpyContainerResizeObserver = useMemo(() => {
+      return new ResizeObserver(handleRatioChange);
+    }, [handleRatioChange]);
+
+    useEffect(() => {
+      if (!connected && !scrcpyClientRef.current) {
+        return;
+      }
+
+      const scrcpyContainer = scrcpyClientRef.current!.containerRef.current!;
+      const resizeObserver = scrcpyContainerResizeObserver;
+
+      resizeObserver.observe(scrcpyContainer);
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }, [connected, scrcpyContainerResizeObserver]);
 
     // turn on keyboard processing when a key is pressed
     useEffect(() => {
@@ -345,28 +390,42 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
           />
           <div className={styles.absolutelyCenteredItem}>
             <Suspense fallback={loadingNode}>
-              {scrcpyWsUrlString && (
+              {(scrcpyWsUrlString && (
                 <ScrcpyDevicePlayer
                   ref={scrcpyClientRef}
                   wsPath={scrcpyWsUrlString}
                   udid={getUdidForDevice(device)}
-                  onDisconnect={() => {
-                    toast({
-                      title: "Disconnected",
-                      description: (
-                        <>
-                          <p className="shadcn-p">Attempting reconnection...</p>
-                        </>
-                      ),
-                    });
+                  onDisconnect={(closeEvent) => {
+                    if (
+                      closeEvent.code !== 1005 &&
+                      closeEvent.code !== 1000 &&
+                      closeEvent.code !== 1001
+                    ) {
+                      // this library does normal exits with 1005, so dumb
+                      toast({
+                        title: "Disconnected Abnormally",
+                        description: (
+                          <>
+                            <p className="shadcn-p">
+                              Attempting reconnection...
+                            </p>
+                          </>
+                        ),
+                      });
+                    }
+
+                    setConnected(false);
                   }}
                   onConnect={() => {
                     updateBoundsRuntime();
-                    // this will be fired last
+
+                    setConnected(true);
                   }}
                 />
-              )}
+              )) ||
+                loadingNode}
             </Suspense>
+            {!connected && scrcpyClientRef.current && loadingNode}
           </div>
           <canvas ref={audioCanvasRef} className="h-0 w-0" />
         </AspectRatio>
