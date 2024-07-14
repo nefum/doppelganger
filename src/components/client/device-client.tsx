@@ -166,7 +166,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       [],
     );
 
-    const setBoundsRuntime = useMemo(
+    const updateBoundsRuntime = useMemo(
       () => () => {
         if (!scrcpyClientRef.current || !sizerRef.current) {
           return;
@@ -183,9 +183,10 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       },
       [createVideoSettingsWithBound, getMaxBounds],
     );
+
     const sizerResizeObserver = useMemo(() => {
-      return new ResizeObserver(setBoundsRuntime);
-    }, [setBoundsRuntime]);
+      return new ResizeObserver(updateBoundsRuntime);
+    }, [updateBoundsRuntime]);
 
     useEffect(() => {
       if (!sizerRef.current) {
@@ -359,7 +360,8 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
                       ),
                     });
                   }}
-                  onReady={() => {
+                  onConnect={() => {
+                    updateBoundsRuntime();
                     // this will be fired last
                   }}
                 />

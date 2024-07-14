@@ -31,7 +31,7 @@ interface ScrcpyDevicePlayerProps {
   name?: string;
   fitToScreen?: boolean;
   onDisconnect?: (closeEvent: CloseEvent) => void;
-  onReady?: () => void;
+  onConnect?: () => void;
   className?: string;
 }
 
@@ -73,7 +73,7 @@ const ScrcpyDevicePlayer = forwardRef<
     videoSettings,
     name,
     fitToScreen,
-    onReady,
+    onConnect,
     onDisconnect,
     className,
   } = props;
@@ -116,15 +116,13 @@ const ScrcpyDevicePlayer = forwardRef<
       newStreamReceiver.on("disconnected", onDisconnect);
     }
 
-    const newStreamClient = StreamClientScrcpy.start(
+    streamClient.current = StreamClientScrcpy.start(
       paramsStreamScrcpy,
       container,
       newStreamReceiver,
       newPlayer,
       paramsStreamScrcpy.fitToScreen,
     );
-
-    streamClient.current = newStreamClient;
     player.current = newPlayer;
     streamReceiver.current = newStreamReceiver;
 
@@ -132,8 +130,8 @@ const ScrcpyDevicePlayer = forwardRef<
       newStreamReceiver.once("disconnected", onDisconnect);
     }
 
-    if (onReady) {
-      onReady();
+    if (onConnect) {
+      newStreamReceiver.once("connected", onConnect);
     }
 
     return () => {
@@ -149,18 +147,8 @@ const ScrcpyDevicePlayer = forwardRef<
         container.removeChild(child);
       }
     };
-  }, [
-    displayInfo,
-    fitToScreen,
-    onDisconnect,
-    onReady,
-    player,
-    streamClient,
-    udid,
-    videoSettings,
-    wcReady,
-    wsPath,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- we SHOULD NOT re-run this effect, it's a one-time setup and any changes can be made via the handle since this is so expensive
+  }, [wcReady]);
 
   useImperativeHandle(ref, () => {
     return {
