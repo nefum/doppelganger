@@ -29,6 +29,7 @@ import {
   LuTriangle,
 } from "react-icons/lu";
 import { RiNotification2Line } from "react-icons/ri";
+import { useMediaQuery } from "usehooks-ts";
 
 const desktopClientTooltip = "Interact";
 
@@ -218,6 +219,7 @@ export default function DesktopClientButton({
   openMobileDialog: () => void;
 }>) {
   const ref = useRef<DeviceClientHandle>(null);
+  const screenTooSmall = useMediaQuery("(max-width: 500px)");
 
   // top-level effects in this component will run when the dialog is first loaded, but won't be very effective.
 
@@ -238,20 +240,37 @@ export default function DesktopClientButton({
             Interactive stream for {deviceInfo.name}
           </DialogDescription>
         </VisuallyHidden.Root>
-        <div
-          // i have long tried to remove the minimum width, but it is not worth it.
-          className="flex justify-center  items-center place-items-center w-full min-h-[35vh] max-h-[70vh]"
-        >
-          {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
-          <DeviceClient
-            ref={ref}
-            device={deviceInfo}
-            loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
-            autoCaptureKeyboard
-            playAudio
-          />
-        </div>
-        <ButtonBar clientRef={ref} openMobileDialog={openMobileDialog} />
+        {screenTooSmall ? (
+          <div>
+            <p className="shadcn-p">
+              This screen is too small to use the embedded viewer.
+            </p>
+            <p className="shadcn-p">
+              Please use a larger screen, or{" "}
+              <span className="shadcn-link" onClick={openMobileDialog}>
+                click here
+              </span>{" "}
+              to open the immersive viewer.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div
+              // i have long tried to remove the minimum width, but it is not worth it.
+              className="flex justify-center  items-center place-items-center w-full min-h-[35vh] max-h-[70vh]"
+            >
+              {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
+              <DeviceClient
+                ref={ref}
+                device={deviceInfo}
+                loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
+                autoCaptureKeyboard
+                playAudio
+              />
+            </div>
+            <ButtonBar clientRef={ref} openMobileDialog={openMobileDialog} />
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
