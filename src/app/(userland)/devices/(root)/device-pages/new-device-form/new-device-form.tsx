@@ -416,6 +416,7 @@ function NewDeviceForm({
           "Content-Type": "application/json",
         },
       });
+      const resultJson = await result.json();
 
       if (result.ok) {
         clientSideRedirectWithToast(
@@ -426,7 +427,7 @@ function NewDeviceForm({
         console.error("Failed to create device", result);
         toast({
           title: "Failed to create device",
-          description: "Check browser console for more information.",
+          description: resultJson.error ?? "An unknown error occurred",
         });
         setDialogCanClose(true);
       }

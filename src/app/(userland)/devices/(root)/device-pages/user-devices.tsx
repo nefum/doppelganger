@@ -1,6 +1,6 @@
-import prisma from "%/database/prisma.ts";
 import { DeviceCard } from "@/app/(userland)/devices/(root)/device-cards/device-card.tsx";
 import NoDevicesCard from "@/app/(userland)/devices/(root)/device-pages/no-devices-card.tsx";
+import { getUsersDevices } from "@/utils/devices.ts";
 import { getIsDeviceRunning } from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import NotFound from "next/dist/client/components/not-found-error";
@@ -15,21 +15,7 @@ export default async function UserDevices() {
     return <NotFound />;
   }
 
-  const clientDevices = await prisma.device.findMany({
-    where: {
-      ownerId: user.id,
-      id:
-        process.env.NODE_ENV === "production"
-          ? {
-              not: {
-                endsWith: "staging",
-              },
-            }
-          : {
-              endsWith: "staging",
-            },
-    },
-  });
+  const clientDevices = await getUsersDevices(user);
 
   const clientDeviceUpStates: { [id: string]: boolean } = {};
 
