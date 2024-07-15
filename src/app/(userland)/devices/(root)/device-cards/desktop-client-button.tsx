@@ -242,7 +242,7 @@ export default function DesktopClientButton({
           </DialogDescription>
         </VisuallyHidden.Root>
         <div
-          className="flex justify-center w-full min-h-[25vh] max-h-[70vh]"
+          className="flex justify-center  items-center place-items-center w-full min-h-[25vh] max-h-[70vh]"
           ref={clientContainerRef}
         >
           <MaxWidthSetter
@@ -253,7 +253,6 @@ export default function DesktopClientButton({
           {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
           <DeviceClient
             ref={ref}
-            className="flex justify-center items-center place-items-center"
             device={deviceInfo}
             loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
             givenMaxWidth={clientMaxWidth}

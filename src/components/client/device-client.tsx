@@ -1,11 +1,11 @@
 "use client";
 
 import { getUdidForDevice } from "%/device-info/device-info.ts";
+import FillingAspectRatio from "@/components/client/filling-aspect-ratio.tsx";
 import JsmpegClient from "@/components/client/jsmpeg-client.tsx";
 import ScrcpyDevicePlayer, {
   ScrcpyDevicePlayerHandle,
 } from "@/components/scrcpy/scrcpy-device-player.tsx";
-import { AspectRatio } from "@/components/ui/aspect-ratio.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
 import Size from "@/ws-scrcpy/src/app/Size.ts";
 import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
@@ -31,7 +31,6 @@ interface DeviceClientProps {
   device: Device;
   loadingNode: ReactNode;
 
-  className?: string;
   givenMaxWidth?: number;
 
   autoCaptureKeyboard?: boolean;
@@ -55,7 +54,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     const {
       device,
       loadingNode,
-      className,
       givenMaxWidth,
       autoCaptureKeyboard,
       playAudio,
@@ -67,7 +65,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       device.redroidWidth / device.redroidHeight,
     );
 
-    const parentRef = useRef<HTMLDivElement>(null);
     const scrcpyClientRef = useRef<ScrcpyDevicePlayerHandle>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const sizerRef = useRef<HTMLImageElement>(null);
@@ -152,61 +149,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
         sizerResizeObserver.disconnect();
       };
     }, [sizerResizeObserver]);
-
-    const [aspectRatioWidth, setAspectRatioWidth] = useState("100%"); // Default width
-
-    const setAspectRatioWidthWithoutOverflow = useMemo(() => {
-      return (requestedWidth: string) => {
-        if (!parentRef.current) {
-          return;
-        }
-
-        const parentParent = parentRef.current.parentElement!;
-
-        if (requestedWidth.endsWith("px")) {
-          // don't allow it to overflow
-          const requestedWidthPx = parseInt(requestedWidth.slice(0, -2));
-          const maxWidth = parentParent.clientWidth;
-          const acceptableMaxWidth = givenMaxWidth ?? maxWidth + 30; // give it a little bit of room for resizing
-
-          if (requestedWidthPx > acceptableMaxWidth) {
-            setAspectRatioWidth(`${givenMaxWidth ?? acceptableMaxWidth}px`);
-            return;
-          }
-        }
-
-        setAspectRatioWidth(requestedWidth);
-      };
-    }, [givenMaxWidth]);
-
-    useEffect(() => {
-      if (!parentRef.current) {
-        return;
-      }
-
-      const calculateWidth = () => {
-        if (!parentRef.current) {
-          return;
-        }
-
-        const viewportHeightPx = parentRef.current.parentElement!.clientHeight;
-        const widthPx = aspectRatio * viewportHeightPx;
-        return `${widthPx}px`;
-      };
-
-      const width = calculateWidth()!;
-      setAspectRatioWidth(width);
-
-      const resizeObserver = new ResizeObserver(() => {
-        setAspectRatioWidthWithoutOverflow(calculateWidth()!);
-      });
-
-      resizeObserver.observe(parentRef.current!);
-
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }, [aspectRatio, setAspectRatioWidthWithoutOverflow]);
 
     const handleRatioChange = useMemo(
       () => () => {
@@ -345,66 +287,65 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     }, [autoCaptureKeyboard]);
 
     return (
-      <div ref={parentRef} style={{ width: aspectRatioWidth }}>
-        <AspectRatio
-          ratio={aspectRatio}
-          ref={containerRef}
-          className={className}
-        >
-          {/*this is SO hacky but it's the best way to do the scrcpydevicehelper with react bindings*/}
-          {/*eslint-disable-next-line @next/next/no-img-element -- placeholder*/}
-          <img
-            ref={sizerRef}
-            className="h-full w-full object-cover opacity-0"
-            src="/placeholder.svg"
-            alt={`${device.name} live stream`}
-          />
-          <div className={styles.absolutelyCenteredItem}>
-            <Suspense fallback={loadingNode}>
-              {(scrcpyWsUrlString && (
-                <ScrcpyDevicePlayer
-                  ref={scrcpyClientRef}
-                  wsPath={scrcpyWsUrlString}
-                  udid={getUdidForDevice(device)}
-                  onDisconnect={(closeEvent) => {
-                    if (
-                      closeEvent.code !== 1005 &&
-                      closeEvent.code !== 1000 &&
-                      closeEvent.code !== 1001
-                    ) {
-                      // this library does normal exits with 1005, so dumb
-                      toast({
-                        title: "Disconnected Abnormally",
-                        description: "Attempting reconnection...",
-                      });
-                    }
+      <FillingAspectRatio
+        givenMaxWidth={givenMaxWidth}
+        aspectRatio={aspectRatio}
+        innerContainerRef={containerRef}
+        className={"items-center place-items-center"}
+      >
+        {/*this is SO hacky but it's the best way to do the scrcpydevicehelper with react bindings*/}
+        {/*eslint-disable-next-line @next/next/no-img-element -- placeholder*/}
+        <img
+          ref={sizerRef}
+          className="h-full w-full object-cover opacity-0"
+          src="/placeholder.svg"
+          alt={`${device.name} live stream`}
+        />
+        <div className={styles.absolutelyCenteredItem}>
+          <Suspense fallback={loadingNode}>
+            {(scrcpyWsUrlString && (
+              <ScrcpyDevicePlayer
+                ref={scrcpyClientRef}
+                wsPath={scrcpyWsUrlString}
+                udid={getUdidForDevice(device)}
+                onDisconnect={(closeEvent) => {
+                  if (
+                    closeEvent.code !== 1005 &&
+                    closeEvent.code !== 1000 &&
+                    closeEvent.code !== 1001
+                  ) {
+                    // this library does normal exits with 1005, so dumb
+                    toast({
+                      title: "Disconnected Abnormally",
+                      description: "Attempting reconnection...",
+                    });
+                  }
 
-                    setConnected(false);
-                  }}
-                  videoSettings={createVideoSettingsWithBound(
-                    getInitialMaxSize(device),
-                  )}
-                  onConnect={() => {
-                    updateBoundsRuntime();
+                  setConnected(false);
+                }}
+                videoSettings={createVideoSettingsWithBound(
+                  getInitialMaxSize(device),
+                )}
+                onConnect={() => {
+                  updateBoundsRuntime();
 
-                    setConnected(true);
-                  }}
-                />
-              )) ||
-                loadingNode}
-            </Suspense>
-            {!connected && scrcpyClientRef.current && loadingNode}
-          </div>
-          {jsmpegWsUrlString && playAudio && (
-            <div className={styles.absolutelyCenteredItem}>
-              <JsmpegClient
-                containerRef={containerRef}
-                jsmpegWsUrlString={jsmpegWsUrlString}
+                  setConnected(true);
+                }}
               />
-            </div>
-          )}
-        </AspectRatio>
-      </div>
+            )) ||
+              loadingNode}
+          </Suspense>
+          {!connected && scrcpyClientRef.current && loadingNode}
+        </div>
+        {jsmpegWsUrlString && playAudio && (
+          <div className={styles.absolutelyCenteredItem}>
+            <JsmpegClient
+              containerRef={containerRef}
+              jsmpegWsUrlString={jsmpegWsUrlString}
+            />
+          </div>
+        )}
+      </FillingAspectRatio>
     );
   },
 );
