@@ -4,21 +4,24 @@ import prisma from "./prisma.ts";
 async function main() {
   // this is from https://github.com/regulad/test-scrcpy
   try {
-    await prisma.device.delete({
+    await prisma.device.deleteMany({
       where: {
-        id: "staging",
+        id: {
+          endsWith: "staging",
+        },
       },
     });
   } catch (e) {
-    console.error(e);
+    // we don't care if its not there
   }
 
   await prisma.device.create({
     data: {
       id: "staging",
-      name: "staging",
+      name: "debug/staging",
       ownerId: "4d7a801f-130a-438f-b013-31e738693fad",
-      adbHostname: "doppelganger.tail11540.ts.net",
+      adbHostname: "doppelganger.tail11540.ts.net", // my tailscale node (hello scrapers!)
+      scrcpyHostname: "doppelganger.tail11540.ts.net", // my tailscale node (hello scrapers!)
       redroidImage: "redroid/redroid:14.0.0-latest",
       redroidFps: 30,
       redroidDpi: 230,

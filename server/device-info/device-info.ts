@@ -22,8 +22,8 @@ export type DeviceSpecs = Pick<
 >;
 
 export async function getDeviceForId(id: string): Promise<Device | null> {
-  if (id === "staging" && process.env.NODE_ENV === "production") {
-    console.error("Tried to access staging/debug device in production");
+  if (id.endsWith("staging") && process.env.NODE_ENV === "production") {
+    console.warn("Tried to access staging/debug device in production");
     return null;
   }
 
@@ -34,11 +34,11 @@ export async function getDeviceForId(id: string): Promise<Device | null> {
   });
 }
 
-export function getRedroidHostnameForDevice(id: string): string {
+export function getDefaultRedroidHostname(id: string): string {
   return `${id}-redroid`;
 }
 
-export function getScrcpyHostnameForDevice(id: string): string {
+export function getDefaultScrcpyHostname(id: string): string {
   return `${id}-scrcpy`;
 }
 
@@ -47,17 +47,17 @@ export function getScrcpyHostnameForDevice(id: string): string {
  * @param device
  */
 export function getUdidForDevice(device: Device): string {
-  return `${device.adbHostname ?? getRedroidHostnameForDevice(device.id)}:${device.adbPort}`;
+  return `${device.adbHostname ?? getDefaultRedroidHostname(device.id)}:${device.adbPort}`;
 }
 
 export function getTargetVncWebsocketUrlForDevice(device: Device): string {
   // never runs without TLS (self-signed)
   // always runs on port 6901, path /websockify
-  return `wss://${device.adbHostname ?? getRedroidHostnameForDevice(device.id)}:6901/websockify`;
+  return `wss://${device.adbHostname ?? getDefaultScrcpyHostname(device.id)}:6901/websockify`;
 }
 
 export function getTargetAudioWebsocketUrlForDevice(device: Device): string {
   // never runs without TLS
   // always runs on port 4901
-  return `wss://${device.adbHostname ?? getScrcpyHostnameForDevice(device.id)}:4901`;
+  return `wss://${device.adbHostname ?? getDefaultScrcpyHostname(device.id)}:4901`;
 }

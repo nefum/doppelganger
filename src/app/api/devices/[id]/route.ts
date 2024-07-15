@@ -2,19 +2,19 @@
 
 import prisma from "%/database/prisma.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
-import { deviceEndpoint } from "%/endpoint-regex.ts";
+import { deviceApiEndpoint } from "%/endpoint-regex.ts";
 import { destroyDevice } from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { DeviceState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
-  const id = req.nextUrl.pathname.match(deviceEndpoint)![1];
+  const id = req.nextUrl.pathname.match(deviceApiEndpoint)![1];
 
   const deviceInfo = await getDeviceForId(id);
 
   if (deviceInfo === null) {
-    return NextResponse.json({ error: "Device not found" }, { status: 404 });
+    return NextResponse.json({}, { status: 404 });
   }
 
   const supabaseClient = createClient();
@@ -27,14 +27,11 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
   }
 
   if (user.id !== deviceInfo.ownerId) {
-    return NextResponse.json({ error: "Device not found" }, { status: 404 });
+    return NextResponse.json({}, { status: 404 });
   }
 
   if (deviceInfo.lastState === DeviceState.SUSPENDED) {
-    return NextResponse.json(
-      { error: "Device cannot be deleted, contact administration" },
-      { status: 403 },
-    );
+    return NextResponse.json({}, { status: 403 });
   }
 
   await prisma.device.update({
@@ -54,5 +51,5 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     },
   });
 
-  return NextResponse.json({ success: "Device deleted" }, { status: 200 });
+  return NextResponse.json({}, { status: 200 });
 }

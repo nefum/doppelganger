@@ -1,7 +1,7 @@
 import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
 import {
-  getWsUrlStringForDevice,
+  getTargetWsScrcpyUrlForDevice,
   runScrcpyServerOnDevice,
 } from "../adb/scrcpy.ts";
 import { getDeviceForId } from "../device-info/device-info.ts";
@@ -44,7 +44,7 @@ export async function handleDeviceStream(
 
   try {
     await runScrcpyServerOnDevice(deviceInfo);
-    const wsUrlString = getWsUrlStringForDevice(deviceInfo);
+    const wsUrlString = getTargetWsScrcpyUrlForDevice(deviceInfo);
     const wsUrl = new URL(wsUrlString);
     targetWs = await createWebSocketProxy(wsUrl, req, ws);
   } catch (e) {

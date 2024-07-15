@@ -60,7 +60,12 @@ export async function createDockerTemplateFromView(
 
 export type InsertableDevice = Omit<
   Device,
-  "createdAt" | "updatedAt" | "lastState" | "adbHostname" | "adbPort"
+  | "createdAt"
+  | "updatedAt"
+  | "lastState"
+  | "adbHostname"
+  | "adbPort"
+  | "scrcpyHostname"
 >;
 
 export function getInsertableDeviceForView(

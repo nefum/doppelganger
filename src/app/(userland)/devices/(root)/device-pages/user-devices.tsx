@@ -18,6 +18,16 @@ export default async function UserDevices() {
   const clientDevices = await prisma.device.findMany({
     where: {
       ownerId: user.id,
+      id:
+        process.env.NODE_ENV === "production"
+          ? {
+              not: {
+                endsWith: "staging",
+              },
+            }
+          : {
+              endsWith: "staging",
+            },
     },
   });
 

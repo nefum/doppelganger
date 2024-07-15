@@ -4,7 +4,7 @@ import { Device } from "@prisma/client";
 import { spawn } from "child_process";
 import path from "path";
 import {
-  getRedroidHostnameForDevice,
+  getDefaultRedroidHostname,
   getUdidForDevice,
 } from "../device-info/device-info.ts";
 import adb from "./adb.ts";
@@ -38,6 +38,10 @@ const SERVER_VERSION = "1.19-ws5";
 // the command that is issued to android to start the scrcpy server
 const RUN_COMMAND = `CLASSPATH=${TEMP_PATH}${FILE_NAME} nohup ${APP_PROCESS} / ${SERVER_CLASS} ${SERVER_VERSION} web ERROR ${SCRCPY_WS_PORT} true 2>&1 > /dev/null`;
 
+export function getTargetWsScrcpyUrlForDevice(device: Device): string {
+  return `ws://${device.adbHostname ?? getDefaultRedroidHostname(device.id)}:${SCRCPY_WS_PORT}`;
+}
+
 export type WaitForPidParams = {
   tryCounter: number;
   processExited: boolean;
@@ -66,7 +70,7 @@ export class AdbDevice {
       return;
     }
     this.deviceId = await adb.connect(
-      this.device.adbHostname ?? getRedroidHostnameForDevice(this.device.id),
+      this.device.adbHostname ?? getDefaultRedroidHostname(this.device.id),
       this.device.adbPort,
     );
     this.adbClient = adb.getDevice(this.deviceId!);
@@ -420,13 +424,4 @@ export async function runScrcpyServerOnDevice(
   console.log(
     `scrcpy server started on device ${adbDevice.udid} with pid ${pid}`,
   );
-}
-
-/**
- * Gets the WebSocket URL string for the device.
- * Use of the returned URL requires the Scrcpy server to be running on the device, which can be started with `runScrcpyServerOnDevice`.
- * @param deviceInfo
- */
-export function getWsUrlStringForDevice(deviceInfo: Device): string {
-  return `ws://${deviceInfo.adbHostname}:${SCRCPY_WS_PORT}`;
 }

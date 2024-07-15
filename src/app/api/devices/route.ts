@@ -11,18 +11,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     data: { user },
   } = await supabaseClient.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json(
-      { error: "You must be logged in to create a device" },
-      { status: 401 },
-    );
-  }
-
-  if (!user.email_confirmed_at) {
-    return NextResponse.json(
-      { error: "You must confirm your email before creating a device" },
-      { status: 401 },
-    );
+  if (!user || !user.email_confirmed_at) {
+    return NextResponse.json({}, { status: 401 });
   }
 
   const requestJson = await req.json();
@@ -59,5 +49,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   await bringUpDevice(device.id);
 
-  return NextResponse.redirect("/devices");
+  return NextResponse.json({}, { status: 201 });
 }
