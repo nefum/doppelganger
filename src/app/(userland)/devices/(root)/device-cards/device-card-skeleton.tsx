@@ -4,19 +4,19 @@ import { Skeleton } from "@/components/ui/skeleton.tsx";
 export function DeviceCardSkeleton() {
   return (
     <div className="w-full xs:max-w-[400px] p-3">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-lg">
         <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
           <div className="space-y-4">
             <div className="space-y-1">
-              <Skeleton className="h-6 sm:w-12 md:w-22 lg:w-32" />
+              <Skeleton className="h-6 w-28" />
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Skeleton className="h-2 w-2 rounded-full" />
                 <Skeleton className="h-4 w-12" />
               </div>
             </div>
             <div className="space-y-1">
-              <Skeleton className="h-4 w-10 lg:w-20" />
-              <Skeleton className="h-4 w-8 lg:w-16" />
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-16" />
             </div>
             <div className="space-y-1">
               <Skeleton className="h-4 w-20" />

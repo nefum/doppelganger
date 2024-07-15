@@ -60,7 +60,9 @@ export function DeviceCard({
         <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
           <div className="space-y-4">
             <div className="space-y-1">
-              <h3 className="text-2xl font-semibold">{deviceInfo.name}</h3>
+              <h3 className="text-2xl max-w-28 break-words text-wrap font-semibold">
+                {deviceInfo.name}
+              </h3>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <div
                   className={clsx("h-2 w-2 rounded-full", {
@@ -86,7 +88,7 @@ export function DeviceCard({
             </div>
             <div className="space-y-1">
               <h4 className="text-sm font-medium">Type</h4>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground max-w-28 break-words">
                 {getRedroidImage(deviceInfo.redroidImage)?.name ?? "Unknown"}
               </p>
             </div>
@@ -127,6 +129,9 @@ export function DeviceCard({
                 className={clsx("absolute bg-black min-h-[100%] min-w-[100%]", {
                   "opacity-0": !loaded,
                 })}
+                style={{
+                  background: "no-repeat url('/noconnect.svg')",
+                }}
                 alt={`${deviceInfo.name} snapshot`}
                 src={getSnapshotUrlOfDevice(deviceInfo.id)}
                 onError={() => setLoaded(true)}
