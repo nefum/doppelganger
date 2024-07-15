@@ -258,6 +258,7 @@ export default function DesktopClientButton({
             loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
             givenMaxWidth={clientMaxWidth}
             autoCaptureKeyboard
+            playAudio
           />
         </div>
         <ButtonBar clientRef={ref} />

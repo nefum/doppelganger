@@ -1,18 +1,15 @@
 "use client";
 
 import { getUdidForDevice } from "%/device-info/device-info.ts";
+import JsmpegClient from "@/components/client/jsmpeg-client.tsx";
 import ScrcpyDevicePlayer, {
   ScrcpyDevicePlayerHandle,
 } from "@/components/scrcpy/scrcpy-device-player.tsx";
 import { AspectRatio } from "@/components/ui/aspect-ratio.tsx";
-import { Button } from "@/components/ui/button.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
-import useOnInteraction from "@/utils/hooks/use-on-interaction.ts"; // doesn't exist at runtime; type-only
 import Size from "@/ws-scrcpy/src/app/Size.ts";
 import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
-import JSMpeg from "@cycjimmy/jsmpeg-player";
 import { Device } from "@prisma/client";
-import type { Player } from "jsmpeg";
 import {
   forwardRef,
   ReactNode,
@@ -24,9 +21,6 @@ import {
   useState,
 } from "react";
 import styles from "./sizer.module.css";
-
-const JSMpegVideoElement = JSMpeg.VideoElement;
-const JSMpegPlayer = JSMpeg.Player || JSMpegVideoElement.player;
 
 const MOBILE_BITRATE_BYTES = 800_0000;
 const MOBILE_IFRAME_INTERVAL = 10;
@@ -41,6 +35,7 @@ interface DeviceClientProps {
   givenMaxWidth?: number;
 
   autoCaptureKeyboard?: boolean;
+  playAudio?: boolean;
 }
 
 function getInitialMaxSize(device: Device): Size {
@@ -63,6 +58,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       className,
       givenMaxWidth,
       autoCaptureKeyboard,
+      playAudio,
     } = props;
 
     const { toast } = useToast();
@@ -75,9 +71,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     const scrcpyClientRef = useRef<ScrcpyDevicePlayerHandle>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const sizerRef = useRef<HTMLImageElement>(null);
-    const audioCanvasRef = useRef<HTMLCanvasElement>(null);
-
-    const jsmpegPlayerRef = useRef<Player | null>();
 
     const [scrcpyWsUrlString, setScrcpyWsUrlString] = useState<string | null>(
       null,
@@ -87,8 +80,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     );
 
     const [connected, setConnected] = useState(false);
-
-    const interacted = useOnInteraction(containerRef);
 
     useEffect(() => {
       const scrcpyWsUrl = new URL(window.location.href);
@@ -101,52 +92,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
       jsmpegWsUrl.pathname = `/devices/${device.id}/jsmpeg`;
       setJsmpegWsUrlString(jsmpegWsUrl.toString());
     }, [device.id]);
-
-    useEffect(() => {
-      if (jsmpegPlayerRef.current || !audioCanvasRef.current) {
-        return;
-      }
-
-      if (!interacted || !jsmpegWsUrlString) {
-        return;
-      }
-
-      console.log("starting audio player");
-
-      // we have the jsmpeg url and the user has interacted, we can attach the player
-      const player = new JSMpegPlayer(jsmpegWsUrlString, {
-        canvas: audioCanvasRef.current,
-        audio: true,
-        video: false,
-        onEnded: () => {
-          toast({
-            title: "Audio Disconnected",
-            description: (
-              <Button onClick={() => window.location.reload()}>
-                Reconnect
-              </Button>
-            ),
-          });
-        },
-        onStalled: (player: Player) => {
-          toast({
-            title: "Audio Stalled; is your connection ok?",
-            description: (
-              <Button onClick={() => window.location.reload()}>
-                Reconnect
-              </Button>
-            ),
-          });
-        },
-      });
-
-      jsmpegPlayerRef.current = player;
-
-      return () => {
-        player.destroy();
-        jsmpegPlayerRef.current = null;
-      };
-    }, [jsmpegPlayerRef, interacted, jsmpegWsUrlString, toast]);
 
     const createVideoSettingsWithBound = useMemo(
       () => (bounds: Size) => {
@@ -450,7 +395,14 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
             </Suspense>
             {!connected && scrcpyClientRef.current && loadingNode}
           </div>
-          <canvas ref={audioCanvasRef} className="h-0 w-0" />
+          {jsmpegWsUrlString && playAudio && (
+            <div className={styles.absolutelyCenteredItem}>
+              <JsmpegClient
+                containerRef={containerRef}
+                jsmpegWsUrlString={jsmpegWsUrlString}
+              />
+            </div>
+          )}
         </AspectRatio>
       </div>
     );

@@ -33,7 +33,12 @@ export default async function Page({
 
   return (
     <div className="flex justify-center items-center place-items-center h-screen w-screen">
-      <DeviceClient device={deviceInfo} loadingNode={<ISpinner large />} />
+      <DeviceClient
+        device={deviceInfo}
+        loadingNode={<ISpinner large />}
+        playAudio
+        autoCaptureKeyboard
+      />
     </div>
   );
 }
