@@ -118,7 +118,9 @@ const ScrcpyDevicePlayer = forwardRef<
     type ScrcpySupportedPlayerName = "webcodecs" | "tinyh264" | "broadway";
     let playerName: ScrcpySupportedPlayerName;
 
-    if (wcSupported && WebCodecsPlayer.isSupported()) {
+    const webWorkerSupported = typeof Worker !== "undefined";
+
+    if (WebCodecsPlayer.isSupported()) {
       playerName = "webcodecs";
     } else {
       console.warn(
@@ -127,7 +129,10 @@ const ScrcpyDevicePlayer = forwardRef<
       playerName = "tinyh264";
     }
 
-    if (playerName == "tinyh264" && !TinyH264Player.isSupported()) {
+    if (
+      playerName == "tinyh264" &&
+      (!TinyH264Player.isSupported() || !webWorkerSupported)
+    ) {
       console.warn(
         "had to fallback to tinyh264 and we aren't sure if its supported, possible failure imbound",
       );

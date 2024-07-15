@@ -38,6 +38,7 @@ next-env.d.ts
 
 # babel custom server
 dist
+public/workers/
 
 # Sentry Config File
 .env.sentry-build-plugin

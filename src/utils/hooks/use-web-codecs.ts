@@ -36,9 +36,9 @@ async function loadWebCodecsPolyfill(): Promise<boolean> {
 
   console.warn("Browser does not fully support WebCodecs, loading polyfill...");
 
-  const libAvWrapper = LibAV.LibAV();
-
   try {
+    const libAvWrapper = LibAV.LibAV();
+
     // Load and initialize the polyfill
     await LibAVWebCodecs.load({
       polyfill: true, // This will add the polyfill to the global object

@@ -39,7 +39,10 @@ COPY . .
 RUN pnpm run db:generate
 
 # Build the server-side code
-RUN pnpm run build-server
+RUN pnpm run server:build
+
+# Build static workers
+RUN pnpm run workers:build
 
 # Build the application
 RUN pnpm run build

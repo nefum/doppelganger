@@ -5,18 +5,18 @@
       "cache": false
     },
     "build": {
-      "dependsOn": ["build-server", "db:generate"],
-      "inputs": ["**/*", "!dist/**", "!node_modules/**"],
+      "dependsOn": ["server:build", "db:generate"],
+      "inputs": ["**/*", "!dist/**", "!node_modules/**", "!public/workers/**"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "build-server": {
+    "workers:build": {
+      "inputs": ["workers/**"],
+      "outputs": ["public/workers/**"]
+    },
+    "server:build": {
       "dependsOn": ["db:generate"],
       "inputs": ["server/**"],
       "outputs": ["dist/**"]
-    },
-    "dev": {
-      "dependsOn": ["db:generate"],
-      "cache": false
     },
     "start": {
       "dependsOn": ["build", "db:generate"],

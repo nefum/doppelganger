@@ -2,6 +2,7 @@
   "extends": "next/core-web-vitals",
   "ignorePatterns": [
     "dist/**",
+    "public/workers/**",
     ".next/**",
     "node_modules/**",
     "src/ws-scrcpy/**"

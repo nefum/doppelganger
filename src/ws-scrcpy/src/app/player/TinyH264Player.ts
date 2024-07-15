@@ -5,8 +5,6 @@ import YUVCanvas from '../../../vendor/tinyh264/YUVCanvas';
 import Size from '../Size';
 import { DisplayInfo } from '../DisplayInfo';
 
-const tinyH264workerUrl = new URL('./../../../vendor/tinyh264/H264NALDecoder.worker', import.meta.url);
-
 type WorkerMessage = {
     type: string;
     width: number;
@@ -58,7 +56,7 @@ export class TinyH264Player extends BaseCanvasBasedPlayer {
     };
 
     private initWorker(): void {
-        this.worker = new Worker(tinyH264workerUrl);
+        this.worker = new Worker("/workers/H264NALDecoder.worker.js"); // statically served
         this.worker.addEventListener('message', this.onWorkerMessage);
     }
 

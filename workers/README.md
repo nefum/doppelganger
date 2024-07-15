@@ -1,0 +1,1 @@
+This project requires web workers, which were a little bit of a hastle to get working with Next.js & Webpack. This folder is where the separately built and separately webpacked workers live, before they get built into ./public/workers and served by the custom server.

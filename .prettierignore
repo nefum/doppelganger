@@ -1,4 +1,5 @@
 src/ws-scrcpy/
 dist/
+public/workers/
 node_modules/
 .next/

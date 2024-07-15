@@ -8,8 +8,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "dotenvx run --env-file=.env.local -- prisma migrate dev",
     "db:seed": "dotenvx run --env-file=.env.local -- tsx prisma/seed.ts",
-    "build-server": "rimraf -rf dist/ && babel --config-file \"./server/babel.config.server.json\" -x \".ts\" server -d dist",
-    "dev": "nodemon -x \"turbo build-server && node dist/server.js\"",
+    "server:build": "rimraf -rf dist/ && babel --config-file \"./server/babel.config.server.json\" -x \".ts\" server -d dist",
+    "workers:build": "rimraf -rf dist-workers/ && webpack --config workers/webpack.config.js --mode production",
+    "dev": "nodemon -x \"turbo server:build workers:build && node dist/server.js\"",
     "build": "next build",
     "start": "NODE_ENV=production node dist/server.js",
     "lint": "next lint --max-warnings 0",
@@ -119,10 +120,13 @@
     "prisma": "^5.16.1",
     "rimraf": "^5.0.7",
     "tailwindcss": "^3.4.1",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.16.2",
     "turbo": "^2.0.6",
     "typescript": "^5.5.3",
-    "v0": "^2.2.3"
+    "v0": "^2.2.3",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
   }
 }
