@@ -9,7 +9,34 @@ import {
 } from "react";
 
 /**
+ * A utility function for Filling Aspect Ratio to allow it to set the maximum width of the inner container.
+ * See src/app/(userland)/devices/(root)/device-cards/desktop-client-button.tsx for an example of how to use this.
+ */
+export function MaxWidthSetter({
+  containerRef,
+  maxWidth,
+  setMaxWidth,
+}: Readonly<{
+  containerRef: RefObject<HTMLDivElement>;
+  maxWidth: number | undefined;
+  setMaxWidth: (maxWidth: number) => void;
+}>): ReactNode {
+  useEffect(() => {
+    if (containerRef.current && maxWidth === undefined) {
+      setMaxWidth(containerRef.current.clientWidth);
+    }
+  }, [containerRef, maxWidth, setMaxWidth]);
+
+  return null;
+}
+
+/**
  * Creates an aspect-ratio box that fills the parent container, but still maintains the aspect ratio.
+ * @param aspectRatio The aspect ratio to maintain.
+ * @param children The children to render inside the aspect-ratio box.
+ * @param innerContainerRef A ref to the inner container.
+ * @param givenMaxWidth The maximum width to allow the inner container to be. If this is undefined, the inner container will grow all the way to the parent container's width.
+ * @param className The class name to apply to the inner container.
  */
 export default function FillingAspectRatio({
   aspectRatio,
@@ -38,19 +65,19 @@ export default function FillingAspectRatio({
 
       if (requestedWidth.endsWith("px")) {
         // don't allow it to overflow
-        const requestedWidthPx = parseInt(requestedWidth.slice(0, -2));
+        const requestedWidthPx = parseFloat(requestedWidth.slice(0, -2));
         const maxWidth = parentParent.clientWidth;
-        const acceptableMaxWidth = givenMaxWidth ?? maxWidth + 30; // give it a little bit of room for resizing
+        const acceptableMaxWidth = maxWidth + 30; // give it a little bit of room for resizing
 
         if (requestedWidthPx > acceptableMaxWidth) {
-          setAspectRatioWidth(`${givenMaxWidth ?? acceptableMaxWidth}px`);
+          setAspectRatioWidth(`${acceptableMaxWidth}px`);
           return;
         }
       }
 
       setAspectRatioWidth(requestedWidth);
     };
-  }, [givenMaxWidth]);
+  }, []);
 
   useEffect(() => {
     if (!parentRef.current) {

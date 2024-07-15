@@ -40,6 +40,9 @@ export function DeviceCard({
   deviceIsUp,
 }: Readonly<{ deviceInfo: Device; deviceIsUp: boolean }>) {
   const [screenDialogOpen, setScreenDialogOpen] = useState(false);
+  const [mobileDialogOpen, setMobileDialogOpen] = useState(false);
+
+  const openMobileDialog = () => setMobileDialogOpen(true);
 
   // interesting problem: sometimes the image loads so fast that the onload event never fires,
   // leading to the loading screen never disappearing. so we wait for the component to mount before we start loading
@@ -52,8 +55,8 @@ export function DeviceCard({
   }, []);
 
   return (
-    <div className="w-full p-3">
-      <Card className="w-full max-w-sm">
+    <div className="w-full xs:max-w-[400px] p-3">
+      <Card className="w-full max-w-md">
         <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
           <div className="space-y-4">
             <div className="space-y-1">
@@ -92,11 +95,16 @@ export function DeviceCard({
               <p className="text-muted-foreground">{deviceInfo.redroidFps}</p>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <MobileClientButton deviceInfo={deviceInfo} />
+              <MobileClientButton
+                deviceInfo={deviceInfo}
+                dialogOpen={mobileDialogOpen}
+                setDialogOpen={setMobileDialogOpen}
+              />
               <DesktopClientButton
                 deviceInfo={deviceInfo}
                 dialogOpen={screenDialogOpen}
                 setDialogOpen={setScreenDialogOpen}
+                openMobileDialog={openMobileDialog}
               />
               <EditDeviceButton deviceInfo={deviceInfo} />
               <DeleteDeviceButton deviceInfo={deviceInfo} />

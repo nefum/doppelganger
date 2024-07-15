@@ -1,6 +1,11 @@
+import {
+  mobileClientTooltip,
+  mobileClientTooltipIcon,
+} from "@/app/(userland)/devices/(root)/device-cards/mobile-client-button.tsx";
 import DeviceClient, {
   DeviceClientHandle,
 } from "@/components/client/device-client.tsx";
+import { MaxWidthSetter } from "@/components/filling-aspect-ratio.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -12,7 +17,7 @@ import {
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { ReactNode, RefObject, useEffect, useRef, useState } from "react";
+import { ReactNode, RefObject, useRef, useState } from "react";
 import { BsVolumeDown, BsVolumeUp } from "react-icons/bs";
 import { FaArrowsRotate } from "react-icons/fa6";
 import {
@@ -59,7 +64,11 @@ function ButtonbarButton({
 
 function ButtonBar({
   clientRef,
-}: Readonly<{ clientRef: RefObject<DeviceClientHandle> }>): ReactNode {
+  openMobileDialog,
+}: Readonly<{
+  clientRef: RefObject<DeviceClientHandle>;
+  openMobileDialog: () => void;
+}>): ReactNode {
   return (
     <div className="flex flex-row justify-center">
       {/*no option to show quality stats, don't expose that to the user*/}
@@ -185,36 +194,29 @@ function ButtonBar({
       >
         <LuSquare className="h-5 w-5" />
       </ButtonbarButton>
+
+      <ButtonbarButton
+        onPress={() => {
+          openMobileDialog();
+        }}
+        label={mobileClientTooltip}
+      >
+        {mobileClientTooltipIcon}
+      </ButtonbarButton>
     </div>
   );
-}
-
-function MaxWidthSetter({
-  containerRef,
-  maxWidth,
-  setMaxWidth,
-}: Readonly<{
-  containerRef: RefObject<HTMLDivElement>;
-  maxWidth: number | undefined;
-  setMaxWidth: (maxWidth: number) => void;
-}>): ReactNode {
-  useEffect(() => {
-    if (containerRef.current && maxWidth === undefined) {
-      setMaxWidth(containerRef.current.clientWidth);
-    }
-  }, [containerRef, maxWidth, setMaxWidth]);
-
-  return null;
 }
 
 export default function DesktopClientButton({
   deviceInfo,
   dialogOpen,
   setDialogOpen,
+  openMobileDialog,
 }: Readonly<{
   deviceInfo: Device;
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
+  openMobileDialog: () => void;
 }>) {
   const ref = useRef<DeviceClientHandle>(null);
   const clientContainerRef = useRef<HTMLDivElement>(null);
@@ -242,8 +244,8 @@ export default function DesktopClientButton({
           </DialogDescription>
         </VisuallyHidden.Root>
         <div
-          className="flex justify-center  items-center place-items-center w-full min-h-[25vh] max-h-[70vh]"
-          ref={clientContainerRef}
+          // i have long tried to remove the minimum width, but it is not worth it.
+          className="flex justify-center  items-center place-items-center w-full min-h-[35vh] max-h-[70vh]"
         >
           <MaxWidthSetter
             containerRef={clientContainerRef}
@@ -260,7 +262,7 @@ export default function DesktopClientButton({
             playAudio
           />
         </div>
-        <ButtonBar clientRef={ref} />
+        <ButtonBar clientRef={ref} openMobileDialog={openMobileDialog} />
       </DialogContent>
     </Dialog>
   );

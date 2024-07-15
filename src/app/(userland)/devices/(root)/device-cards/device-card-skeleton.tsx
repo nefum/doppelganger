@@ -3,8 +3,8 @@ import { Skeleton } from "@/components/ui/skeleton.tsx";
 
 export function DeviceCardSkeleton() {
   return (
-    <div className="w-full sm:w-1/2 lg:w-1/3 p-3">
-      <Card className="w-full max-w-sm">
+    <div className="w-full xs:max-w-[400px] p-3">
+      <Card className="w-full max-w-md">
         <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
           <div className="space-y-4">
             <div className="space-y-1">

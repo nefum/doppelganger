@@ -1,8 +1,8 @@
 "use client";
 
 import { getUdidForDevice } from "%/device-info/device-info.ts";
-import FillingAspectRatio from "@/components/client/filling-aspect-ratio.tsx";
 import JsmpegClient from "@/components/client/jsmpeg-client.tsx";
+import FillingAspectRatio from "@/components/filling-aspect-ratio.tsx";
 import ScrcpyDevicePlayer, {
   ScrcpyDevicePlayerHandle,
 } from "@/components/scrcpy/scrcpy-device-player.tsx";
@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/use-toast.ts";
 import Size from "@/ws-scrcpy/src/app/Size.ts";
 import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
 import { Device } from "@prisma/client";
+import { clsx } from "clsx";
 import {
   forwardRef,
   ReactNode,
@@ -301,7 +302,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
           src="/placeholder.svg"
           alt={`${device.name} live stream`}
         />
-        <div className={styles.absolutelyCenteredItem}>
+        <div className={clsx(styles.absolutelyCenteredItem, "z-20")}>
           <Suspense fallback={loadingNode}>
             {(scrcpyWsUrlString && (
               <ScrcpyDevicePlayer
@@ -335,7 +336,9 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
             )) ||
               loadingNode}
           </Suspense>
-          {!connected && scrcpyClientRef.current && loadingNode}
+        </div>
+        <div className={clsx(styles.absolutelyCenteredItem, "z-10")}>
+          {loadingNode}
         </div>
         {jsmpegWsUrlString && playAudio && (
           <div className={styles.absolutelyCenteredItem}>

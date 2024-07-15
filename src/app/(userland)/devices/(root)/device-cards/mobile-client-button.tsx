@@ -13,33 +13,40 @@ import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
 import Link from "next/link";
-import { IoPhonePortraitOutline } from "react-icons/io5";
+import { LuExternalLink } from "react-icons/lu";
 
-const mobileClientTooltip = "Open Mobile-Optimized Client";
+export const mobileClientTooltip = "Open Immersive Client";
+export const mobileClientTooltipIcon = <LuExternalLink className="h-5 w-5" />;
 
 export function MobileClientButton({
   deviceInfo,
-}: Readonly<{ deviceInfo: Device }>) {
+  dialogOpen,
+  setDialogOpen,
+}: Readonly<{
+  deviceInfo: Device;
+  dialogOpen: boolean;
+  setDialogOpen: (open: boolean) => void;
+}>) {
   return (
-    <AlertDialog>
+    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <SimpleTooltip content={mobileClientTooltip}>
         <AlertDialogTrigger asChild>
           <Button variant="ghost" size="icon">
-            <IoPhonePortraitOutline className="h-5 w-5" />
+            {mobileClientTooltipIcon}
             <span className="sr-only">{mobileClientTooltip}</span>
           </Button>
         </AlertDialogTrigger>
       </SimpleTooltip>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Mobile-Optimized Client</AlertDialogTitle>
+          <AlertDialogTitle>{mobileClientTooltip}</AlertDialogTitle>
           <AlertDialogDescription>
             <p className="shadcn-p">
-              Opening the mobile-optimized client will open a new tab isolated
-              from this page.
+              Opening the immersive client will open a new tab isolated from
+              this page.
             </p>
             <p className="shadcn-p">
-              This mobile-optimized client supports installation as{" "}
+              It supports installation as a{" "}
               <a
                 href={"https://web.dev/explore/progressive-web-apps"}
                 className={"shadcn-link"}
@@ -47,7 +54,7 @@ export function MobileClientButton({
                 Progressive Web App (PWA)
               </a>
               , which provides a more immersive experience free of your
-              browser&apos;s menu bar.
+              browser&apos;s menu bar, making for easy use on mobile.
             </p>
             <p className="shadcn-p">
               See instructions{" "}
