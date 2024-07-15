@@ -402,6 +402,18 @@ export function waitForAdbServerToBeReady(
     const startTime = Date.now();
     const checkConnection = async () => {
       try {
+        // if there is a : we need to split into host, port
+        if (adbSeverUdid.includes(":")) {
+          const [host, port] = adbSeverUdid.split(":");
+          await adb.connect(host, parseInt(port, 10));
+        } else {
+          await adb.connect(adbSeverUdid);
+        }
+      } catch (e) {
+        console.error("Failed to connect to ADB server", e);
+      }
+
+      try {
         const devices = await adb.listDevices();
         if (
           devices.some(
