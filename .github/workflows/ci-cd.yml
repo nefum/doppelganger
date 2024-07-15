@@ -85,6 +85,8 @@ jobs:
       - name: Type-check with Turbo
         run: pnpx turbo run type-check
 
+      # we choose not to run tests in the CI/CD pipeline, it takes too long and requires a lot of resources as well as tokens
+
       - name: Check formatting and fail if changes are detected
         run: |
           if pnpx turbo run format -- --check | grep -q "Files were formatted"; then
