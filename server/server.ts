@@ -13,7 +13,6 @@ import {
 } from "./endpoint-regex.ts";
 
 // load environment variables
-import { Duplex } from "node:stream";
 import handleEventStream from "./events/route.ts";
 import { loadEnvironment } from "./load-environment.ts";
 import { handleAudio, handleKasmVNC } from "./wsutils/kasmvnc-route.ts";
@@ -39,28 +38,6 @@ const wss = new WsWebSocket.Server({
   perMessageDeflate: false, // https://www.npmjs.com/package/ws/v/8.0.0#websocket-compression
 });
 
-function disableNextJsShuttingDownSocket(socket: Duplex): void {
-  const ogSocketEnd = socket.end.bind(socket);
-  socket.end = function (chunk?, encoding?, cb?) {
-    // https://github.com/vercel/next.js/blob/9e817bc032824d2f6f1cd3883a416b2f2dce1007/packages/next/src/server/lib/router-server.ts#L716
-    // we are trying to reject this closing
-    const fauxError = new Error();
-    const fauxStack = fauxError.stack!.split("\n");
-
-    // if router-server is in the stack at all, just return
-    const isRouterServerCall = fauxStack.some((line) =>
-      line.includes("router-server.js"),
-    );
-
-    if (isRouterServerCall) {
-      return socket;
-    }
-
-    // @ts-expect-error -- doesn't matter
-    return ogSocketEnd(chunk, encoding, cb);
-  };
-}
-
 app.prepare().then(() => {
   createServer((req: IncomingMessage, res: ServerResponse) => {
     try {
@@ -83,9 +60,6 @@ app.prepare().then(() => {
     // i was a bonehead and handled upgrades in the regular request handler for the longest time,
     // i was stuck wondering why half of the routes bounced and never figured it out!
     .on("upgrade", (request, socket, head) => {
-      // monkeypatch the socket to ignore ends from next (it will try to kill our socket)
-      disableNextJsShuttingDownSocket(socket);
-
       const pathname = request.url!;
 
       const hitsScrcpy = !!pathname.match(scrcpyWsEndpoint);
