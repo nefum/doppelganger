@@ -1,3 +1,4 @@
+// @ts-check
 import {withSentryConfig} from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -28,8 +29,20 @@ const nextConfig = {
       ...config.module.rules,
     ]
     return config;
-  }
+  },
   // turbopack is too experimental; let's not use it
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true, // already checked by pre-commit, saves time in docker builds
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true, // already checked by pre-commit, saves time in docker builds
+  }
 };
 
 export default withSentryConfig(nextConfig, {
