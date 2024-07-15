@@ -27,7 +27,7 @@ fi
 
 # Copy and rename the server file
 echo "Copying server file to $DESTINATION_FILE..."
-if ! cp "$TEMP_DIR/scrcpy-server" "$DESTINATION_FILE"; then
+if ! cp -f "$TEMP_DIR/scrcpy-server" "$DESTINATION_FILE"; then
     echo "Failed to copy the server file to the destination."
     rm -rf "$TEMP_DIR"
     exit 1

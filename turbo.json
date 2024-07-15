@@ -36,6 +36,9 @@
     "test": {
       "dependsOn": ["db:generate"],
       "cache": false
+    },
+    "android:fetch": {
+      "cache": false
     }
   }
 }

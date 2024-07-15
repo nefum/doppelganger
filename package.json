@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "init": "git submodule update --init --recursive",
+    "android:fetch": "bash scripts/download-scrcpy-server.sh",
     "db:generate": "prisma generate",
     "db:migrate": "dotenvx run --env-file=.env.local -- prisma migrate dev",
     "db:seed": "dotenvx run --env-file=.env.local -- tsx prisma/seed.ts",
