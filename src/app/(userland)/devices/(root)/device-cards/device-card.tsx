@@ -88,7 +88,7 @@ export function DeviceCard({
             </div>
             <div className="space-y-1">
               <h4 className="text-sm font-medium">Type</h4>
-              <p className="text-muted-foreground max-w-28 break-words">
+              <p className="text-muted-foreground max-w-28 break-normal">
                 {getRedroidImage(deviceInfo.redroidImage)?.name ?? "Unknown"}
               </p>
             </div>
