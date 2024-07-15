@@ -1,4 +1,3 @@
-import { getDefaultRedroidHostname } from "%/device-info/device-info.ts";
 import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
 import {
   createDockerTemplateFromView,
@@ -209,5 +208,7 @@ async function getIsContainerRunning(containerName: string): Promise<boolean> {
 }
 
 export async function getIsDeviceRunning(deviceId: string): Promise<boolean> {
-  return getIsContainerRunning(getDefaultRedroidHostname(deviceId));
+  const androidRunning = await getIsContainerRunning(`${deviceId}-redroid-1`);
+  const scrcpyRunning = await getIsContainerRunning(`${deviceId}-scrcpy-1`);
+  return androidRunning && scrcpyRunning;
 }
