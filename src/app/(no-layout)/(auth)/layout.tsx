@@ -13,6 +13,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             height={100}
             className="h-12 w-auto"
           />
+          <h1 className="shadcn-h1 ml-1">Doppelganger</h1>
         </div>
         {children}
       </div>

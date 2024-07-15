@@ -1,3 +1,36 @@
+// uri encoded string
+type EncodedString = string;
+
+interface ToastPrams {
+  toastTitle: string;
+  toastDescription?: string;
+}
+
+interface EncodedToastParams {
+  encodedToastTitle: EncodedString;
+  encodedToastDescription?: EncodedString;
+}
+
+export function encodeToastParams({
+  toastTitle,
+  toastDescription,
+}: ToastPrams): EncodedToastParams {
+  // URI encode the toast name
+  const encodedToastTitle = encodeURIComponent(toastTitle);
+  // check for a description
+  const encodedToastDescription = toastDescription
+    ? encodeURIComponent(toastDescription)
+    : undefined;
+  return { encodedToastTitle, encodedToastDescription };
+}
+
+export function encodeQueryParams({
+  encodedToastTitle,
+  encodedToastDescription,
+}: EncodedToastParams): string {
+  return `?toastTitle=${encodedToastTitle}${encodedToastDescription ? `&toastDescription=${encodedToastDescription}` : ""}`;
+}
+
 /**
  * Redirects the user (client-side) to a given URL and has a toast show up with the given message.
  * @param pathName
@@ -9,16 +42,9 @@ export function clientSideRedirectWithToast(
   toastTitle: string,
   toastDescription?: string,
 ) {
-  // URI encode the toast name
-  const encodedToastTitle = encodeURIComponent(toastTitle);
-  // check for a description
-  const encodedToastDescription = toastDescription
-    ? encodeURIComponent(toastDescription)
-    : undefined;
   // client-side redirect
-  window.location.href = `${pathName}?toastTitle=${encodedToastTitle}${
-    encodedToastDescription
-      ? `&toastDescription=${encodedToastDescription}`
-      : ""
-  }`;
+  const queryParams = encodeQueryParams(
+    encodeToastParams({ toastTitle, toastDescription }),
+  );
+  window.location.href = `${pathName}${queryParams}`;
 }

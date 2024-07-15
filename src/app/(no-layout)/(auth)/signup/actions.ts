@@ -2,6 +2,7 @@
 
 import { FIRST_PAGE_PATHNAME } from "@/app/(no-layout)/(auth)/constants.ts";
 import { createClient } from "@/utils/supabase/server.ts";
+import { encodeQueryParams, encodeToastParams } from "@/utils/toast-utils.ts";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -85,5 +86,12 @@ export async function signup(
   }
 
   revalidatePath("/", "layout");
-  redirect(FIRST_PAGE_PATHNAME);
+  redirect(
+    `${FIRST_PAGE_PATHNAME}${encodeQueryParams(
+      encodeToastParams({
+        toastTitle: "Signup Successful",
+        toastDescription: "Please check your email to confirm your account.",
+      }),
+    )}`,
+  );
 }

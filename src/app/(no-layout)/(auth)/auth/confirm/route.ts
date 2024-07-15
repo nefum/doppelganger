@@ -26,6 +26,11 @@ export async function GET(request: NextRequest) {
     });
     if (!error) {
       redirectTo.searchParams.delete("next");
+      redirectTo.searchParams.set("toastTitle", "Email Confirmed");
+      redirectTo.searchParams.set(
+        "toastDescription",
+        "Your email has been confirmed! You can now log in.",
+      );
       return NextResponse.redirect(redirectTo);
     }
   }

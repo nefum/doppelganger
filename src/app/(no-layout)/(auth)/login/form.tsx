@@ -16,12 +16,24 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import Link from "next/link";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
+import { LuLoader2 } from "react-icons/lu";
 
 const INITIAL_LOGIN_FORM_STATE = {
   message: null,
   errors: {},
 } satisfies LoginFormState;
+
+function LoginButton() {
+  const isPending = useFormStatus().pending;
+
+  return (
+    <Button type="submit" className="w-full" disabled={isPending}>
+      Login
+      {isPending && <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />}
+    </Button>
+  );
+}
 
 export default function LoginForm() {
   const [state, dispatch] = useFormState(login, INITIAL_LOGIN_FORM_STATE);
@@ -87,9 +99,7 @@ export default function LoginForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
+          <LoginButton />
         </CardFooter>
       </Card>
     </form>

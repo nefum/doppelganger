@@ -4,7 +4,6 @@ import {
   signup,
   type SignupFormState,
 } from "@/app/(no-layout)/(auth)/signup/actions.ts";
-import PasswordPopover from "@/components/password-popover.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -17,15 +16,163 @@ import {
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover.tsx";
 import Link from "next/link";
-import { useState } from "react";
-import { useFormState } from "react-dom";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
+import { FaCheck, FaXmark } from "react-icons/fa6";
+import { LuLoader2 } from "react-icons/lu";
 
-const initialState = { message: null, errors: {} } satisfies SignupFormState;
+const INITIAL_SIGNUP_FORM_STATE = {
+  message: null,
+  errors: {},
+} satisfies SignupFormState;
+
+function getPasswordBars(passwordLength: number): React.ReactNode {
+  if (passwordLength >= 12) {
+    return (
+      <>
+        <div className="h-1 bg-green-400 dark:bg-green-500" />
+        <div className="h-1 bg-green-400 dark:bg-green-500" />
+        <div className="h-1 bg-green-400 dark:bg-green-500" />
+        <div className="h-1 bg-green-400 dark:bg-green-500" />
+      </>
+    );
+  } else if (passwordLength >= 8) {
+    return (
+      <>
+        <div className="h-1 bg-green-400 dark:bg-green-500" />
+        <div className="h-1 bg-green-400 dark:bg-green-500" />
+        <div className="h-1 bg-green-400 dark:bg-green-500" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+      </>
+    );
+  } else if (passwordLength >= 6) {
+    return (
+      <>
+        <div className="h-1 bg-orange-300 dark:bg-orange-400" />
+        <div className="h-1 bg-orange-300 dark:bg-orange-400" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+      </>
+    );
+  } else if (passwordLength >= 1) {
+    return (
+      <>
+        <div className="h-1 bg-red-400 dark:bg-red-500" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
+      </>
+    );
+  }
+}
+
+function PasswordQualityAnalysis({
+  password: passwordAttempt,
+  children,
+  isOpen,
+}: {
+  password: string;
+  children: ReactNode;
+  isOpen: boolean;
+}): ReactNode {
+  const passwordLengthRangeBars = getPasswordBars(passwordAttempt.length);
+
+  const passwordHasUpperCase = /[A-Z]/.test(passwordAttempt);
+  const passwordHasLowerCase = /[a-z]/.test(passwordAttempt);
+  const passwordHasNumber = /[0-9]/.test(passwordAttempt);
+
+  return (
+    <Popover open={isOpen} onOpenChange={(_: boolean) => {}}>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent>
+        <div className="space-y-2 p-3">
+          <h3 className="font-semibold text-gray-900 dark:text-white">
+            Must have at least 6 characters!
+          </h3>
+          <div className="grid grid-cols-4 gap-2">
+            {passwordLengthRangeBars}
+          </div>
+          <p>Your password needs...</p>
+          <ul>
+            <li className="mb-1 flex items-center">
+              {passwordHasUpperCase ? <FaCheck /> : <FaXmark />}
+              Upper case letters
+            </li>
+            <li className="mb-1 flex items-center">
+              {passwordHasLowerCase ? <FaCheck /> : <FaXmark />}
+              Lower case letters
+            </li>
+            <li className="mb-1 flex items-center">
+              {passwordHasNumber ? <FaCheck /> : <FaXmark />}
+              Numbers
+            </li>
+          </ul>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function SignupButton() {
+  const isPending = useFormStatus().pending;
+
+  return (
+    <Button type="submit" className="w-full" disabled={isPending}>
+      Sign Up
+      {isPending && <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />}
+    </Button>
+  );
+}
 
 export default function SignupForm() {
-  const [state, dispatch] = useFormState(signup, initialState);
+  const [state, dispatch] = useFormState(signup, INITIAL_SIGNUP_FORM_STATE);
   const [enteredPassword, setEnteredPassword] = useState("");
+
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const open = () => setIsPopoverOpen(true);
+  const close = () => setIsPopoverOpen(false);
+
+  const passwordQualityRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        passwordQualityRef.current &&
+        !passwordQualityRef.current.contains(event.target as Node)
+      ) {
+        close();
+      }
+    }
+
+    function handleTabPress(event: KeyboardEvent) {
+      if (event.key === "Tab") {
+        close();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleTabPress);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleTabPress);
+    };
+  }, []);
 
   return (
     <form action={dispatch} aria-describedby="overall-error">
@@ -44,7 +191,7 @@ export default function SignupForm() {
               id="email"
               type="email"
               aria-describedby="email-error"
-              placeholder="me@example.com"
+              placeholder="my-email@example.com"
               required
             />
           </div>
@@ -55,21 +202,27 @@ export default function SignupForm() {
               </p>
             ))}
           </div>
-          <PasswordPopover password={enteredPassword}>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                name="password"
-                id="password"
-                aria-describedby="password-error"
-                type="password"
-                required
-                onChange={(e) => {
-                  setEnteredPassword(e.target.value);
-                }}
-              />
-            </div>
-          </PasswordPopover>
+          <div ref={passwordQualityRef}>
+            <PasswordQualityAnalysis
+              password={enteredPassword}
+              isOpen={isPopoverOpen}
+            >
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  name="password"
+                  id="password"
+                  aria-describedby="password-error"
+                  type="password"
+                  required
+                  onChange={(e) => {
+                    setEnteredPassword(e.target.value);
+                  }}
+                  onFocus={open}
+                />
+              </div>
+            </PasswordQualityAnalysis>
+          </div>
           <div aria-atomic="true" aria-live="polite" id="password-error">
             {state.errors?.password?.map((error: string) => (
               <p className="mt-2 text-sm text-red-500" key={error}>
@@ -129,9 +282,7 @@ export default function SignupForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">
-            Sign Up
-          </Button>
+          <SignupButton />
         </CardFooter>
       </Card>
     </form>

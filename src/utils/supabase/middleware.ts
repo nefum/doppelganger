@@ -1,3 +1,4 @@
+import { FIRST_PAGE_PATHNAME } from "@/app/(no-layout)/(auth)/constants.ts";
 import { authRequiredRoutesRegex } from "@/app/constants.ts";
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
@@ -47,6 +48,17 @@ export async function updateSession(request: NextRequest) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  if (
+    user &&
+    (request.nextUrl.pathname === "/login" ||
+      request.nextUrl.pathname === "/signup")
+  ) {
+    // user is logged in, potentially respond by redirecting the user to the home page
+    const url = request.nextUrl.clone();
+    url.pathname = FIRST_PAGE_PATHNAME;
     return NextResponse.redirect(url);
   }
 

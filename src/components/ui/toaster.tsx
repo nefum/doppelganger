@@ -39,8 +39,7 @@ export function Toaster() {
         `${location.pathname}${newSearchParams.toString() ? "?" : ""}${newSearchParams.toString()}`,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only run once; we modify the search params
-  }, []);
+  }, [searchParams, toast]);
 
   return (
     <ToastProvider>
