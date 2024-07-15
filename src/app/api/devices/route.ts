@@ -1,8 +1,11 @@
+import { waitForAdbServerToBeReady } from "%/adb/scrcpy.ts";
 import prisma from "%/database/prisma.ts";
+import { getAdbUdidForDevice } from "%/device-info/device-info.ts";
 import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
 import { bringUpDevice, initializeDevice } from "@/utils/redroid/deployment.ts";
 import { getRedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { createClient } from "@/utils/supabase/server.ts";
+import { Device } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -47,7 +50,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     },
   });
 
+  const fullDevice: Device | null = await prisma.device.findUnique({
+    where: {
+      id: device.id,
+    },
+  });
+
   await bringUpDevice(device.id);
+  await waitForAdbServerToBeReady(getAdbUdidForDevice(fullDevice!));
 
   return NextResponse.json({}, { status: 201 });
 }

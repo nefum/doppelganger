@@ -46,7 +46,7 @@ export function getDefaultScrcpyHostname(id: string): string {
  * Gets the ADB udid for a device. This can be used to open a connection.
  * @param device
  */
-export function getUdidForDevice(device: Device): string {
+export function getAdbUdidForDevice(device: Device): string {
   return `${device.adbHostname ?? getDefaultRedroidHostname(device.id)}:${device.adbPort}`;
 }
 

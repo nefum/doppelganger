@@ -4,8 +4,8 @@ import { Device } from "@prisma/client";
 import { spawn } from "child_process";
 import path from "path";
 import {
+  getAdbUdidForDevice,
   getDefaultRedroidHostname,
-  getUdidForDevice,
 } from "../device-info/device-info.ts";
 import adb from "./adb.ts";
 
@@ -15,6 +15,11 @@ enum PID_DETECTION_METHOD {
   GREP_PS,
   GREP_PS_A,
   LS_PROC,
+}
+
+interface AdbListDeviceDevice {
+  id: string;
+  type: string;
 }
 
 const localScrcpyServerJarRelative = "../../scrcpy/scrcpy-server.jar";
@@ -82,12 +87,12 @@ export class AdbDevice {
     }
     const allDevices = await adb.listDevices();
     return allDevices.some(
-      (device: { id: string; type: string }) => device.id === this.deviceId,
+      (device: AdbListDeviceDevice) => device.id === this.deviceId,
     );
   }
 
   get udid(): string {
-    return getUdidForDevice(this.device);
+    return getAdbUdidForDevice(this.device);
   }
 
   public async runShellCommandAdbKit(command: string): Promise<string> {
@@ -382,6 +387,44 @@ export class AdbDevice {
       }, timeout);
     });
   }
+}
+
+/**
+ * Continuously queries a device over ADB until it is connectable and ready to accept commands.
+ * @param adbSeverUdid The udid of the device to query.
+ * @param maxTimeout
+ */
+export function waitForAdbServerToBeReady(
+  adbSeverUdid: string,
+  maxTimeout?: number,
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    const startTime = Date.now();
+    const checkConnection = async () => {
+      try {
+        const devices = await adb.listDevices();
+        if (
+          devices.some(
+            (device: AdbListDeviceDevice) => device.id === adbSeverUdid,
+          )
+        ) {
+          resolve();
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to list devices", e);
+      }
+
+      if (maxTimeout && Date.now() - startTime > maxTimeout) {
+        reject(new Error("Timeout waiting for ADB server to be ready"));
+        return;
+      }
+
+      setTimeout(checkConnection, 1000);
+    };
+
+    checkConnection();
+  });
 }
 
 /**

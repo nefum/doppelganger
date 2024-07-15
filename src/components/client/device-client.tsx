@@ -1,6 +1,6 @@
 "use client";
 
-import { getUdidForDevice } from "%/device-info/device-info.ts";
+import { getAdbUdidForDevice } from "%/device-info/device-info.ts";
 import JSMpegClient from "@/components/client/jsmpeg-client.tsx";
 import FillingAspectRatio from "@/components/filling-aspect-ratio.tsx";
 import ScrcpyDevicePlayer, {
@@ -299,7 +299,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
               <ScrcpyDevicePlayer
                 ref={scrcpyClientRef}
                 wsPath={scrcpyWsUrlString}
-                udid={getUdidForDevice(device)}
+                udid={getAdbUdidForDevice(device)}
                 onDisconnect={(closeEvent) => {
                   if (
                     closeEvent.code !== 1005 &&
