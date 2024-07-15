@@ -67,6 +67,7 @@ import allRedroidImages, {
   RedroidImage,
 } from "@/utils/redroid/redroid-images.ts";
 import { SubscriptionStatus } from "@/utils/subscriptions.ts";
+import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { ReactNode, useMemo, useState } from "react";
@@ -417,11 +418,10 @@ function NewDeviceForm({
       });
 
       if (result.ok) {
-        toast({
-          title: "Device created successfully",
-        });
-        setDialogCanClose(true);
-        window.location.reload();
+        clientSideRedirectWithToast(
+          "/devices",
+          `Device "${values.deviceName}" created successfully`,
+        );
       } else {
         console.error("Failed to create device", result);
         toast({

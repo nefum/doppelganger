@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
+import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
 import { Device } from "@prisma/client";
 import React, { useMemo, useState } from "react";
 import { HiOutlineTrash } from "react-icons/hi2";
@@ -47,11 +48,10 @@ export default function DeleteDeviceButton({
         method: "DELETE",
       });
       if (response.ok) {
-        toast({
-          title: "Device deleted successfully",
-        });
-        // invalidate the cache
-        window.location.reload();
+        clientSideRedirectWithToast(
+          "/devices",
+          `Device "${deviceInfo.id}" deleted successfully`,
+        );
       } else {
         console.error("Failed to delete device", response);
         setLoading(false);
