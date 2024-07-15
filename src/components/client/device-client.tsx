@@ -1,7 +1,7 @@
 "use client";
 
 import { getUdidForDevice } from "%/device-info/device-info.ts";
-import JsmpegClient from "@/components/client/jsmpeg-client.tsx";
+import JSMpegClient from "@/components/client/jsmpeg-client.tsx";
 import FillingAspectRatio from "@/components/filling-aspect-ratio.tsx";
 import ScrcpyDevicePlayer, {
   ScrcpyDevicePlayerHandle,
@@ -32,8 +32,6 @@ interface DeviceClientProps {
   device: Device;
   loadingNode: ReactNode;
 
-  givenMaxWidth?: number;
-
   autoCaptureKeyboard?: boolean;
   playAudio?: boolean;
 }
@@ -52,13 +50,7 @@ export type DeviceClientHandle = Omit<
  */
 const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
   (props, ref) => {
-    const {
-      device,
-      loadingNode,
-      givenMaxWidth,
-      autoCaptureKeyboard,
-      playAudio,
-    } = props;
+    const { device, loadingNode, autoCaptureKeyboard, playAudio } = props;
 
     const { toast } = useToast();
 
@@ -289,7 +281,6 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
 
     return (
       <FillingAspectRatio
-        givenMaxWidth={givenMaxWidth}
         aspectRatio={aspectRatio}
         innerContainerRef={containerRef}
         className={"items-center place-items-center"}
@@ -342,7 +333,7 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
         </div>
         {jsmpegWsUrlString && playAudio && (
           <div className={styles.absolutelyCenteredItem}>
-            <JsmpegClient
+            <JSMpegClient
               containerRef={containerRef}
               jsmpegWsUrlString={jsmpegWsUrlString}
             />

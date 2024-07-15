@@ -5,7 +5,6 @@ import {
 import DeviceClient, {
   DeviceClientHandle,
 } from "@/components/client/device-client.tsx";
-import { MaxWidthSetter } from "@/components/filling-aspect-ratio.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -17,7 +16,7 @@ import {
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { ReactNode, RefObject, useRef, useState } from "react";
+import { ReactNode, RefObject, useRef } from "react";
 import { BsVolumeDown, BsVolumeUp } from "react-icons/bs";
 import { FaArrowsRotate } from "react-icons/fa6";
 import {
@@ -219,10 +218,6 @@ export default function DesktopClientButton({
   openMobileDialog: () => void;
 }>) {
   const ref = useRef<DeviceClientHandle>(null);
-  const clientContainerRef = useRef<HTMLDivElement>(null);
-  const [clientMaxWidth, setClientMaxWidth] = useState<number | undefined>(
-    undefined,
-  );
 
   // top-level effects in this component will run when the dialog is first loaded, but won't be very effective.
 
@@ -247,17 +242,11 @@ export default function DesktopClientButton({
           // i have long tried to remove the minimum width, but it is not worth it.
           className="flex justify-center  items-center place-items-center w-full min-h-[35vh] max-h-[70vh]"
         >
-          <MaxWidthSetter
-            containerRef={clientContainerRef}
-            maxWidth={clientMaxWidth}
-            setMaxWidth={setClientMaxWidth}
-          />
           {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
           <DeviceClient
             ref={ref}
             device={deviceInfo}
             loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
-            givenMaxWidth={clientMaxWidth}
             autoCaptureKeyboard
             playAudio
           />

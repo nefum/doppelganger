@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
-import useOnInteraction from "@/utils/hooks/use-on-interaction.ts";
+import useInteractedWithAtLeastOnce from "@/utils/hooks/use-interacted-with-at-least-once.ts";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
 import type { Player } from "jsmpeg";
 import { ReactNode, RefObject, useEffect, useRef } from "react";
@@ -8,7 +8,13 @@ import { ReactNode, RefObject, useEffect, useRef } from "react";
 const JSMpegVideoElement = JSMpeg.VideoElement;
 const JSMpegPlayer = JSMpeg.Player || JSMpegVideoElement.player;
 
-export default function JsmpegClient({
+/**
+ * A JSMpeg client that plays audio only. Useful for connecting to KasmVNC-based clients that expose audio over a WS compatible with JSMpeg.
+ * @param containerRef A ref to the container housing the JSMpeg client, used to ensure that the page has been interacted with before playing audio
+ * @param jsmpegWsUrlString The source URL for the JSMpeg audio stream
+ * @constructor
+ */
+export default function JSMpegClient({
   containerRef,
   jsmpegWsUrlString,
 }: Readonly<{
@@ -20,7 +26,7 @@ export default function JsmpegClient({
 
   const { toast } = useToast();
 
-  const interacted = useOnInteraction(containerRef);
+  const interacted = useInteractedWithAtLeastOnce(containerRef);
 
   useEffect(() => {
     if (jsmpegPlayerRef.current || !audioCanvasRef.current) {

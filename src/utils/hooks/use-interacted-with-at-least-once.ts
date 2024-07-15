@@ -39,7 +39,9 @@ const interactionEvents = [
  * Hook to detect if the user has interacted with the element at least once, best used for waiting for interaction before starting video or audio that cannot run without user interaction.
  * @param ref The Element to watch
  */
-export default function useOnInteraction(ref: RefObject<HTMLElement>): boolean {
+export default function useInteractedWithAtLeastOnce(
+  ref: RefObject<HTMLElement>,
+): boolean {
   const [interacted, setInteracted] = useState(false);
 
   useEffect(() => {

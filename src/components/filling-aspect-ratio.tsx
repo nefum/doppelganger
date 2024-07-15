@@ -9,28 +9,6 @@ import {
 } from "react";
 
 /**
- * A utility function for Filling Aspect Ratio to allow it to set the maximum width of the inner container.
- * See src/app/(userland)/devices/(root)/device-cards/desktop-client-button.tsx for an example of how to use this.
- */
-export function MaxWidthSetter({
-  containerRef,
-  maxWidth,
-  setMaxWidth,
-}: Readonly<{
-  containerRef: RefObject<HTMLDivElement>;
-  maxWidth: number | undefined;
-  setMaxWidth: (maxWidth: number) => void;
-}>): ReactNode {
-  useEffect(() => {
-    if (containerRef.current && maxWidth === undefined) {
-      setMaxWidth(containerRef.current.clientWidth);
-    }
-  }, [containerRef, maxWidth, setMaxWidth]);
-
-  return null;
-}
-
-/**
  * Creates an aspect-ratio box that fills the parent container, but still maintains the aspect ratio.
  * @param aspectRatio The aspect ratio to maintain.
  * @param children The children to render inside the aspect-ratio box.
@@ -42,35 +20,50 @@ export default function FillingAspectRatio({
   aspectRatio,
   children,
   innerContainerRef,
-  givenMaxWidth,
   className,
 }: Readonly<{
   aspectRatio: number;
   children?: ReactNode;
   innerContainerRef: RefObject<HTMLDivElement>;
-  givenMaxWidth?: number;
   className?: string;
 }>): ReactNode {
-  const parentRef = useRef<HTMLDivElement>(null);
+  const outerContainerRef = useRef<HTMLDivElement>(null);
 
+  // returns the parent of the outer container
+  const getParentElement = useMemo(
+    () => () => {
+      return outerContainerRef.current!.parentElement!;
+    },
+    [],
+  );
+  // the width of the parent that we must not exceed
+
+  // in a ref object to prevent unmounting of the observers when the aspect ratio changes
+  const aspectRatioRef = useRef(aspectRatio);
+  // this cannot be a state, we cannot rerender and therefore unmount the observers when the width changes, circular loop
+  const parentWidth = useRef<number | null>(null);
+  // the aspect ratio when the parent width was updated
+  const parentWidthSourceAspectRatio = useRef<number | null>(null);
   const [aspectRatioWidth, setAspectRatioWidth] = useState("100%"); // Default width
 
   const setAspectRatioWidthWithoutOverflow = useMemo(() => {
-    return (requestedWidth: string) => {
-      if (!parentRef.current) {
+    return function internalSetAspectRatioWidthWithoutOverflow(
+      requestedWidth: string,
+    ) {
+      if (!outerContainerRef.current) {
         return;
       }
 
-      const parentParent = parentRef.current.parentElement!;
+      // assign into a variable to ignore any simultaneous changes
+      const currentParentWidth = parentWidth.current;
 
-      if (requestedWidth.endsWith("px")) {
-        // don't allow it to overflow
+      if (requestedWidth.endsWith("px") && currentParentWidth !== null) {
+        // if the parent width is undefined, there isn't much we can do to compare
         const requestedWidthPx = parseFloat(requestedWidth.slice(0, -2));
-        const maxWidth = parentParent.clientWidth;
-        const acceptableMaxWidth = maxWidth + 30; // give it a little bit of room for resizing
 
-        if (requestedWidthPx > acceptableMaxWidth) {
-          setAspectRatioWidth(`${acceptableMaxWidth}px`);
+        if (requestedWidthPx > currentParentWidth) {
+          setAspectRatioWidth(`${currentParentWidth}px`);
+
           return;
         }
       }
@@ -80,36 +73,62 @@ export default function FillingAspectRatio({
   }, []);
 
   useEffect(() => {
-    if (!parentRef.current) {
+    aspectRatioRef.current = aspectRatio;
+  }, [aspectRatio]);
+
+  useEffect(() => {
+    if (!outerContainerRef.current) {
       return;
     }
 
-    const calculateWidth = () => {
-      if (!parentRef.current) {
+    // setup calculating the inside container
+    function calculateWidth() {
+      if (!outerContainerRef.current) {
         return;
       }
 
-      const viewportHeightPx = parentRef.current.parentElement!.clientHeight;
-      const widthPx = aspectRatio * viewportHeightPx;
+      const viewportHeightPx =
+        outerContainerRef.current.parentElement!.clientHeight;
+      const widthPx = aspectRatioRef.current * viewportHeightPx;
       return `${widthPx}px`;
-    };
+    }
 
-    const width = calculateWidth()!;
-    setAspectRatioWidth(width);
-
-    const resizeObserver = new ResizeObserver(() => {
+    function updateWidth() {
       setAspectRatioWidthWithoutOverflow(calculateWidth()!);
-    });
+    }
 
-    resizeObserver.observe(parentRef.current!);
+    // note: the aspect ratio gets updated BEFORE the parent width gets updated here
+    function updateParentWidth() {
+      if (!outerContainerRef.current) {
+        return;
+      }
+
+      parentWidthSourceAspectRatio.current = aspectRatioRef.current;
+      parentWidth.current = getParentElement().clientWidth;
+
+      // we can do a safe call to set the update width now
+      updateWidth();
+    }
+
+    // this will only effectively run on the first render, making the parent width not changable due to resizing of the children 🥳
+    updateParentWidth();
+
+    // we need to update our internal max width when the parent's parent container changes size due to an external factor,
+    // like a resizable/draggable component (multiview)
+    const outerResizeObserver = new ResizeObserver(updateParentWidth);
+    const innerResizeObserver = new ResizeObserver(updateWidth);
+
+    innerResizeObserver.observe(outerContainerRef.current!);
+    outerResizeObserver.observe(getParentElement());
 
     return () => {
-      resizeObserver.disconnect();
+      innerResizeObserver.disconnect();
+      outerResizeObserver.disconnect();
     };
-  }, [aspectRatio, setAspectRatioWidthWithoutOverflow]);
+  }, [getParentElement, setAspectRatioWidthWithoutOverflow]);
 
   return (
-    <div ref={parentRef} style={{ width: aspectRatioWidth }}>
+    <div ref={outerContainerRef} style={{ width: aspectRatioWidth }}>
       <AspectRatio
         ratio={aspectRatio}
         ref={innerContainerRef}
