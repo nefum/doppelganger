@@ -121,12 +121,16 @@ function runDockerCommand(command: string, args: string[]): Promise<string> {
 
     dockerProcess.stdout.on("data", function (data) {
       stdout += data.toString();
-      processStdout.write(data); // Real-time output
+      if (process.env.NODE_ENV !== "production") {
+        processStdout.write(data); // Real-time output
+      }
     });
 
     dockerProcess.stderr.on("data", function (data) {
       stderr += data.toString();
-      processStderr.write(data); // Real-time error output
+      if (process.env.NODE_ENV !== "production") {
+        processStderr.write(data); // Real-time output
+      }
     });
 
     dockerProcess.on("close", function (code) {
@@ -208,7 +212,11 @@ async function getIsContainerRunning(containerName: string): Promise<boolean> {
 }
 
 export async function getIsDeviceRunning(deviceId: string): Promise<boolean> {
-  const androidRunning = await getIsContainerRunning(`${deviceId}-redroid-1`);
-  const scrcpyRunning = await getIsContainerRunning(`${deviceId}-scrcpy-1`);
+  const androidRunningPromise = getIsContainerRunning(`${deviceId}-redroid-1`);
+  const scrcpyRunningPromise = getIsContainerRunning(`${deviceId}-scrcpy-1`);
+  const [androidRunning, scrcpyRunning] = await Promise.all([
+    androidRunningPromise,
+    scrcpyRunningPromise,
+  ]);
   return androidRunning && scrcpyRunning;
 }

@@ -23,10 +23,10 @@ import {
 } from "react";
 import styles from "./sizer.module.css";
 
-const MOBILE_BITRATE_BYTES = 800_0000;
-const MOBILE_IFRAME_INTERVAL = 10;
+// 8 MB/s
+const DEVICE_BITRATE_BYTES = 8_000_000;
+// for some bizzarre reason, the video is always a bit too small, so we overscan it
 const OVERSCAN_MULTIPLIER = 1.05;
-const RESIZE_DEBOUNCE = 100;
 
 interface DeviceClientProps {
   device: Device;
@@ -86,9 +86,9 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
     const createVideoSettingsWithBound = useMemo(
       () => (bounds: Size) => {
         return new VideoSettings({
-          bitrate: MOBILE_BITRATE_BYTES,
+          bitrate: DEVICE_BITRATE_BYTES,
           maxFps: device.redroidFps,
-          iFrameInterval: MOBILE_IFRAME_INTERVAL,
+          iFrameInterval: Math.floor(device.redroidFps / 2), // 0.5 seconds, balances responsiveness and bandwidth
           sendFrameMeta: false,
           bounds,
         });
