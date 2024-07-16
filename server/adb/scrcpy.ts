@@ -6,8 +6,9 @@ import path from "path";
 import {
   getAdbUdidForDevice,
   getDefaultRedroidHostname,
-} from "../device-info/device-info.ts";
-import adb from "./adb.ts";
+} from "../device-info/device-info";
+import { getRedroidImage } from "../device-info/redroid-images";
+import adb from "./adb";
 
 enum PID_DETECTION_METHOD {
   UNKNOWN,
@@ -386,6 +387,32 @@ export class AdbDevice {
         resolve(this.waitForServerPid(params));
       }, timeout);
     });
+  }
+
+  /* custom methods */
+  /**
+   * Gets the Framework ID for an Android device so that it may be registered with Google at https://www.google.com/android/uncertified
+   */
+  async getGoogleServicesFrameworkID(): Promise<number> {
+    const redroidImage = getRedroidImage(this.device.redroidImage)!;
+
+    if (!redroidImage.gms) {
+      throw new Error("Device does not have Google Mobile Services");
+    }
+
+    if (!(await this.getIsConnected())) {
+      throw new Error("Device is not connected");
+    }
+
+    await this.adbClient!.root();
+    // rets android_id|3546527965867813643
+    const androidIdRet = await this.runShellCommandAdbKit(
+      'sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db "select * from main where name = "android_id";"',
+    );
+
+    const androidIdString = androidIdRet.split("|")[1].trim();
+
+    return parseInt(androidIdString, 10);
   }
 }
 

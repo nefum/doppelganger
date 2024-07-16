@@ -1,6 +1,6 @@
 import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
-import { isFatalWebSocketError, WsWebSocketOptions } from "./wsutils.ts";
+import { isFatalWebSocketError, WsWebSocketOptions } from "./wsutils";
 
 // from ws
 function isValidStatusCode(code: number): boolean {

@@ -10,14 +10,14 @@ import {
   eventsWsEndpoint,
   kasmVncWsEndpoint,
   scrcpyWsEndpoint,
-} from "./endpoint-regex.ts";
+} from "./endpoint-regex";
 
 // load environment variables
-import handleEventStream from "./events/route.ts";
-import { loadEnvironment } from "./load-environment.ts";
-import { handleAudio, handleKasmVNC } from "./wsutils/kasmvnc-route.ts";
-import { handleDeviceStream } from "./wsutils/scrcpy-route.ts";
-import { isWebSocketRequest } from "./wsutils/wsutils.ts";
+import handleEventStream from "./events/route";
+import { loadEnvironment } from "./load-environment";
+import { handleAudio, handleKasmVNC } from "./wsutils/kasmvnc-route";
+import { handleDeviceStream } from "./wsutils/scrcpy-route";
+import { isWebSocketRequest } from "./wsutils/wsutils";
 // like during development the IDEA runner and during production the docker container
 loadEnvironment();
 

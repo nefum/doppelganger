@@ -4,55 +4,71 @@
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:14.0.0-latest",
     "usable": true,
-    "premium": true
+    "premium": true,
+    "gms": false,
+    "androidSdkVersion": 34
   },
   {
     "name": "Android 13",
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:13.0.0-latest",
     "usable": false,
-    "premium": false
+    "premium": false,
+    "gms": false,
+    "androidSdkVersion": 33
   },
   {
     "name": "Android 12",
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:12.0.0-latest",
     "usable": false,
-    "premium": false
+    "premium": false,
+    "gms": false,
+    "androidSdkVersion": 31
   },
   {
     "name": "Android 11",
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:11.0.0-latest",
     "usable": false,
-    "premium": false
+    "premium": false,
+    "gms": false,
+    "androidSdkVersion": 30
   },
   {
     "name": "Android 10",
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:10.0.0-latest",
     "usable": false,
-    "premium": false
+    "premium": false,
+    "gms": false,
+    "androidSdkVersion": 29
   },
   {
     "name": "Android 9",
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:9.0.0-latest",
     "usable": false,
-    "premium": false
+    "premium": false,
+    "gms": false,
+    "androidSdkVersion": 28
   },
   {
     "name": "Android 8.1",
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:8.1.0-latest",
     "usable": false,
-    "premium": false
+    "premium": false,
+    "gms": false,
+    "androidSdkVersion": 27
   },
   {
     "name": "Android 11 w/ Play Store",
     "description": "Android 11 with the Play Store installed, fully-featured and ready to go.",
     "imageName": "abing7k/redroid:a11_gapps_arm",
     "usable": true,
-    "premium": false
+    "premium": false,
+    "gms": true,
+    "androidSdkVersion": 30
   }
 ]

@@ -24,7 +24,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({}, { status: 404 });
   }
 
-  if (!(await getIsDeviceRunning(device.id))) {
+  if (!(await getIsDeviceRunning(device))) {
     return NextResponse.json({}, { status: 400 });
   }
 

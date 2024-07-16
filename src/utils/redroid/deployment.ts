@@ -1,3 +1,6 @@
+import { AdbDevice } from "%/adb/scrcpy.ts";
+import { SampleDeviceSpecs } from "%/device-info/device-specs.ts";
+import { RedroidImage } from "%/device-info/redroid-images.ts";
 import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
 import {
   createDockerTemplateFromView,
@@ -11,9 +14,8 @@ import {
   getDockerImageInfo,
   getPathFriendlyStringForDockerImageInfo,
 } from "@/utils/docker/docker-image-parsing.ts";
-import { SampleDeviceSpecs } from "@/utils/redroid/device-specs.ts";
-import { RedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { createId } from "@paralleldrive/cuid2";
+import { Device } from "@prisma/client";
 import { spawn } from "node:child_process";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { stderr as processStderr, stdout as processStdout } from "node:process";
@@ -200,7 +202,9 @@ export async function destroyDevice(deviceId: string): Promise<void> {
   }
 }
 
-async function getIsContainerRunning(containerName: string): Promise<boolean> {
+export async function getIsContainerRunning(
+  containerName: string,
+): Promise<boolean> {
   try {
     const result = await runDockerCommand("ps", ["--format", "{{.Names}}"]);
     const runningContainers = result.trim().split("\n");
@@ -211,12 +215,19 @@ async function getIsContainerRunning(containerName: string): Promise<boolean> {
   }
 }
 
-export async function getIsDeviceRunning(deviceId: string): Promise<boolean> {
+export async function getIsDeviceRunning(device: Device): Promise<boolean> {
+  const { id: deviceId } = device;
+  const adbDevice = new AdbDevice(device);
+
   const androidRunningPromise = getIsContainerRunning(`${deviceId}-redroid-1`);
   const scrcpyRunningPromise = getIsContainerRunning(`${deviceId}-scrcpy-1`);
-  const [androidRunning, scrcpyRunning] = await Promise.all([
+  const adbConnectedPromise = adbDevice.getIsConnected();
+
+  const allPromises = await Promise.all([
     androidRunningPromise,
     scrcpyRunningPromise,
+    adbConnectedPromise,
   ]);
-  return androidRunning && scrcpyRunning;
+
+  return allPromises.every(Boolean);
 }

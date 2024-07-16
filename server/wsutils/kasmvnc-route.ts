@@ -5,11 +5,11 @@ import {
   getDeviceForId,
   getTargetAudioWebsocketUrlForDevice,
   getTargetVncWebsocketUrlForDevice,
-} from "../device-info/device-info.ts";
-import { audioWsEndpoint, kasmVncWsEndpoint } from "../endpoint-regex.ts";
-import { createClient } from "../supabase/ro-server.ts";
-import { getWsWebSocketOptionForKasmVNC } from "./kasmvnc-connect.ts";
-import { createWebSocketProxy } from "./wsproxy.ts";
+} from "../device-info/device-info";
+import { audioWsEndpoint, kasmVncWsEndpoint } from "../endpoint-regex";
+import { createClient } from "../supabase/ro-server";
+import { getWsWebSocketOptionForKasmVNC } from "./kasmvnc-connect";
+import { createWebSocketProxy } from "./wsproxy";
 
 enum EndpointType {
   KASMVNC,

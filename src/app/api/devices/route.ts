@@ -1,10 +1,10 @@
 import { waitForAdbServerToBeReady } from "%/adb/scrcpy.ts";
 import prisma from "%/database/prisma.ts";
 import { getAdbUdidForDevice } from "%/device-info/device-info.ts";
+import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
 import { getUsersDevices } from "@/utils/devices.ts";
 import { bringUpDevice, initializeDevice } from "@/utils/redroid/deployment.ts";
-import { getRedroidImage } from "@/utils/redroid/redroid-images.ts";
 import {
   getMaxDeviceCount,
   getSubscriptionStatus,

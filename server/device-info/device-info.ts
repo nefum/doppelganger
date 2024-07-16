@@ -1,6 +1,6 @@
 import { Device } from "@prisma/client";
-import prisma from "../database/prisma.ts";
-import { deviceEndpoint } from "../endpoint-regex.ts";
+import prisma from "../database/prisma";
+import { deviceEndpoint } from "../endpoint-regex";
 
 export function getDeviceIdFromUrl(url: URL | string): string | null {
   let match;

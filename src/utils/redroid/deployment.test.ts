@@ -2,9 +2,9 @@
  * @jest-environment node
  */
 
+import { SampleDeviceSpecs } from "%/device-info/device-specs.ts";
+import { defaultRedroidImage } from "%/device-info/redroid-images.ts";
 import { createDockerTemplateFromView } from "@/utils/docker/docker-compose-moustache-formatting.ts";
-import { SampleDeviceSpecs } from "@/utils/redroid/device-specs.ts";
-import { defaultRedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { stringify as stringifyYaml, parse as yamlParse } from "yaml";
 import { createView } from "./deployment.ts";
 

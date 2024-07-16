@@ -1,5 +1,5 @@
 import { IncomingHttpHeaders } from "node:http";
-import { WsWebSocketOptions } from "./wsutils.ts";
+import { WsWebSocketOptions } from "./wsutils";
 
 export function getWsWebSocketOptionForKasmVNC(
   targetUrl: URL,

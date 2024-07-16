@@ -1,5 +1,13 @@
 "use client";
 
+import allSampleDeviceSpecs, {
+  defaultSampleDeviceSpecs,
+  SampleDeviceSpecs,
+} from "%/device-info/device-specs.ts";
+import allRedroidImages, {
+  defaultRedroidImage,
+  RedroidImage,
+} from "%/device-info/redroid-images.ts";
 import NewDeviceButtonClient from "@/app/(userland)/devices/(root)/device-pages/new-device-button/new-device-button-client.tsx";
 import {
   isFreeTierCompatible,
@@ -58,14 +66,6 @@ import {
   useToast,
 } from "@/components/ui/use-toast.ts";
 import { cn } from "@/lib/utils.ts";
-import allSampleDeviceSpecs, {
-  defaultSampleDeviceSpecs,
-  SampleDeviceSpecs,
-} from "@/utils/redroid/device-specs.ts";
-import allRedroidImages, {
-  defaultRedroidImage,
-  RedroidImage,
-} from "@/utils/redroid/redroid-images.ts";
 import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -3,6 +3,7 @@ import NoDevicesCard from "@/app/(userland)/devices/(root)/device-pages/no-devic
 import { getUsersDevices } from "@/utils/devices.ts";
 import { getIsDeviceRunning } from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
+import { Device } from "@prisma/client";
 import NotFound from "next/dist/client/components/not-found-error";
 
 export default async function UserDevices() {
@@ -19,13 +20,11 @@ export default async function UserDevices() {
 
   const clientDeviceUpStates: { [id: string]: boolean } = {};
 
-  async function updateDeviceUpState(deviceId: string) {
-    clientDeviceUpStates[deviceId] = await getIsDeviceRunning(deviceId);
+  async function updateDeviceUpState(device: Device) {
+    clientDeviceUpStates[device.id] = await getIsDeviceRunning(device);
   }
 
-  await Promise.all(
-    clientDevices.map((device) => updateDeviceUpState(device.id)),
-  );
+  await Promise.all(clientDevices.map((device) => updateDeviceUpState(device)));
 
   if (clientDevices.length === 0) {
     return <NoDevicesCard />;

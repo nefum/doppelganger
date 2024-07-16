@@ -9,9 +9,18 @@
       "inputs": ["**/*", "!dist/**", "!node_modules/**", "!public/workers/**"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
+    "workers:dev": {
+      "inputs": ["workers/**"],
+      "outputs": ["public/workers/**"]
+    },
     "workers:build": {
       "inputs": ["workers/**"],
       "outputs": ["public/workers/**"]
+    },
+    "server:dev": {
+      "dependsOn": ["db:generate"],
+      "inputs": ["server/**"],
+      "outputs": ["dist/**"]
     },
     "server:build": {
       "dependsOn": ["db:generate"],

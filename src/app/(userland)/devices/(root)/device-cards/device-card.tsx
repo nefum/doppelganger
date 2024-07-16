@@ -23,6 +23,7 @@ import { Card } from "@/components/ui/card.tsx";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 
+import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import DeleteDeviceButton from "@/app/(userland)/devices/(root)/device-cards/delete-device-button.tsx";
 import DesktopClientButton from "@/app/(userland)/devices/(root)/device-cards/desktop-client-button.tsx";
 import EditDeviceButton from "@/app/(userland)/devices/(root)/device-cards/edit-device-button.tsx";
@@ -31,7 +32,6 @@ import { MobileClientButton } from "@/app/(userland)/devices/(root)/device-cards
 import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { toTitleCase } from "@/utils/misc.ts";
-import { getRedroidImage } from "@/utils/redroid/redroid-images.ts";
 import { Device, DeviceState } from "@prisma/client";
 import { LuMousePointer2 } from "react-icons/lu";
 

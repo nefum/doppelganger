@@ -3,11 +3,11 @@ import { WebSocket as WsWebSocket } from "ws";
 import {
   getTargetWsScrcpyUrlForDevice,
   runScrcpyServerOnDevice,
-} from "../adb/scrcpy.ts";
-import { getDeviceForId } from "../device-info/device-info.ts";
-import { scrcpyWsEndpoint } from "../endpoint-regex.ts";
-import { createClient } from "../supabase/ro-server.ts";
-import { createWebSocketProxy } from "./wsproxy.ts";
+} from "../adb/scrcpy";
+import { getDeviceForId } from "../device-info/device-info";
+import { scrcpyWsEndpoint } from "../endpoint-regex";
+import { createClient } from "../supabase/ro-server";
+import { createWebSocketProxy } from "./wsproxy";
 
 export async function handleDeviceStream(
   req: IncomingMessage,

@@ -50,7 +50,7 @@ export default function DeleteDeviceButton({
       if (response.ok) {
         clientSideRedirectWithToast(
           "/devices",
-          `Device "${deviceInfo.id}" deleted successfully`,
+          `Device "${deviceInfo.name}" deleted successfully`,
         );
       } else {
         console.error("Failed to delete device", response);
@@ -61,7 +61,7 @@ export default function DeleteDeviceButton({
         });
       }
     },
-    [deviceInfo.id, toast],
+    [deviceInfo.id, deviceInfo.name, toast],
   );
 
   return (
