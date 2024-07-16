@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
+import { reloadWithToast } from "@/utils/toast-utils.ts";
 import { Device } from "@prisma/client";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import React, { useMemo, useState } from "react";
@@ -31,11 +32,9 @@ export default function EditDeviceButton({
         method: "PUT",
       });
       if (response.ok) {
-        toast({
-          title: "Device started successfully",
+        reloadWithToast({
+          toastTitle: "Device started successfully",
         });
-        // invalidate the cache
-        window.location.reload();
       } else {
         console.error("Failed to start device", response);
         setDeviceUpLoading(false);
@@ -56,11 +55,9 @@ export default function EditDeviceButton({
         method: "PUT",
       });
       if (response.ok) {
-        toast({
-          title: "Device stopped successfully",
+        reloadWithToast({
+          toastTitle: "Device stopped successfully",
         });
-        // invalidate the cache
-        window.location.reload();
       } else {
         console.error("Failed to stop device", response);
         setDeviceDownLoading(false);

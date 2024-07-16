@@ -48,3 +48,11 @@ export function clientSideRedirectWithToast(
   );
   window.location.href = `${pathName}${queryParams}`;
 }
+
+export function reloadWithToast({ toastTitle, toastDescription }: ToastPrams) {
+  clientSideRedirectWithToast(
+    window.location.pathname,
+    toastTitle,
+    toastDescription,
+  );
+}
