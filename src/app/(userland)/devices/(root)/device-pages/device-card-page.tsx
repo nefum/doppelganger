@@ -34,7 +34,7 @@ export function DeviceCardPage({
           <NewDeviceButtonServer />
         </Suspense>
       </div>
-      <div className="flex flex-wrap -m-3">{children}</div>
+      <div className="flex flex-wrap justify-between -m-3">{children}</div>
     </div>
   );
 }

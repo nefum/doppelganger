@@ -1,3 +1,4 @@
+import { urlBase } from "@/app/constants.ts";
 import { Toaster } from "@/components/ui/toaster.tsx";
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     default: "Doppelganger",
   },
   description: "Free cloud-based Android phones for everyone",
-  metadataBase: new URL("https://www.doppelgangerhq.com"),
+  metadataBase: new URL(urlBase),
 };
 
 export default function RootLayout({

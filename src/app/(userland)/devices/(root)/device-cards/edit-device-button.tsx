@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
-import { reloadWithToast } from "@/utils/toast-utils.ts";
+import { clientSideReloadWithToast } from "@/utils/toast-utils.ts";
 import { Device } from "@prisma/client";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import React, { useMemo, useState } from "react";
@@ -32,7 +32,7 @@ export default function EditDeviceButton({
         method: "PUT",
       });
       if (response.ok) {
-        reloadWithToast({
+        clientSideReloadWithToast({
           toastTitle: "Device started successfully",
         });
       } else {
@@ -55,7 +55,7 @@ export default function EditDeviceButton({
         method: "PUT",
       });
       if (response.ok) {
-        reloadWithToast({
+        clientSideReloadWithToast({
           toastTitle: "Device stopped successfully",
         });
       } else {

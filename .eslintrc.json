@@ -5,6 +5,7 @@
     "public/workers/**",
     ".next/**",
     "node_modules/**",
-    "src/ws-scrcpy/**"
+    "src/ws-scrcpy/**",
+    "src/app/(userland)/(static)/licenses/licenses.json"
   ]
 }

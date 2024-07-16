@@ -56,11 +56,11 @@ export function DeviceCard({
 
   return (
     <div className="w-full xs:max-w-[400px] p-3">
-      <Card className="w-full max-w-md">
-        <div className="grid grid-cols-[1fr_200px] gap-6 p-4">
-          <div className="space-y-4">
+      <Card className="w-full max-w-lg">
+        <div className="flex justify-between p-4 w-full">
+          <div className="space-y-4 min-w-20 max-w-24">
             <div className="space-y-1">
-              <h3 className="text-2xl max-w-28 break-words text-wrap font-semibold">
+              <h3 className="text-2xl break-words text-wrap font-semibold">
                 {deviceInfo.name}
               </h3>
               <div className="flex items-center gap-2 text-muted-foreground">
@@ -116,7 +116,7 @@ export function DeviceCard({
           <link rel="prefetch" href={getSnapshotUrlOfDevice(deviceInfo.id)} />
           <div
             className={clsx(
-              "rounded-lg object-cover aspect-[2/4] relative bg-gray-200",
+              "rounded-lg object-cover aspect-[2/4] relative bg-gray-200 min-w-[200px]",
               styles.fill,
               {
                 "animate-pulse": !loaded,

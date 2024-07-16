@@ -252,7 +252,7 @@ export default function SignupForm() {
             <Label htmlFor="terms" className="text-sm font-medium">
               I agree to the{" "}
               <Link
-                href="#"
+                href="/tos"
                 className="text-primary hover:underline"
                 prefetch={false}
               >
@@ -260,7 +260,7 @@ export default function SignupForm() {
               </Link>{" "}
               and{" "}
               <Link
-                href="#"
+                href="/privacy"
                 className="text-primary hover:underline"
                 prefetch={false}
               >

@@ -49,7 +49,6 @@ function ButtonbarButton({
       <Button
         variant="ghost"
         size="icon"
-        className="my-2"
         onMouseDown={onPress}
         onMouseUp={onRelease}
         onTouchStart={onPress}

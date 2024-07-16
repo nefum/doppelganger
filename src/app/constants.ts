@@ -1,3 +1,5 @@
+export const urlBase = "https://www.doppelgangerhq.com";
+
 export const authRequiredRoutesRegex: RegExp[] = [
   /*
    * All device paths, except
@@ -8,6 +10,8 @@ export const authRequiredRoutesRegex: RegExp[] = [
    * These are the WS endpoints; authentication will be done manually
    */
   /^\/devices(?!\/[^\/]+\/(jsmpeg|scrcpy|kasmvnc|events)).*$/,
+  // user management page
+  /^\/user.*$/,
 ];
 export const MIN_FPS = 10;
 

@@ -42,3 +42,5 @@ public/workers/
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+src/app/(userland)/(static)/licenses/licenses.json

@@ -78,16 +78,87 @@
 
 /*https://ui.shadcn.com/docs/components/typography*/
 @layer components {
-  .shadcn-link {
-    @apply font-medium text-primary underline underline-offset-4;
+  .shadcn-h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
   }
+
+  .shadcn-h2 {
+    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
+  }
+
+  .shadcn-h3 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+
+  .shadcn-h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+
   .shadcn-p {
     @apply leading-7 [&:not(:first-child)]:mt-6;
   }
+
+  .shadcn-blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+
+  /* https://ui.shadcn.com/docs/components/typography#:~:text=Copy-,table,-Preview */
+
+  .shadcn-table-container {
+    @apply my-6 w-full overflow-y-auto;
+  }
+
+  .shadcn-table {
+    @apply w-full;
+  }
+
+  .shadcn-tr {
+    @apply m-0 border-t p-0 even:bg-muted;
+  }
+
+  .shadcn-th {
+    @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  .shadcn-th-head {
+    @apply border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  /*https://ui.shadcn.com/docs/components/typography#:~:text=Copy-,list,-Preview*/
+
+  .shadcn-ul {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  .shadcn-code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  .shadcn-lead {
+    @apply text-xl text-muted-foreground;
+  }
+
+  .shadcn-large {
+    @apply text-lg font-semibold;
+  }
+
+  .shadcn-small {
+    @apply text-sm font-medium leading-none;
+  }
+
   .shadcn-muted {
     @apply text-sm text-muted-foreground;
   }
-  .shadcn-h1 {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+
+  /* undocumented */
+
+  .shadcn-link {
+    @apply font-medium text-primary underline underline-offset-4;
+  }
+}
+
+@layer components  {
+  .shadcn-h-spaced {
+    @apply mt-5 first:mt-0; /* custom */
   }
 }

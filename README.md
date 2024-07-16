@@ -28,10 +28,13 @@ brew install node pnpm
 pnpm i
 ```
 
-### Submodules
+### Prereqs
 
 ```bash
-pnpm run init
+pnpm run init  # initializes submodules
+pnpm run db:generate  # generates the database schema
+pnpm run db:migrate  # migrates the database schema
+pnpm run licenses:check  # generates a licenses.json file for the licenses page
 ```
 
 ## Running

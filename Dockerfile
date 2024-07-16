@@ -41,6 +41,9 @@ RUN pnpm run db:generate
 # Build the server-side code
 RUN pnpm run server:build
 
+# Generate licenses
+RUN pnpm run licenses:check
+
 # Build static workers
 RUN pnpm run workers:build
 
