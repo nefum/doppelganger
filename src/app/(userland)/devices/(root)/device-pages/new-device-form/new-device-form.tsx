@@ -200,7 +200,12 @@ function RedroidImageCombobox({
       {field.value && (
         <Tooltip>
           <TooltipTrigger>
-            <LuInfo className="ml-2 h-4 w-4" />
+            <LuInfo
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              className="ml-2 h-4 w-4"
+            />
           </TooltipTrigger>
           <TooltipContent className="italic">
             <h6 className="text-md font-semibold">
