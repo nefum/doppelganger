@@ -76,7 +76,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   });
 
   await bringUpDevice(device.id);
-  await waitForAdbServerToBeReady(getAdbUdidForDevice(fullDevice!), 60_000); // do not wait longer than 60 seconds
+
+  try {
+    await waitForAdbServerToBeReady(getAdbUdidForDevice(fullDevice!), 60_000); // do not wait longer than 60 seconds
+  } catch (e) {
+    // ignore the fact that the device is not ready; cannot be forcing users to wait forever
+  }
 
   return NextResponse.json({}, { status: 201 });
 }
