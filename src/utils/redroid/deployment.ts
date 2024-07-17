@@ -179,7 +179,9 @@ export async function bringDownDevice(deviceId: string): Promise<void> {
   ]);
 }
 
-function getDataDirOfDevice(deviceId: string): `${string}/${string}-diff` {
+export function getDataDirOfDevice(
+  deviceId: string,
+): `${string}/${string}-diff` {
   return `${getBaseDir()}/${deviceId}-diff`; // from ./template/docker-compose.1.9.yml
 }
 
@@ -219,11 +221,25 @@ export async function getIsContainerRunning(
   }
 }
 
+export function getRedroidContainerName(
+  deviceId: string,
+): `${string}-redroid-1` {
+  return `${deviceId}-redroid-1`;
+}
+
+export function getScrcpyContainerName(deviceId: string): `${string}-scrcpy-1` {
+  return `${deviceId}-scrcpy-1`;
+}
+
 export async function getIsDeviceRunning(device: Device): Promise<boolean> {
   const { id: deviceId } = device;
 
-  const androidRunningPromise = getIsContainerRunning(`${deviceId}-redroid-1`);
-  const scrcpyRunningPromise = getIsContainerRunning(`${deviceId}-scrcpy-1`);
+  const androidRunningPromise = getIsContainerRunning(
+    getRedroidContainerName(deviceId),
+  );
+  const scrcpyRunningPromise = getIsContainerRunning(
+    getScrcpyContainerName(deviceId),
+  );
 
   const allPromises = await Promise.all([
     androidRunningPromise,
