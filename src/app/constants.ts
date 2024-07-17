@@ -1,4 +1,4 @@
-export const URL_BASE = "https://www.doppelgangerhq.com";
+export const URL_BASE = "https://doppelgangerhq.com";
 
 export const AUTH_REQUIRED_ROUTES_REGEX: RegExp[] = [
   /*
@@ -26,3 +26,10 @@ export const MAX_DEVICES_PREMIUM = 3;
 
 export const FREE_MAX_FPS = 15;
 export const PREMIUM_MAX_FPS = 30;
+
+export const FREE_TIER_IDLE_TIME_MS = 1_000 * 5 * 60; // 5 minutes
+
+// from template/docker-compose.1.9.yml
+export const VOLUME_SIZE_BYTES = 17179869184; // 16 GiB
+export const CPU_LIMIT = 2.0;
+export const MEMORY_LIMIT_BYTES = 2_147_483_648; // 2 GiB
