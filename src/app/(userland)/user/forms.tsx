@@ -2,6 +2,8 @@
 // this is because claude wrote this file and i do not care
 "use client";
 
+import { zodPassword } from "@/app/(no-layout)/(auth)/constants.ts";
+import { PasswordQualityAnalysis } from "@/components/password-quality-analysis.tsx";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,8 +32,9 @@ import {
   clientSideRedirectWithToast,
   clientSideReloadWithToast,
 } from "@/utils/toast-utils.ts";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
+import { z } from "zod";
 import handleDeleteAccount from "./actions.ts";
 
 export function EmailChangeForm() {
@@ -59,7 +62,20 @@ export function EmailChangeForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const { success: emailValid } = await z.string().email().spa(newEmail);
+
+    if (!emailValid) {
+      console.error("Invalid email");
+      toast({
+        title: "Invalid Email",
+        description: "The email you entered is invalid.",
+      });
+      return;
+    }
+
     const { error } = await supabaseClient.auth.updateUser({ email: newEmail });
+
     if (error) {
       console.error("Error updating email:", error.message);
       toast({
@@ -111,12 +127,22 @@ export function PasswordChangeForm() {
   const supabaseClient = createClient();
   const { toast } = useToast();
 
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const { success } = await zodPassword.safeParseAsync(newPassword);
+    if (!success) {
+      console.error("Invalid password");
+      toast({
+        title: "Invalid Password",
+        description: "Your password does not meet the requirements.",
+      });
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       console.error("New passwords do not match");
       toast({
@@ -126,9 +152,11 @@ export function PasswordChangeForm() {
       });
       return;
     }
+
     const { error } = await supabaseClient.auth.updateUser({
       password: newPassword,
     });
+
     if (error) {
       console.error("Error updating password:", error.message);
       toast({
@@ -143,6 +171,37 @@ export function PasswordChangeForm() {
     }
   };
 
+  const passwordQualityAnalysisContainerRef = useRef<HTMLDivElement>(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const open = () => setPopoverOpen(true);
+  const close = () => setPopoverOpen(false);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        passwordQualityAnalysisContainerRef.current &&
+        !passwordQualityAnalysisContainerRef.current.contains(
+          event.target as Node,
+        )
+      ) {
+        close();
+      }
+    }
+
+    function handleTabPress(event: KeyboardEvent) {
+      if (event.key === "Tab") {
+        close();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleTabPress);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleTabPress);
+    };
+  }, []);
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -152,25 +211,24 @@ export function PasswordChangeForm() {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="currentPassword">Current Password</Label>
-              <Input
-                id="currentPassword"
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Enter current password"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
+            <div
+              ref={passwordQualityAnalysisContainerRef}
+              className="flex flex-col space-y-1.5"
+            >
               <Label htmlFor="newPassword">New Password</Label>
-              <Input
-                id="newPassword"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password"
-              />
+              <PasswordQualityAnalysis
+                password={newPassword}
+                isOpen={popoverOpen}
+              >
+                <Input
+                  id="newPassword"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  onFocus={open}
+                />
+              </PasswordQualityAnalysis>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="confirmPassword">Confirm New Password</Label>

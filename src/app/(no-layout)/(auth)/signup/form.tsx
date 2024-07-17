@@ -4,6 +4,7 @@ import {
   signup,
   type SignupFormState,
 } from "@/app/(no-layout)/(auth)/signup/actions.ts";
+import { PasswordQualityAnalysis } from "@/components/password-quality-analysis.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -16,117 +17,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover.tsx";
 import Link from "next/link";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { FaCheck, FaXmark } from "react-icons/fa6";
 import { LuLoader2 } from "react-icons/lu";
 
 const INITIAL_SIGNUP_FORM_STATE = {
   message: null,
   errors: {},
 } satisfies SignupFormState;
-
-function getPasswordBars(passwordLength: number): React.ReactNode {
-  if (passwordLength >= 12) {
-    return (
-      <>
-        <div className="h-1 bg-green-400 dark:bg-green-500" />
-        <div className="h-1 bg-green-400 dark:bg-green-500" />
-        <div className="h-1 bg-green-400 dark:bg-green-500" />
-        <div className="h-1 bg-green-400 dark:bg-green-500" />
-      </>
-    );
-  } else if (passwordLength >= 8) {
-    return (
-      <>
-        <div className="h-1 bg-green-400 dark:bg-green-500" />
-        <div className="h-1 bg-green-400 dark:bg-green-500" />
-        <div className="h-1 bg-green-400 dark:bg-green-500" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-      </>
-    );
-  } else if (passwordLength >= 6) {
-    return (
-      <>
-        <div className="h-1 bg-orange-300 dark:bg-orange-400" />
-        <div className="h-1 bg-orange-300 dark:bg-orange-400" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-      </>
-    );
-  } else if (passwordLength >= 1) {
-    return (
-      <>
-        <div className="h-1 bg-red-400 dark:bg-red-500" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-        <div className="h-1 bg-gray-200 dark:bg-gray-600" />
-      </>
-    );
-  }
-}
-
-function PasswordQualityAnalysis({
-  password: passwordAttempt,
-  children,
-  isOpen,
-}: {
-  password: string;
-  children: ReactNode;
-  isOpen: boolean;
-}): ReactNode {
-  const passwordLengthRangeBars = getPasswordBars(passwordAttempt.length);
-
-  const passwordHasUpperCase = /[A-Z]/.test(passwordAttempt);
-  const passwordHasLowerCase = /[a-z]/.test(passwordAttempt);
-  const passwordHasNumber = /[0-9]/.test(passwordAttempt);
-
-  return (
-    <Popover open={isOpen} onOpenChange={(_: boolean) => {}}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent>
-        <div className="space-y-2 p-3">
-          <h3 className="font-semibold text-gray-900 dark:text-white">
-            Must have at least 6 characters!
-          </h3>
-          <div className="grid grid-cols-4 gap-2">
-            {passwordLengthRangeBars}
-          </div>
-          <p>Your password needs...</p>
-          <ul>
-            <li className="mb-1 flex items-center">
-              {passwordHasUpperCase ? <FaCheck /> : <FaXmark />}
-              Upper case letters
-            </li>
-            <li className="mb-1 flex items-center">
-              {passwordHasLowerCase ? <FaCheck /> : <FaXmark />}
-              Lower case letters
-            </li>
-            <li className="mb-1 flex items-center">
-              {passwordHasNumber ? <FaCheck /> : <FaXmark />}
-              Numbers
-            </li>
-          </ul>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
 
 function SignupButton() {
   const isPending = useFormStatus().pending;

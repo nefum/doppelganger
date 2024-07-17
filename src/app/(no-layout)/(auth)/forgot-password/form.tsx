@@ -24,6 +24,7 @@ import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { LuLoader2 } from "react-icons/lu";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -47,9 +48,6 @@ export default function ForgotPasswordForm() {
 
     const { error } = await supabaseClient.auth.resetPasswordForEmail(
       values.email,
-      {
-        redirectTo: `${window.location.origin}/reset-password`,
-      },
     );
 
     setIsLoading(false);
@@ -58,11 +56,13 @@ export default function ForgotPasswordForm() {
       toast({
         title: "Error",
         description: error.message,
+        variant: "destructive",
       });
     } else {
       clientSideRedirectWithToast(
         "/login",
         "Password reset email sent. Check your inbox.",
+        "This link will get you into the user management page, where you can reset your password.",
       );
     }
   }
@@ -95,7 +95,10 @@ export default function ForgotPasswordForm() {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Sending..." : "Send Reset Link"}
+              Send Reset Link
+              {isLoading && (
+                <LuLoader2 className={"ml-2 h-5 w-5 animate-spin"} />
+              )}
             </Button>
           </CardFooter>
         </form>

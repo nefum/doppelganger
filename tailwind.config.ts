@@ -8,7 +8,7 @@ const { extend: relumeThemeExtension, ...relumeTheme } =
 const combinedThemeExtension = { ...relumeTheme, ...relumeThemeExtension };
 
 const config = {
-  darkMode: "media",
+  darkMode: ["class"],
   content: [
     "./src/**/*.{js,ts,jsx,tsx,md,mdx}",
     "./node_modules/@relume_io/relume-ui/dist/**/*.{js,ts,jsx,tsx}",

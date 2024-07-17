@@ -1,6 +1,6 @@
-export const urlBase = "https://www.doppelgangerhq.com";
+export const URL_BASE = "https://www.doppelgangerhq.com";
 
-export const authRequiredRoutesRegex: RegExp[] = [
+export const AUTH_REQUIRED_ROUTES_REGEX: RegExp[] = [
   /*
    * All device paths, except
    * - /devices/:id/jsmpeg
@@ -13,6 +13,12 @@ export const authRequiredRoutesRegex: RegExp[] = [
   // user management page
   /^\/user.*$/,
 ];
+export const AUTHORIZED_USERS_FORBIDDEN_REGEX: RegExp[] = [
+  /^\/login$/,
+  /^\/signup$/,
+  /^\/forgot-password$/,
+];
+
 export const MIN_FPS = 10;
 
 export const MAX_DEVICES_FREE = 1;

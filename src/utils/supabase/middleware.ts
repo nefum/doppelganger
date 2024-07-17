@@ -1,5 +1,8 @@
 import { FIRST_PAGE_PATHNAME } from "@/app/(no-layout)/(auth)/constants.ts";
-import { authRequiredRoutesRegex } from "@/app/constants.ts";
+import {
+  AUTH_REQUIRED_ROUTES_REGEX,
+  AUTHORIZED_USERS_FORBIDDEN_REGEX,
+} from "@/app/constants.ts";
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -41,9 +44,9 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
-    authRequiredRoutesRegex
-      .map((regex) => regex.test(request.nextUrl.pathname))
-      .includes(true)
+    AUTH_REQUIRED_ROUTES_REGEX.map((regex) =>
+      regex.test(request.nextUrl.pathname),
+    ).includes(true)
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
@@ -53,8 +56,9 @@ export async function updateSession(request: NextRequest) {
 
   if (
     user &&
-    (request.nextUrl.pathname === "/login" ||
-      request.nextUrl.pathname === "/signup")
+    AUTHORIZED_USERS_FORBIDDEN_REGEX.map((regex) =>
+      regex.test(request.nextUrl.pathname),
+    ).includes(true)
   ) {
     // user is logged in, potentially respond by redirecting the user to the home page
     const url = request.nextUrl.clone();
