@@ -1,6 +1,5 @@
 "use client";
 
-import useWebCodecs from "@/utils/hooks/use-web-codecs.ts";
 import { CommandControlMessage } from "@/ws-scrcpy/src/app/controlMessage/CommandControlMessage.ts";
 import { ControlMessage } from "@/ws-scrcpy/src/app/controlMessage/ControlMessage.ts";
 import { KeyCodeControlMessage } from "@/ws-scrcpy/src/app/controlMessage/KeyCodeControlMessage.ts";
@@ -80,9 +79,6 @@ const ScrcpyDevicePlayer = forwardRef<
     onDisconnect,
     className,
   } = props;
-
-  const [wcReady, wcSupported] = useWebCodecs();
-
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -94,10 +90,6 @@ const ScrcpyDevicePlayer = forwardRef<
   const [keyboardListening, setKeyboardListening] = useState(false);
 
   useEffect(() => {
-    if (!wcReady || wcSupported === null) {
-      return;
-    }
-
     if (!containerRef.current || !canvasRef.current) {
       return; // we need the container & canvas to do it
     }
@@ -198,7 +190,7 @@ const ScrcpyDevicePlayer = forwardRef<
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we SHOULD NOT re-run this effect, it's a one-time setup and any changes can be made via the handle since this is so expensive
-  }, [wcReady]);
+  }, []);
 
   useImperativeHandle(ref, () => {
     return {

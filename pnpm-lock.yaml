@@ -140,12 +140,6 @@ dependencies:
   ispinner.css:
     specifier: ^3.1.1
     version: 3.1.1
-  libav.js:
-    specifier: ^5.4.6
-    version: 5.4.6
-  libavjs-webcodecs-polyfill:
-    specifier: ^0.5.1
-    version: 0.5.1
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -6141,10 +6135,6 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /@ungap/global-this@0.4.4:
-    resolution: {integrity: sha512-mHkm6FvepJECMNthFuIgpAEFmPOk71UyXuIxYfjytvFTnSDBIz7jmViO+LfHI/AjrazWije0PnSP3+/NlwzqtA==}
-    dev: false
-
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
 
@@ -10028,16 +10018,6 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
-
-  /libav.js@5.4.6:
-    resolution: {integrity: sha512-U+wB4DFRxTnI3LM83zujGtLa81JGymtllvDWPqtIF0EEK1jtVA7e3AQaFi5sIVq86Kung0ft0PqW7FZPeQEb3g==}
-    dev: false
-
-  /libavjs-webcodecs-polyfill@0.5.1:
-    resolution: {integrity: sha512-q3uPe8Q1xdAiKUNklQbeJ9KBCRcjD6hwXXOqS3dLt960UxVijgEavixcziGZISCcKCflPDFX97p9D1nJKdiG8w==}
-    dependencies:
-      '@ungap/global-this': 0.4.4
-    dev: false
 
   /license-checker@25.0.1:
     resolution: {integrity: sha512-mET5AIwl7MR2IAKYYoVBBpV0OnkKQ1xGj2IMMeEFIs42QAkEVjRtFZGWmQ28WeU7MP779iAgOaOy93Mn44mn6g==}
