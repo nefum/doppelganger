@@ -16,5 +16,269 @@
     "width": 590,
     "height": 1140,
     "dpi": 230
+  },
+  {
+    "name": "iPhone 15 Pro Max",
+    "width": 1290,
+    "height": 2796,
+    "dpi": 460
+  },
+  {
+    "name": "iPhone 15 Pro Max (50%)",
+    "width": 644,
+    "height": 1398,
+    "dpi": 230
+  },
+  {
+    "name": "iPad Pro 12.9-inch (6th generation)",
+    "width": 2048,
+    "height": 2732,
+    "dpi": 264
+  },
+  {
+    "name": "iPad Pro 12.9-inch (6th generation) (50%)",
+    "width": 1024,
+    "height": 1366,
+    "dpi": 132
+  },
+  {
+    "name": "MacBook Pro 16-inch",
+    "width": 3456,
+    "height": 2234,
+    "dpi": 254
+  },
+  {
+    "name": "MacBook Air 13.3-inch",
+    "width": 2560,
+    "height": 1600,
+    "dpi": 227
+  },
+  {
+    "name": "Samsung Galaxy S23 Ultra",
+    "width": 1440,
+    "height": 3088,
+    "dpi": 500
+  },
+  {
+    "name": "Samsung Galaxy S23 Ultra (50%)",
+    "width": 720,
+    "height": 1544,
+    "dpi": 250
+  },
+  {
+    "name": "Google Pixel 7 Pro",
+    "width": 1440,
+    "height": 3120,
+    "dpi": 512
+  },
+  {
+    "name": "Microsoft Surface Pro 9",
+    "width": 2880,
+    "height": 1920,
+    "dpi": 267
+  },
+  {
+    "name": "Dell XPS 15 (4K)",
+    "width": 3840,
+    "height": 2400,
+    "dpi": 290
+  },
+  {
+    "name": "iMac 24-inch (4.5K)",
+    "width": 4480,
+    "height": 2520,
+    "dpi": 218
+  },
+  {
+    "name": "iPad Air (5th generation)",
+    "width": 1640,
+    "height": 2360,
+    "dpi": 264
+  },
+  {
+    "name": "iPhone 14 Pro",
+    "width": 1178,
+    "height": 2556,
+    "dpi": 460
+  },
+  {
+    "name": "iPhone 14 Pro (50%)",
+    "width": 590,
+    "height": 1278,
+    "dpi": 230
+  },
+  {
+    "name": "Samsung Galaxy Z Fold 4 (Unfolded)",
+    "width": 1812,
+    "height": 2176,
+    "dpi": 374
+  },
+  {
+    "name": "Samsung Galaxy Z Fold 4 (Folded)",
+    "width": 904,
+    "height": 2316,
+    "dpi": 387
+  },
+  {
+    "name": "OnePlus 9 Pro",
+    "width": 1440,
+    "height": 3216,
+    "dpi": 525
+  },
+  {
+    "name": "iPad Mini (6th generation)",
+    "width": 1488,
+    "height": 2266,
+    "dpi": 326
+  },
+  {
+    "name": "Microsoft Surface Laptop 4 (13.5-inch)",
+    "width": 2256,
+    "height": 1504,
+    "dpi": 201
+  },
+  {
+    "name": "Lenovo ThinkPad X1 Carbon (Gen 9)",
+    "width": 3840,
+    "height": 2400,
+    "dpi": 323
+  },
+  {
+    "name": "ASUS ROG Zephyrus G14",
+    "width": 2560,
+    "height": 1600,
+    "dpi": 216
+  },
+  {
+    "name": "LG Gram 17",
+    "width": 2560,
+    "height": 1600,
+    "dpi": 177
+  },
+  {
+    "name": "HP Spectre x360 14",
+    "width": 3000,
+    "height": 2000,
+    "dpi": 285
+  },
+  {
+    "name": "Acer Predator Triton 500 SE",
+    "width": 2560,
+    "height": 1600,
+    "dpi": 240
+  },
+  {
+    "name": "Razer Blade 15 (4K)",
+    "width": 3840,
+    "height": 2160,
+    "dpi": 282
+  },
+  {
+    "name": "Dell Alienware m15 R4",
+    "width": 3840,
+    "height": 2160,
+    "dpi": 282
+  },
+  {
+    "name": "Google Pixel Slate",
+    "width": 3000,
+    "height": 2000,
+    "dpi": 293
+  },
+  {
+    "name": "Huawei MateBook X Pro",
+    "width": 3000,
+    "height": 2000,
+    "dpi": 260
+  },
+  {
+    "name": "Sony Xperia 1 III",
+    "width": 1644,
+    "height": 3840,
+    "dpi": 643
+  },
+  {
+    "name": "Sony Xperia 1 III (50%)",
+    "width": 822,
+    "height": 1920,
+    "dpi": 322
+  },
+  {
+    "name": "Microsoft Surface Studio 2",
+    "width": 4500,
+    "height": 3000,
+    "dpi": 192
+  },
+  {
+    "name": "Apple Pro Display XDR",
+    "width": 6016,
+    "height": 3384,
+    "dpi": 218
+  },
+  {
+    "name": "LG UltraFine 5K Display",
+    "width": 5120,
+    "height": 2880,
+    "dpi": 218
+  },
+  {
+    "name": "Dell UltraSharp U2720Q",
+    "width": 3840,
+    "height": 2160,
+    "dpi": 163
+  },
+  {
+    "name": "ASUS ProArt PA32UCX-PK",
+    "width": 3840,
+    "height": 2160,
+    "dpi": 138
+  },
+  {
+    "name": "BenQ PD3200U",
+    "width": 3840,
+    "height": 2160,
+    "dpi": 138
+  },
+  {
+    "name": "Xiaomi Mi 11",
+    "width": 1440,
+    "height": 3200,
+    "dpi": 515
+  },
+  {
+    "name": "Oppo Find X3 Pro",
+    "width": 1440,
+    "height": 3216,
+    "dpi": 525
+  },
+  {
+    "name": "Lenovo Yoga Tab 13",
+    "width": 2160,
+    "height": 1350,
+    "dpi": 196
+  },
+  {
+    "name": "Samsung Galaxy Tab S7+",
+    "width": 2800,
+    "height": 1752,
+    "dpi": 266
+  },
+  {
+    "name": "Microsoft Surface Duo 2",
+    "width": 2688,
+    "height": 1892,
+    "dpi": 401
+  },
+  {
+    "name": "Motorola Edge+",
+    "width": 1080,
+    "height": 2340,
+    "dpi": 385
+  },
+  {
+    "name": "Asus ROG Phone 5",
+    "width": 1080,
+    "height": 2448,
+    "dpi": 391
   }
 ]

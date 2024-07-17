@@ -2,8 +2,8 @@ import allSampleDeviceSpecsJson from "./device-specs.json";
 
 export interface SampleDeviceSpecs {
   name: string;
-  width: number;
-  height: number;
+  width: number; // can divide by 2 evenly (bash restriction)
+  height: number; // can divide by 2 evenly (bash restriction)
   dpi: number;
 }
 
