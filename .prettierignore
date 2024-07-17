@@ -3,4 +3,4 @@ dist/
 public/workers/
 node_modules/
 .next/
-src/app/(userland)/(static)/licenses/licenses.json
+src/app/(userland)/(contained)/licenses/licenses.json
