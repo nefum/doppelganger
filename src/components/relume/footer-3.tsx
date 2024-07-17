@@ -1,4 +1,5 @@
 import { LogoBigHero } from "@/components/logo.tsx";
+import Link from "next/link";
 import { ReactNode } from "react";
 import {
   BiLogoFacebookCircle,
@@ -78,31 +79,31 @@ export const Footer3 = (props: Footer3Props) => {
               </div>
               <div>
                 <p className="mb-1 text-sm font-semibold">{contact.label}</p>
-                <p className="flex flex-col text-sm underline decoration-black underline-offset-1 md:mb-6">
-                  <a
+                <p className="flex flex-col text-sm underline decoration-black dark:decoration-white underline-offset-1 md:mb-6">
+                  <Link
                     href={`tel:${contact.phone}`}
                     className="focus-visible:outline-none"
                   >
                     {contact.phone}
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href={`mailto:${contact.email}`}
                     className="focus-visible:outline-none"
                   >
                     {contact.email}
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>
             <div className="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-x-3 gap-y-0">
               {socialMediaLinks.map((link, index) => (
-                <a
+                <Link
                   key={index}
                   href={link.url}
                   className="focus-visible:outline-none"
                 >
                   {link.icon}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -111,24 +112,27 @@ export const Footer3 = (props: Footer3Props) => {
               <ul key={index}>
                 {column.links.map((link, linkIndex) => (
                   <li key={linkIndex} className="py-2 text-sm font-semibold">
-                    <a href={link.url} className="focus-visible:outline-none">
+                    <Link
+                      href={link.url}
+                      className="focus-visible:outline-none"
+                    >
                       {link.title}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             ))}
           </div>
         </div>
-        <div className="h-px w-full bg-black" />
+        <div className="h-px w-full bg-black dark:bg-white" />
         <div className="flex flex-col-reverse items-start justify-between pb-4 pt-6 text-sm md:flex-row md:items-center md:pb-0 md:pt-8">
           <p className="mt-8 md:mt-0">{footerText}</p>
           <ul className="grid grid-flow-row grid-cols-[max-content] justify-center gap-x-0 gap-y-4 text-sm md:grid-flow-col md:gap-x-6 md:gap-y-0">
             {footerLinks.map((link, index) => (
               <li key={index} className="underline">
-                <a href={link.url} className="focus-visible:outline-none">
+                <Link href={link.url} className="focus-visible:outline-none">
                   {link.title}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
