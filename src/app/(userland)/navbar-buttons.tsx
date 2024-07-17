@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/mode-toggle.tsx";
 import {
   Avatar,
   AvatarFallback,
@@ -80,9 +81,17 @@ export default async function NavbarButtons() {
     data: { user },
   } = await supabaseClient.auth.getUser();
 
+  let userButtons: ReactNode;
   if (user) {
-    return <LoggedInNavbarButtons user={user} />;
+    userButtons = <LoggedInNavbarButtons user={user} />;
   } else {
-    return <LoggedOutNavbarButtons />;
+    userButtons = <LoggedOutNavbarButtons />;
   }
+
+  return (
+    <>
+      {userButtons}
+      <ModeToggle />
+    </>
+  );
 }

@@ -62,17 +62,17 @@ export const Navbar1 = (props: Navbar1Props) => {
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           >
             <motion.span
-              className="my-[3px] h-0.5 w-6 bg-black"
+              className="my-[3px] h-0.5 w-6 bg-black dark:bg-white"
               animate={isMobileMenuOpen ? ["open", "rotatePhase"] : "closed"}
               variants={topLineVariants}
             />
             <motion.span
-              className="my-[3px] h-0.5 w-6 bg-black"
+              className="my-[3px] h-0.5 w-6 bg-black dark:bg-white"
               animate={isMobileMenuOpen ? "open" : "closed"}
               variants={middleLineVariants}
             />
             <motion.span
-              className="my-[3px] h-0.5 w-6 bg-black"
+              className="my-[3px] h-0.5 w-6 bg-black dark:bg-white"
               animate={isMobileMenuOpen ? ["open", "rotatePhase"] : "closed"}
               variants={bottomLineVariants}
             />

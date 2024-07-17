@@ -81,6 +81,7 @@
     "mustache": "^4.2.0",
     "mutation-observer": "^1.0.3",
     "next": "^14.2.4",
+    "next-themes": "^0.3.0",
     "nth-check": "^2.1.1",
     "permessage-deflate": "^0.1.7",
     "punycode": "^2.3.1",

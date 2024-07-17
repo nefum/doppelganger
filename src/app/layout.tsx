@@ -1,4 +1,5 @@
 import { URL_BASE } from "@/app/constants.ts";
+import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -37,7 +38,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // https://ui.shadcn.com/docs/dark-mode/next
+    <html lang="en" suppressHydrationWarning>
       <body
         className={clsx(
           "antialiased",
@@ -46,13 +48,20 @@ export default function RootLayout({
           fontBody.variable,
         )}
       >
-        <main>
-          <TooltipProvider>{children}</TooltipProvider>
-        </main>
-        <Suspense>
-          <Toaster />
-        </Suspense>
-        <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
+        <TooltipProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main>{children}</main>
+            <Suspense>
+              <Toaster />
+            </Suspense>
+            <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
+          </ThemeProvider>
+        </TooltipProvider>
       </body>
     </html>
   );
