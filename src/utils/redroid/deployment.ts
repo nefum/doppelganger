@@ -1,4 +1,3 @@
-import { AdbDevice } from "%/adb/scrcpy.ts";
 import { SampleDeviceSpecs } from "%/device-info/device-specs.ts";
 import { RedroidImage } from "%/device-info/redroid-images.ts";
 import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
@@ -103,6 +102,7 @@ export async function initializeDevice(
   const dockerCompose = await createDockerTemplateFromView(view);
   const stackFolder = getDockerComposeFileDirectory(view.id); // we need to make this if it doesn't exist.
   await mkdir(stackFolder, { recursive: true });
+  await mkdir(getDataDirOfDevice(view.id), { recursive: true }); // required for the bind that limits storage
 
   const dockerComposeFilePath = getDockerComposePathInFolder(stackFolder);
   const minifiedYaml = minifyYaml(dockerCompose);
@@ -179,10 +179,14 @@ export async function bringDownDevice(deviceId: string): Promise<void> {
   ]);
 }
 
+function getDataDirOfDevice(deviceId: string): `${string}/${string}-diff` {
+  return `${getBaseDir()}/${deviceId}-diff`; // from ./template/docker-compose.1.9.yml
+}
+
 function getFoldersOfDevice(deviceId: string): string[] {
   return [
     getDockerComposeFileDirectory(deviceId),
-    `${getBaseDir()}/${deviceId}-diff`, // from ./template/docker-compose.yml
+    getDataDirOfDevice(deviceId),
   ];
 }
 
@@ -217,16 +221,13 @@ export async function getIsContainerRunning(
 
 export async function getIsDeviceRunning(device: Device): Promise<boolean> {
   const { id: deviceId } = device;
-  const adbDevice = new AdbDevice(device);
 
   const androidRunningPromise = getIsContainerRunning(`${deviceId}-redroid-1`);
   const scrcpyRunningPromise = getIsContainerRunning(`${deviceId}-scrcpy-1`);
-  const adbConnectedPromise = adbDevice.getIsConnected();
 
   const allPromises = await Promise.all([
     androidRunningPromise,
     scrcpyRunningPromise,
-    adbConnectedPromise,
   ]);
 
   return allPromises.every(Boolean);
