@@ -23,7 +23,7 @@ services:
     image: "ghcr.io/regulad/http-docker-cron:latest"
     restart: unless-stopped
     environment:
-      CRON_SCHEDULE: "0 0 * * *"
+      CRON_SCHEDULE: "* * * * *"
       ENDPOINT: "http://doppelganger:3000/api/cron"
 networks:
   doppelganger:
