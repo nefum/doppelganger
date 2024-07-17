@@ -11,6 +11,9 @@ import {
 import { Device } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
+// fsr ci tries to ssr this route, but it is cron
+export const dynamic = "force-dynamic";
+
 async function shutdownAbandonedDevice(device: Device): Promise<void> {
   const deviceRunning = await getIsDeviceRunning(device);
 
@@ -47,8 +50,6 @@ async function handleOwner(ownerId: string, devices: Device[]): Promise<void> {
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  // taking the nextrequest as an argument disables caching
-
   const allDevices = await prisma.device.findMany({
     where: {
       id:
@@ -77,5 +78,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   await Promise.all(devicePromises);
 
-  return NextResponse.json({}, { status: 200 });
+  return NextResponse.json(
+    {},
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    },
+  );
 }
