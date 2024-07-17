@@ -25,7 +25,10 @@ async function loadDockerComposeTemplate(): Promise<string> {
     return globalThis.______dockerComposeTemplate;
   }
 
-  const loadedFile = await readFile("./template/docker-compose.yml", "utf-8");
+  const loadedFile = await readFile(
+    "./template/docker-compose.1.9.yml",
+    "utf-8",
+  );
   globalThis.______dockerComposeTemplate = loadedFile;
   return loadedFile;
 }

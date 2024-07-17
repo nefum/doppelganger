@@ -1,3 +1,4 @@
+# this is the template for scrcpy 1.9-ws & sndcpy
 name: "{{ id }}"
 # note: moustache has built-in anti-xss, so anything with a slash needs to have a & before it
 services:
@@ -12,7 +13,9 @@ services:
       - "{{{ externalNetworkName }}}"
     volumes:
       - "{{ &baseDir }}/{{ redroidImageDataBasePath }}:/data-base"
-      - "{{ &baseDir }}/{{ id }}-diff:/data-diff"
+      - type: volume
+        source: redroid-diff
+        target: /data-diff
     # https://github.com/remote-android/redroid-doc?tab=readme-ov-file#configuration
     command:
       - "androidboot.use_redroid_overlayfs=1"
@@ -65,6 +68,18 @@ services:
       # username: kasm_user
       VNC_PW: "password"
       # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
+
 networks:
   '{{ externalNetworkName }}':
     external: true
+
+volumes:
+  redroid-diff:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "{{ &baseDir }}/{{ id }}-diff"
+    name: "{{ id }}-redroid-diff"
+    labels:
+      com.docker.storage.quota.size: "17179869184"  # 16 GiB in bytes
