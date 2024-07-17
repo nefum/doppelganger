@@ -251,19 +251,11 @@ export default function SignupForm() {
             <Checkbox id="terms" name="terms" aria-describedby="terms-error" />
             <Label htmlFor="terms" className="text-sm font-medium">
               I agree to the{" "}
-              <Link
-                href="/tos"
-                className="text-primary hover:underline"
-                prefetch={false}
-              >
+              <Link href="/tos" className="text-primary hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link
-                href="/privacy"
-                className="text-primary hover:underline"
-                prefetch={false}
-              >
+              <Link href="/privacy" className="text-primary hover:underline">
                 Privacy Policy
               </Link>
             </Label>
