@@ -26,7 +26,7 @@ export function DeviceCardPage({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 lg:justify-start">
         <h2 className="text-2xl font-semibold">My Devices</h2>
         <Suspense
           fallback={<NewDeviceButtonStatic className="animate-pulse" />}
