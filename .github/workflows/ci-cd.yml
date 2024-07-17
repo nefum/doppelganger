@@ -82,6 +82,9 @@ jobs:
       - name: Lint with Turbo
         run: pnpx turbo run lint
 
+      - name: Generate licenses
+        run: pnpx turbo run licenses:check
+
       - name: Type-check with Turbo
         run: pnpx turbo run type-check
 
