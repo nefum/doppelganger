@@ -24,7 +24,13 @@ type Props = {
 export type Navbar1Props = React.ComponentPropsWithoutRef<"section"> &
   Partial<Props>;
 
-function NavLinkComp({ navLink }: { navLink: NavLink }) {
+function NavLinkComp({
+  navLink,
+  setIsMobileMenuOpen,
+}: {
+  navLink: NavLink;
+  setIsMobileMenuOpen: (isMobileMenuOpen: boolean) => void;
+}) {
   const pathname = usePathname();
   const isActive = navLink.url === pathname;
 
@@ -37,6 +43,7 @@ function NavLinkComp({ navLink }: { navLink: NavLink }) {
           "font-bold": isActive,
         },
       )}
+      onClick={() => setIsMobileMenuOpen(false)}
     >
       {navLink.title}
     </Link>
@@ -98,7 +105,10 @@ export const Navbar1 = (props: Navbar1Props) => {
               {navLink.subMenuLinks && navLink.subMenuLinks.length > 0 ? (
                 <SubMenu navLink={navLink} isMobile={isMobile} />
               ) : (
-                <NavLinkComp navLink={navLink} />
+                <NavLinkComp
+                  navLink={navLink}
+                  setIsMobileMenuOpen={setIsMobileMenuOpen}
+                />
               )}
             </div>
           ))}
