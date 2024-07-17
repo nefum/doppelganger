@@ -12,12 +12,6 @@
     "dpi": 460
   },
   {
-    "name": "iPhone 15 (usable space) (50%)",
-    "width": 590,
-    "height": 1140,
-    "dpi": 230
-  },
-  {
     "name": "iPhone 15 Pro Max",
     "width": 1290,
     "height": 2796,
@@ -280,5 +274,11 @@
     "width": 1080,
     "height": 2448,
     "dpi": 391
+  },
+  {
+    "name": "iPhone 15 (usable space) (50%)",
+    "width": 590,
+    "height": 1140,
+    "dpi": 230
   }
 ]

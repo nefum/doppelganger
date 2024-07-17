@@ -25,4 +25,4 @@ export const MAX_DEVICES_FREE = 1;
 export const MAX_DEVICES_PREMIUM = 3;
 
 export const FREE_MAX_FPS = 15;
-export const PREMIUM_MAX_FPS = 60;
+export const PREMIUM_MAX_FPS = 30;

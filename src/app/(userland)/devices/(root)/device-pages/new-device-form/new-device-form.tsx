@@ -299,11 +299,15 @@ function DeviceSpecsPresetCombobox({
 
 function AdvancedSettings({
   form,
-}: Readonly<{ form: UseFormReturn<formType> }>): ReactNode {
+  disabled,
+}: Readonly<{
+  form: UseFormReturn<formType>;
+  disabled: boolean;
+}>): ReactNode {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary">
+        <Button variant="secondary" disabled={disabled}>
           Advanced
           <LuSettings className="ml-2 h-4 w-4" />
         </Button>
@@ -414,14 +418,27 @@ function NewDeviceForm({
       }
 
       setDialogCanClose(false);
-      const result = await fetch("/api/devices", {
-        method: "POST",
-        body: JSON.stringify(values),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const resultJson = await result.json();
+
+      let result: Response;
+      let resultJson: { error?: string };
+      try {
+        result = await fetch("/api/devices", {
+          method: "POST",
+          body: JSON.stringify(values),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        resultJson = await result.json();
+      } catch (e) {
+        console.error("Failed to create device", e);
+        toast({
+          title: "Failed to create device",
+          description: "An unknown error occurred; please contact support",
+        });
+        setDialogCanClose(true);
+        return;
+      }
 
       if (result.ok) {
         clientSideRedirectWithToast(
@@ -514,7 +531,7 @@ function NewDeviceForm({
           )}
         />
         <FooterComp>
-          <AdvancedSettings form={form} />
+          <AdvancedSettings form={form} disabled={!dialogCanClose} />
           <Button type="submit" disabled={!dialogCanClose}>
             Create
             {!dialogCanClose && (
