@@ -9,7 +9,7 @@ import {
   SubscriptionStatus,
 } from "@/utils/subscriptions.ts";
 import { Device } from "@prisma/client";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 async function shutdownAbandonedDevice(device: Device): Promise<void> {
   const deviceRunning = await getIsDeviceRunning(device);
@@ -46,7 +46,7 @@ async function handleOwner(ownerId: string, devices: Device[]): Promise<void> {
   await Promise.all(devicePromises);
 }
 
-export async function GET(req: NextRequest): Promise<void> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   // taking the nextrequest as an argument disables caching
 
   const allDevices = await prisma.device.findMany({
@@ -77,5 +77,5 @@ export async function GET(req: NextRequest): Promise<void> {
 
   await Promise.all(devicePromises);
 
-  return;
+  return NextResponse.json({}, { status: 200 });
 }

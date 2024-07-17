@@ -16,6 +16,12 @@ jest.mock("%/database/prisma.ts", () => ({
   },
 }));
 
+jest.mock("next/server", () => ({
+  NextResponse: {
+    json: jest.fn(),
+  },
+}));
+
 jest.mock("@/utils/subscriptions.ts", () => ({
   ...jest.requireActual("@/utils/subscriptions.ts"),
   getSubscriptionStatus: jest.fn(),
@@ -39,7 +45,7 @@ describe("GET function in route.ts", () => {
     getIsDeviceRunning.mockResolvedValue(true);
     // @ts-expect-error -- testing purposes
     bringDownDevice.mockResolvedValue(undefined);
-
+    ``;
     // Call the function
 
     // @ts-expect-error -- testing purposes
