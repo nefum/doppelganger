@@ -30,6 +30,6 @@ export const PREMIUM_MAX_FPS = 30;
 export const FREE_TIER_IDLE_TIME_MS = 1_000 * 5 * 60; // 5 minutes
 
 // from template/docker-compose.1.9.yml
-export const VOLUME_SIZE_BYTES = 17179869184; // 16 GiB
-export const CPU_LIMIT = 2.0;
+export const VOLUME_SIZE_LIMIT_BYTES = 17_179_869_184; // 16 GiB
+export const CPU_LIMIT_CPUS = 2.0;
 export const MEMORY_LIMIT_BYTES = 2_147_483_648; // 2 GiB

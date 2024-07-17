@@ -5,9 +5,13 @@
       "cache": false
     },
     "build": {
-      "dependsOn": ["server:build", "db:generate"],
+      "dependsOn": ["server:build", "db:generate", "licenses:check"],
       "inputs": ["**/*", "!dist/**", "!node_modules/**", "!public/workers/**"],
       "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "dev": {
+      "dependsOn": ["db:generate", "licenses:check"],
+      "cache": false
     },
     "workers:dev": {
       "inputs": ["workers/**"],
@@ -35,7 +39,7 @@
       "cache": false
     },
     "type-check": {
-      "dependsOn": ["db:generate"],
+      "dependsOn": ["db:generate", "licenses:check"],
       "inputs": ["**/*.{ts,tsx}"],
       "cache": false
     },
