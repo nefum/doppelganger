@@ -30,6 +30,7 @@ export const metadata: Metadata = {
   },
   description: "Free cloud-based Android phones for everyone",
   metadataBase: new URL(URL_BASE),
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -48,6 +49,18 @@ export default function RootLayout({
           fontBody.variable,
         )}
       >
+        <link
+          rel="apple-touch-icon"
+          href="/apple-icon?<generated>"
+          type="image/<generated>"
+          sizes="<generated>"
+        />
+        <link
+          rel="icon"
+          href="/icon?<generated>"
+          type="image/<generated>"
+          sizes="<generated>"
+        />
         <TooltipProvider>
           <ThemeProvider
             attribute="class"

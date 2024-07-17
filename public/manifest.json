@@ -1,0 +1,28 @@
+{
+  "name": "Doppelganger",
+  "description": "Free cloud-based Android phones",
+  "short_name": "DoppelG",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "150x150"
+    },
+    {
+      "src": "/ios/192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/ios/512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "id": "doppelganger1",
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "start_url": "/devices?source=pwa",
+  "display": "standalone",
+  "orientation": "portrait"
+}
