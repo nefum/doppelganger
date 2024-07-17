@@ -47,6 +47,9 @@ RUN pnpm run licenses:check
 # Build static workers
 RUN pnpm run workers:build
 
+# Provide public (NEXT_PUBLIC_) environment variables
+RUN cp .env.local.public .env.local
+
 # Build the application
 RUN pnpm run build
 
