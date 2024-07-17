@@ -7,6 +7,7 @@ import {
 import { getDeviceForId } from "../device-info/device-info";
 import { scrcpyWsEndpoint } from "../endpoint-regex";
 import { createClient } from "../supabase/ro-server";
+import { attachUpdateListener } from "./attach-update-listener";
 import { createWebSocketProxy } from "./wsproxy";
 
 export async function handleDeviceStream(
@@ -54,4 +55,5 @@ export async function handleDeviceStream(
   }
 
   console.debug("ws proxy established", ws.readyState, targetWs.readyState);
+  attachUpdateListener(ws, targetWs, deviceId);
 }

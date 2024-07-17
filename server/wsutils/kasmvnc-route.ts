@@ -8,6 +8,7 @@ import {
 } from "../device-info/device-info";
 import { audioWsEndpoint, kasmVncWsEndpoint } from "../endpoint-regex";
 import { createClient } from "../supabase/ro-server";
+import { attachUpdateListener } from "./attach-update-listener";
 import { getWsWebSocketOptionForKasmVNC } from "./kasmvnc-connect";
 import { createWebSocketProxy } from "./wsproxy";
 
@@ -39,14 +40,14 @@ export function createAudioWsProxy(
 }
 
 async function handleKasmVncDeviceEndpoint(
-  type: EndpointType,
+  endpointType: EndpointType,
   req: IncomingMessage,
   ws: WsWebSocket,
 ): Promise<void> {
   const pathname = req.url!;
 
   let regex: RegExp;
-  switch (type) {
+  switch (endpointType) {
     case EndpointType.KASMVNC:
       regex = kasmVncWsEndpoint;
       break;
@@ -82,7 +83,7 @@ async function handleKasmVncDeviceEndpoint(
   let targetWs: WsWebSocket;
 
   try {
-    switch (type) {
+    switch (endpointType) {
       case EndpointType.KASMVNC:
         targetWs = await createVncWebSocketProxy(req, ws, deviceInfo);
         break;
@@ -97,6 +98,10 @@ async function handleKasmVncDeviceEndpoint(
   }
 
   console.debug("ws proxy established", ws.readyState, targetWs.readyState);
+
+  if (endpointType === EndpointType.KASMVNC) {
+    attachUpdateListener(ws, targetWs, deviceId);
+  }
 }
 
 export const handleAudio = handleKasmVncDeviceEndpoint.bind(

@@ -39,9 +39,11 @@ model Device {
 
   scrcpyHostname String? @map(name: "scrcpy_hostname") // if null, see getDefaultScrcpyHostname
 
-  createdAt DateTime    @default(now()) @map(name: "created_at")
-  updatedAt DateTime    @default(now()) @updatedAt @map(name: "updated_at")
-  lastState DeviceState @default(USABLE) @map(name: "last_state")
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  lastConnectedAt DateTime?   @map(name: "last_connected_at")
+  lastState       DeviceState @default(USABLE) @map(name: "last_state")
 
   @@index([ownerId, id])
   @@map(name: "devices")

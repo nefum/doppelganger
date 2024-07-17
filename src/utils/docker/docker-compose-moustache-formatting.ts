@@ -69,6 +69,7 @@ export type InsertableDevice = Omit<
   | "adbHostname"
   | "adbPort"
   | "scrcpyHostname"
+  | "lastConnectedAt"
 >;
 
 export function getInsertableDeviceForView(
