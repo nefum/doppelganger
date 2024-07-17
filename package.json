@@ -12,7 +12,7 @@
     "server:dev": "tsx server/index.ts",
     "workers:dev": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs",
     "workers:build": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs --mode production",
-    "licenses:check": "rimraf \"src/app/(userland)/(contained)/licenses/licenses.json\" && license-checker --production --json --out \"src/app/(userland)/(static)/licenses/licenses.json\"",
+    "licenses:check": "rimraf \"src/app/(userland)/(contained)/licenses/licenses.json\" && license-checker --production --json --out \"src/app/(userland)/(contained)/licenses/licenses.json\"",
     "dev": "nodemon -x \"turbo workers:dev && pnpm run server:dev\"",
     "build": "next build",
     "start": "NODE_ENV=production node dist/index.js",
