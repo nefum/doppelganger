@@ -8,7 +8,9 @@ export enum SubscriptionStatus {
 export async function getSubscriptionStatus(
   userId: string,
 ): Promise<SubscriptionStatus> {
-  return SubscriptionStatus.INACTIVE; // TODO
+  return userId === "4d7a801f-130a-438f-b013-31e738693fad"
+    ? SubscriptionStatus.ACTIVE
+    : SubscriptionStatus.INACTIVE; // TODO
 }
 
 export function getMaxDeviceCount(

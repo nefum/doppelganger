@@ -130,7 +130,7 @@ export function DeviceCard({
                   "opacity-0": !loaded,
                 })}
                 style={{
-                  background: "no-repeat url('/noconnect.svg')",
+                  background: "no-repeat center url('/noconnect.svg')",
                 }}
                 alt={`${deviceInfo.name} snapshot`}
                 src={getSnapshotUrlOfDevice(deviceInfo.id)}
