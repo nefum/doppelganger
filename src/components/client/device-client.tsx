@@ -309,7 +309,8 @@ const DeviceClient = forwardRef<DeviceClientHandle, DeviceClientProps>(
                     // this library does normal exits with 1005, so dumb
                     toast({
                       title: "Disconnected Abnormally",
-                      description: "Attempting reconnection...",
+                      description:
+                        "Attempting reconnection... (you may need to reload/close & reopen)",
                     });
                   }
 

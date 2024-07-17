@@ -2,6 +2,7 @@ import {
   mobileClientTooltip,
   mobileClientTooltipIcon,
 } from "@/app/(userland)/devices/(root)/device-cards/mobile-client-button.tsx";
+import pwaClickHandler from "@/app/(userland)/devices/(root)/device-cards/pwa-click-handler.ts";
 import DeviceClient, {
   DeviceClientHandle,
 } from "@/components/client/device-client.tsx";
@@ -16,6 +17,7 @@ import {
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { useRouter } from "next/navigation";
 import { ReactNode, RefObject, useRef } from "react";
 import { BsVolumeDown, BsVolumeUp } from "react-icons/bs";
 import { FaArrowsRotate } from "react-icons/fa6";
@@ -219,6 +221,7 @@ export default function DesktopClientButton({
 }>) {
   const ref = useRef<DeviceClientHandle>(null);
   const screenTooSmall = useMediaQuery("(max-width: 500px)");
+  const router = useRouter();
 
   // top-level effects in this component will run when the dialog is first loaded, but won't be very effective.
 
@@ -226,7 +229,13 @@ export default function DesktopClientButton({
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <SimpleTooltip content={desktopClientTooltip}>
         <DialogTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              pwaClickHandler(router, deviceInfo, e);
+            }}
+          >
             <LuMousePointer2 className="h-5 w-5" />
             <span className="sr-only">{desktopClientTooltip}</span>
           </Button>

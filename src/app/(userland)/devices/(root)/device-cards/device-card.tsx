@@ -29,16 +29,20 @@ import DesktopClientButton from "@/app/(userland)/devices/(root)/device-cards/de
 import EditDeviceButton from "@/app/(userland)/devices/(root)/device-cards/edit-device-button.tsx";
 import styles from "@/app/(userland)/devices/(root)/device-cards/fill.module.css";
 import { MobileClientButton } from "@/app/(userland)/devices/(root)/device-cards/mobile-client-button.tsx";
+import pwaClickHandler from "@/app/(userland)/devices/(root)/device-cards/pwa-click-handler.ts";
 import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { toTitleCase } from "@/utils/misc.ts";
 import { Device, DeviceState } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { LuMousePointer2 } from "react-icons/lu";
 
 export function DeviceCard({
   deviceInfo,
   deviceIsUp,
 }: Readonly<{ deviceInfo: Device; deviceIsUp: boolean }>) {
+  const router = useRouter();
+
   const [screenDialogOpen, setScreenDialogOpen] = useState(false);
   const [mobileDialogOpen, setMobileDialogOpen] = useState(false);
 
@@ -140,7 +144,12 @@ export function DeviceCard({
             )}
             <Button
               className={styles.hoverOverButton}
-              onClick={() => setScreenDialogOpen(true)}
+              onClick={(e) => {
+                const isPWA = pwaClickHandler(router, deviceInfo, e);
+                if (!isPWA) {
+                  setScreenDialogOpen(true);
+                }
+              }}
             >
               Interact
               <LuMousePointer2 className="ml-1 h-5 w-5" />
