@@ -28,7 +28,7 @@ services:
       - "androidboot.redroid_net_dns1=1.1.1.1"
       - "androidboot.redroid_net_dns2=1.0.0.1"
 #      TODO: proxy support
-      - "androidboot.redroid_gpu_mode=auto"
+      - "androidboot.redroid_gpu_mode=guest"  # doesn't work with auto/host on oracle
     deploy:
       resources:
         limits:

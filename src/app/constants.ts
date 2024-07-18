@@ -1,4 +1,7 @@
-export const URL_BASE = "https://doppelgangerhq.com";
+export const BASE_ORIGIN =
+  process.env.NODE_ENV === "production"
+    ? "https://doppelgangerhq.com"
+    : "http://localhost:3030";
 
 export const AUTH_REQUIRED_ROUTES_REGEX: RegExp[] = [
   /*

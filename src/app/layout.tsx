@@ -1,4 +1,8 @@
-import { URL_BASE } from "@/app/constants.ts";
+import { BASE_ORIGIN } from "@/app/constants.ts";
+import GoogleOneTap from "@/components/google/google-one-tap.tsx";
+import GoogleSigninHandlerProvider from "@/components/google/google-signin-handler-provider.tsx";
+import { NonceProvider } from "@/components/google/nonce-provider.tsx";
+import ProviderComposer from "@/components/providers.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
@@ -6,6 +10,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { clsx } from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { Suspense } from "react";
 import "./globals.css";
 
@@ -29,7 +34,7 @@ export const metadata: Metadata = {
     default: "Doppelganger",
   },
   description: "Free cloud-based Android phones for everyone",
-  metadataBase: new URL(URL_BASE),
+  metadataBase: new URL(BASE_ORIGIN),
   manifest: "/manifest.json",
 };
 
@@ -61,20 +66,36 @@ export default function RootLayout({
           type="image/<generated>"
           sizes="<generated>"
         />
-        <TooltipProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <main>{children}</main>
-            <Suspense>
-              <Toaster />
-            </Suspense>
-            <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
-          </ThemeProvider>
-        </TooltipProvider>
+        <ProviderComposer
+          providers={[
+            [TooltipProvider],
+            [NonceProvider],
+            [
+              ThemeProvider,
+              {
+                attribute: "class",
+                defaultTheme: "system",
+                enableSystem: true,
+                disableTransitionOnChange: true,
+              },
+            ],
+            [GoogleSigninHandlerProvider],
+          ]}
+        >
+          <main>{children}</main>
+          <Suspense>
+            <GoogleOneTap />
+          </Suspense>
+          <Suspense>
+            <Toaster />
+          </Suspense>
+        </ProviderComposer>
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="lazyOnload"
+          async
+        />
+        <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
       </body>
     </html>
   );
