@@ -38,7 +38,7 @@ export default function GoogleOneTap() {
       data-callback="handleSignInWithGoogle"
       data-auto_select="true"
       data-itp_support="true"
-      data-use_fedcm_for_prompt="true"
+      data-use_fedcm_for_prompt="true" // chrome third party cookies phase-out requirement
       data-nonce={hashedNonce}
     />
   );

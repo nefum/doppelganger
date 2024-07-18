@@ -8,10 +8,22 @@ import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
 import { ReactNode, useEffect, useMemo } from "react";
 
 /**
- * https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=framework&framework=nextjs&queryGroups=environment&environment=client#google-pre-built:~:text=that%20takes%20the-,CredentialResponse,-and%20passes%20the
+ * https://developers.google.com/identity/gsi/web/reference/js-reference#CredentialResponse
  */
 interface CredentialResponse {
-  credential: string;
+  credential: string; // jwt
+  select_by:
+    | "auto"
+    | "user"
+    | "fedcm"
+    | "fedcm_auto"
+    | "user_1tap"
+    | "user_2tap"
+    | "btn"
+    | "btn_confirm"
+    | "btn_add_session"
+    | "btn_confirm_add_session";
+  state?: string;
 }
 
 interface AugmentedGlobalThis extends Window {
