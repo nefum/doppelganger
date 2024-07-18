@@ -148,7 +148,7 @@ function RedroidImageCombobox({
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-[300px] justify-between"
+              className="w-[500px] justify-between"
             >
               {field.value
                 ? allRedroidImages.find(
@@ -159,7 +159,7 @@ function RedroidImageCombobox({
             </Button>
           </FormControl>
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0">
+        <PopoverContent className="w-[500px] p-0">
           <Command>
             <CommandInput placeholder="Search device types..." />
             <CommandList>
@@ -606,12 +606,14 @@ export default function NewDeviceDialogClient({
               Create a new device to use for your apps.
             </DrawerDescription>
           </DrawerHeader>
-          <NewDeviceForm
-            subscriptionStatus={subscriptionStatus}
-            dialogCanClose={dialogCanClose}
-            setDialogCanClose={setDialogCanClose}
-            footerComponentType={DrawerFooter}
-          />
+          <div className="gap-2 p-4">
+            <NewDeviceForm
+              subscriptionStatus={subscriptionStatus}
+              dialogCanClose={dialogCanClose}
+              setDialogCanClose={setDialogCanClose}
+              footerComponentType={DrawerFooter}
+            />
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
