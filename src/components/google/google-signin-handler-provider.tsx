@@ -1,8 +1,10 @@
 "use client";
 
+import { FIRST_PAGE_PATHNAME } from "@/app/(no-layout)/(auth)/constants.ts";
 import { useNonce } from "@/components/google/nonce-provider.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { createClient } from "@/utils/supabase/client.ts";
+import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
 import { ReactNode, useEffect, useMemo } from "react";
 
 /**
@@ -48,10 +50,10 @@ export default function GoogleSigninHandlerProvider({
         });
       } else {
         console.log("Signed in with Google", data);
-        toast({
-          title: "Signed in with Google",
-          description: "You are now signed in with Google",
-        });
+        clientSideRedirectWithToast(
+          FIRST_PAGE_PATHNAME,
+          "Signed in with Google",
+        );
       }
     }
 
