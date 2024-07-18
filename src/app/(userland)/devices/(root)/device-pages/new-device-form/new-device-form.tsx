@@ -473,7 +473,7 @@ function NewDeviceForm({
                 <Input placeholder={"My Device"} {...field} />
               </FormControl>
               <FormDescription>
-                The name of your device. This will be displayed to you in the
+                The name of your device. This will be displayed in the
                 dashboard.
               </FormDescription>
               <FormMessage />
@@ -492,8 +492,8 @@ function NewDeviceForm({
                 userIsPremium={userIsPremium}
               />
               <FormDescription>
-                The type that your device will be. This cannot be changed after
-                device creation.
+                The type of device you want to create. This cannot be changed
+                once the device is created.
               </FormDescription>
               <FormMessage />
             </FormItem>
