@@ -29,6 +29,7 @@ export class TinyH264Player extends BaseCanvasBasedPlayer {
 
     private worker?: Worker;
     private isDecoderReady = false;
+    // @ts-expect-error -- do not touch it if it works
     protected canvas?: YUVWebGLCanvas | YUVCanvas;
     public readonly supportsScreenshot: boolean = true;
 

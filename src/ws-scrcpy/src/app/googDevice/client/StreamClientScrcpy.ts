@@ -73,7 +73,6 @@ export class StreamClientScrcpy
 
     private static getPlayerClass(playerName: string): PlayerClass | undefined {
         let playerClass: PlayerClass | undefined;
-        // @ts-expect-error -- stub
         for (const value of StreamClientScrcpy.players.values()) {
             if (value.playerFullName === playerName || value.playerCodeName === playerName) {
                 playerClass = value;

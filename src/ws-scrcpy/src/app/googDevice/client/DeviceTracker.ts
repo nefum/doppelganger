@@ -63,7 +63,6 @@ export class DeviceTracker extends BaseDeviceTracker<GoogDeviceDescriptor, never
 
     protected setIdAndHostName(id: string, hostName: string): void {
         super.setIdAndHostName(id, hostName);
-        // @ts-expect-error -- stub
         for (const value of DeviceTracker.instancesByUrl.values()) {
             if (value.id === id && value !== this) {
                 console.warn(

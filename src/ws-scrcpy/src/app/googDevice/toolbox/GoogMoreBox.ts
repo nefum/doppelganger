@@ -46,7 +46,6 @@ export class GoogMoreBox {
 
         const commands: HTMLElement[] = [];
         const codes = CommandControlMessage.Commands;
-        // @ts-expect-error -- stub
         for (const [action, command] of codes.entries()) {
             const btn = document.createElement('button');
             let bitrateInput: HTMLInputElement;
