@@ -105,7 +105,7 @@ export default function RootLayout({
         {/*no need for a cookie consent manager yet, we only do business in the us*/}
         <Script
           src="https://accounts.google.com/gsi/client"
-          strategy="afterInteractive"
+          strategy="lazyOnload" // while afterInteractive would be more appropriate, the google one tap elements have to laod first. loading the nonce is pretty much instant, but since this script is so common and in the memory cache of chromium-based browser, this tends to be faster.
           async
         />
         <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
