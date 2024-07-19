@@ -10,7 +10,10 @@ services:
     privileged: true  # required for redroid
     restart: unless-stopped
     networks:
-      - "{{{ externalNetworkName }}}"
+      '{{ externalNetworkName }}':
+        driver_opts:
+          com.docker.network.bandwidth.rx: "10M"  # 10 Mbps down
+          com.docker.network.bandwidth.tx: "5M"  # 5 Mbps up
     volumes:
       - "{{ &baseDir }}/{{ redroidImageDataBasePath }}:/data-base"
       - type: volume
@@ -37,6 +40,8 @@ services:
         reservations:
           cpus: '0.1'
           memory: 700M
+    blkio_config:
+      weight: 300  # always gives the orhcestrator priority to disk I/O
   scrcpy:
     # implementation note: this is a custom version of my scrcpy image that only runs sndcpy since scrcpy cannot accept a WS connection while it is already connected to
     image: "ghcr.io/regulad/workspaces-images:sndcpy"
@@ -58,6 +63,7 @@ services:
           memory: 200M
     depends_on:
       - "redroid"
+    # no network limits attached because arbitrary code cannot be run on this container
     networks:
       - "{{ externalNetworkName }}"
     environment:
@@ -68,6 +74,8 @@ services:
       # username: kasm_user
       VNC_PW: "password"
       # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
+    blkio_config:
+      weight: 400  # higher than the android, but lower than the orhcestrator
 
 networks:
   '{{ externalNetworkName }}':

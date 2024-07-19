@@ -1,9 +1,6 @@
 // route.test.ts
 import prisma from "%/database/prisma.ts";
-import {
-  bringDownDevice,
-  getIsDeviceRunning,
-} from "@/utils/redroid/deployment.ts";
+import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
 import {
   getSubscriptionStatus,
   SubscriptionStatus,
@@ -27,7 +24,7 @@ jest.mock("@/utils/subscriptions.ts", () => ({
   getSubscriptionStatus: jest.fn(),
 }));
 
-jest.mock("@/utils/redroid/deployment.ts", () => ({
+jest.mock("%/docker/device-state.ts", () => ({
   bringDownDevice: jest.fn(),
   getIsDeviceRunning: jest.fn(),
 }));

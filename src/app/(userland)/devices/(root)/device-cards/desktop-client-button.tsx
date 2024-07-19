@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
+import { useToast } from "@/components/ui/use-toast.ts";
 import { Device } from "@prisma/client";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useRouter } from "next/navigation";
@@ -211,17 +212,20 @@ function ButtonBar({
 export default function DesktopClientButton({
   deviceInfo,
   dialogOpen,
+  deviceIsUp,
   setDialogOpen,
   openMobileDialog,
 }: Readonly<{
   deviceInfo: Device;
   dialogOpen: boolean;
+  deviceIsUp: boolean;
   setDialogOpen: (open: boolean) => void;
   openMobileDialog: () => void;
 }>) {
   const ref = useRef<DeviceClientHandle>(null);
   const screenTooSmall = useMediaQuery("(max-width: 500px)");
   const router = useRouter();
+  const { toast } = useToast();
 
   // top-level effects in this component will run when the dialog is first loaded, but won't be very effective.
 
@@ -233,6 +237,13 @@ export default function DesktopClientButton({
             variant="ghost"
             size="icon"
             onClick={(e) => {
+              if (!deviceIsUp) {
+                toast({
+                  title: "This may take a while...",
+                  description:
+                    "You are trying to interact with an offline device. We will wake it up for you, but this could take a moment.",
+                });
+              }
               pwaClickHandler(router, deviceInfo, e);
             }}
           >

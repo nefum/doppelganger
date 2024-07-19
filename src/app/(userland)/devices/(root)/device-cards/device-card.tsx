@@ -32,6 +32,7 @@ import { MobileClientButton } from "@/app/(userland)/devices/(root)/device-cards
 import pwaClickHandler from "@/app/(userland)/devices/(root)/device-cards/pwa-click-handler.ts";
 import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
 import { Button } from "@/components/ui/button.tsx";
+import { useToast } from "@/components/ui/use-toast.ts";
 import { toTitleCase } from "@/utils/misc.ts";
 import { Device, DeviceState } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -42,6 +43,7 @@ export function DeviceCard({
   deviceIsUp,
 }: Readonly<{ deviceInfo: Device; deviceIsUp: boolean }>) {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [screenDialogOpen, setScreenDialogOpen] = useState(false);
   const [mobileDialogOpen, setMobileDialogOpen] = useState(false);
@@ -107,6 +109,7 @@ export function DeviceCard({
                 setDialogOpen={setMobileDialogOpen}
               />
               <DesktopClientButton
+                deviceIsUp={deviceIsUp}
                 deviceInfo={deviceInfo}
                 dialogOpen={screenDialogOpen}
                 setDialogOpen={setScreenDialogOpen}
@@ -145,6 +148,13 @@ export function DeviceCard({
             <Button
               className={styles.hoverOverButton}
               onClick={(e) => {
+                if (!deviceIsUp) {
+                  toast({
+                    title: "This may take a while...",
+                    description:
+                      "You are trying to interact with an offline device. We will wake it up for you, but this could take a moment.",
+                  });
+                }
                 const isPWA = pwaClickHandler(router, deviceInfo, e);
                 if (!isPWA) {
                   setScreenDialogOpen(true);

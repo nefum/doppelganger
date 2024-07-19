@@ -1,4 +1,9 @@
 import { AdbDevice } from "%/adb/scrcpy.ts";
+import { getDataDirOfDevice } from "%/docker/device-paths.ts";
+import {
+  getIsDeviceRunning,
+  getRedroidContainerName,
+} from "%/docker/device-state.ts";
 import {
   CPU_LIMIT_CPUS,
   MEMORY_LIMIT_BYTES,
@@ -9,11 +14,6 @@ import {
   getMemoryUsageOfDockerContainerBytes,
   getTotalDiskUsageOfDirectoryBytes,
 } from "@/utils/docker/resource-utils.ts";
-import {
-  getDataDirOfDevice,
-  getIsDeviceRunning,
-  getRedroidContainerName,
-} from "@/utils/redroid/deployment.ts";
 import { Device } from "@prisma/client";
 
 /**

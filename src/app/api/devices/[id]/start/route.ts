@@ -1,9 +1,6 @@
 import { getDeviceForId } from "%/device-info/device-info.ts";
+import { bringUpDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
-import {
-  bringUpDevice,
-  getIsDeviceRunning,
-} from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { NextRequest, NextResponse } from "next/server";
 

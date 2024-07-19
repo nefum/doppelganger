@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "%/database/prisma.ts";
+import { destroyDevice } from "%/docker/device-state.ts";
 import { getUsersDevices } from "@/utils/devices.ts";
-import { destroyDevice } from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device, DeviceState } from "@prisma/client";
 

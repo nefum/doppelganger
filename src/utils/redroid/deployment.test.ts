@@ -5,8 +5,24 @@
 import { SampleDeviceSpecs } from "%/device-info/device-specs.ts";
 import { defaultRedroidImage } from "%/device-info/redroid-images.ts";
 import { createDockerTemplateFromView } from "@/utils/docker/docker-compose-moustache-formatting.ts";
+import Ajv from "ajv-draft-04";
+import addFormats from "ajv-formats";
 import { stringify as stringifyYaml, parse as yamlParse } from "yaml";
+import dockerComposeSpec from "./compose_spec.json";
 import { createView } from "./deployment.ts";
+
+const ajv = new Ajv({
+  schemaId: "id",
+  meta: false,
+  strict: false,
+  strictSchema: false,
+  strictNumbers: false,
+  allowMatchingProperties: true,
+  allowUnionTypes: true,
+  validateFormats: false,
+});
+addFormats(ajv);
+const validate = ajv.compile({ ...dockerComposeSpec, $schema: undefined });
 
 describe("createView", () => {
   it("should create a valid DockerComposeMoustacheView with explicit settings", async () => {
@@ -45,4 +61,20 @@ describe("createView", () => {
     const stringifiedYaml = stringifyYaml(parsedYaml);
     console.log(stringifiedYaml);
   }, 60_000); // needs time to fetch the digest
+
+  it("should validate the generated Docker Compose YAML against the JSON Schema", async () => {
+    const fps = 30;
+    const specs = {
+      name: "",
+      dpi: 160,
+      width: 720,
+      height: 1280,
+    };
+    const view = await createView(defaultRedroidImage, fps, specs);
+    const yaml = await createDockerTemplateFromView(view);
+    const parsedYaml = yamlParse(yaml);
+
+    const valid = validate(parsedYaml);
+    expect(valid).toBe(true);
+  }, 60_000); // Adjust timeout as necessary
 });

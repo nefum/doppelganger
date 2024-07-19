@@ -1,3 +1,4 @@
+import { getIsDeviceRunning } from "%/docker/device-state.ts";
 import {
   CPU_LIMIT_CPUS,
   MEMORY_LIMIT_BYTES,
@@ -12,8 +13,11 @@ import {
 } from "@/utils/redroid/stats";
 import { Device } from "@prisma/client";
 
-jest.mock("@/utils/redroid/deployment.ts", () => ({
+jest.mock("%/docker/device-paths.ts", () => ({
   getDataDirOfDevice: jest.fn().mockReturnValue("/data/device"),
+}));
+
+jest.mock("%/docker/device-state.ts", () => ({
   getIsDeviceRunning: jest.fn(),
   getRedroidContainerName: jest.fn().mockReturnValue("redroid_container"),
 }));
@@ -40,16 +44,12 @@ describe("Device Stats Functions", () => {
 
   describe("getRunningStatus", () => {
     it("should return true when device is running", async () => {
-      require("@/utils/redroid/deployment.ts").getIsDeviceRunning.mockResolvedValue(
-        true,
-      );
+      (getIsDeviceRunning as unknown as jest.Mock).mockResolvedValue(true);
       await expect(getRunningStatus(mockDevice)).resolves.toBe(true);
     });
 
     it("should return false when device is not running", async () => {
-      require("@/utils/redroid/deployment.ts").getIsDeviceRunning.mockResolvedValue(
-        false,
-      );
+      (getIsDeviceRunning as unknown as jest.Mock).mockResolvedValue(false);
       await expect(getRunningStatus(mockDevice)).resolves.toBe(false);
     });
   });

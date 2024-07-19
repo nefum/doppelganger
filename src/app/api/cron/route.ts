@@ -1,9 +1,6 @@
 import prisma from "%/database/prisma.ts";
+import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
 import { FREE_TIER_IDLE_TIME_MS } from "@/app/constants.ts";
-import {
-  bringDownDevice,
-  getIsDeviceRunning,
-} from "@/utils/redroid/deployment.ts";
 import {
   getSubscriptionStatus,
   SubscriptionStatus,

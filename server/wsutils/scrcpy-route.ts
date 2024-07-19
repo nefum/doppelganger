@@ -5,6 +5,7 @@ import {
   runScrcpyServerOnDevice,
 } from "../adb/scrcpy";
 import { getDeviceForId } from "../device-info/device-info";
+import { bringUpDevice, getIsDeviceRunning } from "../docker/device-state";
 import { scrcpyWsEndpoint } from "../endpoint-regex";
 import { createClient } from "../supabase/ro-server";
 import { attachUpdateListener } from "./attach-update-listener";
@@ -44,6 +45,9 @@ export async function handleDeviceStream(
   let targetWs: WsWebSocket;
 
   try {
+    if (!(await getIsDeviceRunning(deviceInfo))) {
+      await bringUpDevice(deviceInfo.id); // might take a minute
+    }
     await runScrcpyServerOnDevice(deviceInfo);
     const wsUrlString = getTargetWsScrcpyUrlForDevice(deviceInfo);
     const wsUrl = new URL(wsUrlString);

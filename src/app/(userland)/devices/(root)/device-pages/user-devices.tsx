@@ -1,7 +1,7 @@
+import { getIsDeviceRunning } from "%/docker/device-state.ts";
 import { DeviceCard } from "@/app/(userland)/devices/(root)/device-cards/device-card.tsx";
 import NoDevicesCard from "@/app/(userland)/devices/(root)/device-pages/no-devices-card.tsx";
 import { getUsersDevices } from "@/utils/devices.ts";
-import { getIsDeviceRunning } from "@/utils/redroid/deployment.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device } from "@prisma/client";
 import NotFound from "next/dist/client/components/not-found-error";
