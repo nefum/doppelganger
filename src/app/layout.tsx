@@ -1,4 +1,4 @@
-import { BASE_ORIGIN } from "@/app/constants.ts";
+import { BASE_ORIGIN, TAGLINE } from "@/app/constants.ts";
 import GoogleOneTap from "@/components/google/google-one-tap.tsx";
 import GoogleSigninHandlerProvider from "@/components/google/google-signin-handler-provider.tsx";
 import { NonceProvider } from "@/components/google/nonce-provider.tsx";
@@ -33,9 +33,21 @@ export const metadata: Metadata = {
     template: "%s | Doppelganger",
     default: "Doppelganger",
   },
-  description: "Free cloud-based Android phones for everyone",
+  description: TAGLINE,
   metadataBase: new URL(BASE_ORIGIN),
   manifest: "/manifest.json",
+  openGraph: {
+    type: "website",
+    url: BASE_ORIGIN,
+    title: "Doppelganger",
+    description: TAGLINE,
+    siteName: "Doppelganger",
+    images: [
+      {
+        url: new URL("/mockup.png", BASE_ORIGIN).toString(),
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

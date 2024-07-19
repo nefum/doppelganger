@@ -1,3 +1,4 @@
+export const TAGLINE = "Android, on any device.";
 export const BASE_ORIGIN =
   process.env.NODE_ENV === "production"
     ? "https://doppelgangerhq.com"
