@@ -90,9 +90,10 @@ export default function RootLayout({
             <Toaster />
           </Suspense>
         </ProviderComposer>
+        {/*no need for a cookie consent manager yet, we only do business in the us*/}
         <Script
           src="https://accounts.google.com/gsi/client"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           async
         />
         <GoogleAnalytics gaId="G-KN7ZDR3JD9" />

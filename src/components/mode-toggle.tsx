@@ -10,12 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { GearIcon } from "@radix-ui/react-icons";
+import { useEffectiveTheme } from "@/utils/hooks/use-effective-theme.ts";
 import { ReactNode } from "react";
 
 // https://ui.shadcn.com/docs/dark-mode/next
 export function ModeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme: chosenTheme } = useTheme();
+  const theme = useEffectiveTheme();
 
   // we can't do absolute because it clashes with the relume dropdown menu, so it unfortunately breaks this nice animation
   let themeButtonIcon: ReactNode;
@@ -30,16 +31,12 @@ export function ModeToggle() {
         <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
       );
       break;
-    case "system":
-    default: // can't get rid of default, causes a hydration error
-      themeButtonIcon = <GearIcon className="h-[1.2rem] w-[1.2rem]" />;
-      break;
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" suppressHydrationWarning>
           {themeButtonIcon}
           <span className="sr-only">Toggle theme</span>
         </Button>

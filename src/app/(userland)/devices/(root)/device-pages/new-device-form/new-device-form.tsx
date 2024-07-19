@@ -207,7 +207,7 @@ function RedroidImageCombobox({
               className="ml-2 h-4 w-4"
             />
           </TooltipTrigger>
-          <TooltipContent className="italic">
+          <TooltipContent className="italic max-w-[80vw]">
             <h6 className="text-md font-semibold">
               Selected:{" "}
               {
@@ -492,8 +492,9 @@ function NewDeviceForm({
                 userIsPremium={userIsPremium}
               />
               <FormDescription>
-                The type of device you want to create. This cannot be changed
-                once the device is created.
+                The type of device you want to create. Hover over the info icon
+                to review important notes. This cannot be changed once the
+                device is created.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -533,7 +534,7 @@ function NewDeviceForm({
         <FooterComp>
           <AdvancedSettings form={form} disabled={!dialogCanClose} />
           <Button type="submit" disabled={!dialogCanClose}>
-            Create
+            Create (this WILL take a while!)
             {!dialogCanClose && (
               <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />
             )}

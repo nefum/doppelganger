@@ -1,1 +1,30 @@
-TODO
+import { Header1 } from "../../../components/relume/header-1";
+import DarkLightComponent from "../../../components/dark-light-component";
+import Image from "next/image";
+import Link from "next/link";
+import darkModeHeaderImage from "./dark mode iphone 15 mockup-left.png";
+import lightModeHeaderImage from "./light mode iphone 15 mockup-left.png";
+import { Button } from "../../../components/ui/button";
+import ScrollerButton from "./scroller-button";
+
+<Header1
+  heading={<>Android, on{" "}<strong>any</strong>{" "}device.</>}
+  description="Doppelganger brings cloud-based Android devices to your fingertips, accessible through any web browser. Experience the freedom of running your favorite Android apps on any device, anytime, anywhere."
+  image={(
+    // must use priority since this will be the LCP
+    <DarkLightComponent
+      dark={<Image src={darkModeHeaderImage} alt={"Phone sample dark mode"} className={"object-contain max-h-full"} priority placeholder="blur" />}
+      light={<Image src={lightModeHeaderImage} alt={"Phone sample light mode"} className={"object-contain max-h-full"} priority placeholder="blur" />}
+    />
+  )}
+  buttons={(
+    <>
+      <Button asChild>
+        <Link href={"/signup"}>
+          Try it out
+        </Link>
+      </Button>
+      <ScrollerButton />
+    </>
+  )}
+/>
