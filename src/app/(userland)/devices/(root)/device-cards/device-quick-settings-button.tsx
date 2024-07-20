@@ -15,11 +15,15 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import React, { useMemo, useState } from "react";
 import { LuLoader2, LuPower, LuPowerOff, LuSettings2 } from "react-icons/lu";
 
-const editDeviceTooltip = "Edit Device";
+const quickSettingsTooltip = "Quick Settings";
 
-export default function EditDeviceButton({
+export default function DeviceQuickSettingsButton({
   deviceInfo,
-}: Readonly<{ deviceInfo: Device }>) {
+  deviceIsUp,
+}: Readonly<{
+  deviceInfo: Device;
+  deviceIsUp: boolean;
+}>) {
   const [deviceUpLoading, setDeviceUpLoading] = useState(false);
   const [deviceDownLoading, setDeviceDownLoading] = useState(false);
   const { toast } = useToast();
@@ -33,7 +37,7 @@ export default function EditDeviceButton({
       });
       if (response.ok) {
         clientSideReloadWithToast({
-          toastTitle: "Device started successfully",
+          title: "Device started successfully",
         });
       } else {
         console.error("Failed to start device", response);
@@ -56,7 +60,7 @@ export default function EditDeviceButton({
       });
       if (response.ok) {
         clientSideReloadWithToast({
-          toastTitle: "Device stopped successfully",
+          title: "Device stopped successfully",
         });
       } else {
         console.error("Failed to stop device", response);
@@ -72,11 +76,11 @@ export default function EditDeviceButton({
 
   return (
     <Dialog>
-      <SimpleTooltip content={editDeviceTooltip}>
+      <SimpleTooltip content={quickSettingsTooltip}>
         <DialogTrigger asChild>
           <Button variant="ghost" size="icon">
             <LuSettings2 className="h-5 w-5" />
-            <span className="sr-only">{editDeviceTooltip}</span>
+            <span className="sr-only">{quickSettingsTooltip}</span>
           </Button>
         </DialogTrigger>
       </SimpleTooltip>
@@ -88,7 +92,7 @@ export default function EditDeviceButton({
           <Button
             onClick={handleDeviceUp}
             variant="default"
-            disabled={deviceUpLoading || deviceDownLoading}
+            disabled={deviceUpLoading || deviceDownLoading || !deviceIsUp}
           >
             <LuPower className="h-4 w-4" />
             <span className="ml-1">Start Device</span>
@@ -99,7 +103,7 @@ export default function EditDeviceButton({
           <Button
             onClick={handleDeviceDown}
             variant="destructive"
-            disabled={deviceUpLoading || deviceDownLoading}
+            disabled={deviceUpLoading || deviceDownLoading || deviceIsUp}
             className="ml-2"
           >
             <LuPowerOff className="h-4 w-4" />

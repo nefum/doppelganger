@@ -55,8 +55,8 @@ export async function login(
   redirect(
     `${FIRST_PAGE_PATHNAME}${encodeQueryParams(
       encodeToastParams({
-        toastTitle: "Login Successful",
-        toastDescription: "Welcome back!",
+        title: "Login Successful",
+        description: "Welcome back!",
       }),
     )}`,
   );

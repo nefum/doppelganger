@@ -84,8 +84,8 @@ export function EmailChangeForm() {
       });
     } else {
       clientSideReloadWithToast({
-        toastTitle: "Email Updated",
-        toastDescription:
+        title: "Email Updated",
+        description:
           "Your email has been successfully updated. Please check your inbox for a verification email.",
       });
     }
@@ -165,8 +165,8 @@ export function PasswordChangeForm() {
       });
     } else {
       clientSideReloadWithToast({
-        toastTitle: "Password Updated",
-        toastDescription: "Your password has been successfully updated.",
+        title: "Password Updated",
+        description: "Your password has been successfully updated.",
       });
     }
   };
@@ -266,11 +266,11 @@ export function DeleteAccountCard() {
           description: `There was an error deleting your account: ${error.message}`,
         });
       }
-      clientSideRedirectWithToast(
-        "/",
-        "Account Deleted",
-        "Your account has been successfully deleted.",
-      );
+      clientSideRedirectWithToast("/", {
+        title: "Account Deleted",
+        description:
+          "Your account has been successfully deleted. We're sorry to see you go.",
+      });
       setAccountDeleting(false);
     },
     [toast],

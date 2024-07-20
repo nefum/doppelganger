@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import DeleteDeviceButton from "@/app/(userland)/devices/(root)/device-cards/delete-device-button.tsx";
 import DesktopClientButton from "@/app/(userland)/devices/(root)/device-cards/desktop-client-button.tsx";
-import EditDeviceButton from "@/app/(userland)/devices/(root)/device-cards/edit-device-button.tsx";
+import DeviceQuickSettingsButton from "@/app/(userland)/devices/(root)/device-cards/device-quick-settings-button.tsx";
 import styles from "@/app/(userland)/devices/(root)/device-cards/fill.module.css";
 import { MobileClientButton } from "@/app/(userland)/devices/(root)/device-cards/mobile-client-button.tsx";
 import pwaClickHandler from "@/app/(userland)/devices/(root)/device-cards/pwa-click-handler.ts";
@@ -115,7 +115,10 @@ export function DeviceCard({
                 setDialogOpen={setScreenDialogOpen}
                 openMobileDialog={openMobileDialog}
               />
-              <EditDeviceButton deviceInfo={deviceInfo} />
+              <DeviceQuickSettingsButton
+                deviceInfo={deviceInfo}
+                deviceIsUp={deviceIsUp}
+              />
               <DeleteDeviceButton deviceInfo={deviceInfo} />
             </div>
           </div>

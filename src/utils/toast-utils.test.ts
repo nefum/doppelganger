@@ -8,8 +8,8 @@ describe("toast-utils", () => {
   describe("encodeToastParams", () => {
     it("encodes both title and description when provided", () => {
       const params = {
-        toastTitle: "Test Title",
-        toastDescription: "Test Description",
+        title: "Test Title",
+        description: "Test Description",
       };
       const encoded = encodeToastParams(params);
       expect(encoded.encodedToastTitle).toEqual(
@@ -21,7 +21,7 @@ describe("toast-utils", () => {
     });
 
     it("encodes title only when description is not provided", () => {
-      const params = { toastTitle: "Only Title" };
+      const params = { title: "Only Title" };
       const encoded = encodeToastParams(params);
       expect(encoded.encodedToastTitle).toEqual(
         encodeURIComponent("Only Title"),
@@ -57,14 +57,19 @@ describe("toast-utils", () => {
     });
 
     it("redirects with both title and description in the query params", () => {
-      clientSideRedirectWithToast("/path", "Title", "Description");
+      clientSideRedirectWithToast("/path", {
+        title: "Title",
+        description: "Description",
+      });
       expect(window.location.href).toEqual(
         `/path?toastTitle=${encodeURIComponent("Title")}&toastDescription=${encodeURIComponent("Description")}`,
       );
     });
 
     it("redirects with only title in the query params when description is not provided", () => {
-      clientSideRedirectWithToast("/path", "Title");
+      clientSideRedirectWithToast("/path", {
+        title: "Title",
+      });
       expect(window.location.href).toEqual(
         `/path?toastTitle=${encodeURIComponent("Title")}`,
       );

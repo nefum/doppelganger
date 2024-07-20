@@ -48,10 +48,9 @@ export default function DeleteDeviceButton({
         method: "DELETE",
       });
       if (response.ok) {
-        clientSideRedirectWithToast(
-          "/devices",
-          `Device "${deviceInfo.name}" deleted successfully`,
-        );
+        clientSideRedirectWithToast("/devices", {
+          title: `Device ${deviceInfo.name} deleted successfully`,
+        });
       } else {
         console.error("Failed to delete device", response);
         setLoading(false);

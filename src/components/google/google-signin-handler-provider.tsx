@@ -62,10 +62,10 @@ export default function GoogleSigninHandlerProvider({
         });
       } else {
         console.log("Signed in with Google", data);
-        clientSideRedirectWithToast(
-          FIRST_PAGE_PATHNAME,
-          "Signed in with Google",
-        );
+        clientSideRedirectWithToast(FIRST_PAGE_PATHNAME, {
+          title: "Signed in with Google",
+          description: "You are now signed in with Google.",
+        });
       }
     }
 

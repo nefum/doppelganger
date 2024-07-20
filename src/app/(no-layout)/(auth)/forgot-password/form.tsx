@@ -59,11 +59,11 @@ export default function ForgotPasswordForm() {
         variant: "destructive",
       });
     } else {
-      clientSideRedirectWithToast(
-        "/login",
-        "Password reset email sent. Check your inbox.",
-        "This link will get you into the user management page, where you can reset your password.",
-      );
+      clientSideRedirectWithToast("/login", {
+        title: "Password reset email sent. Check your inbox.",
+        description:
+          "This link will get you into the user management page, where you can reset your password.",
+      });
     }
   }
 

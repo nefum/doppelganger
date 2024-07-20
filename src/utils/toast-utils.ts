@@ -1,25 +1,24 @@
-// uri encoded string
-type EncodedString = string;
+type UriEncodedString = string;
 
-interface ToastPrams {
-  toastTitle: string;
-  toastDescription?: string;
+interface PlaintextToastParams {
+  title: string;
+  description?: string;
 }
 
 interface EncodedToastParams {
-  encodedToastTitle: EncodedString;
-  encodedToastDescription?: EncodedString;
+  encodedToastTitle: UriEncodedString;
+  encodedToastDescription?: UriEncodedString;
 }
 
 export function encodeToastParams({
-  toastTitle,
-  toastDescription,
-}: ToastPrams): EncodedToastParams {
+  title,
+  description,
+}: PlaintextToastParams): EncodedToastParams {
   // URI encode the toast name
-  const encodedToastTitle = encodeURIComponent(toastTitle);
+  const encodedToastTitle = encodeURIComponent(title);
   // check for a description
-  const encodedToastDescription = toastDescription
-    ? encodeURIComponent(toastDescription)
+  const encodedToastDescription = description
+    ? encodeURIComponent(description)
     : undefined;
   return { encodedToastTitle, encodedToastDescription };
 }
@@ -34,28 +33,17 @@ export function encodeQueryParams({
 /**
  * Redirects the user (client-side) to a given URL and has a toast show up with the given message.
  * @param pathName
- * @param toastTitle The title of the toast
- * @param toastDescription The description of the toast; can be undefined
+ * @param toast
  */
 export function clientSideRedirectWithToast(
   pathName: string,
-  toastTitle: string,
-  toastDescription?: string,
+  toast: PlaintextToastParams,
 ) {
   // client-side redirect
-  const queryParams = encodeQueryParams(
-    encodeToastParams({ toastTitle, toastDescription }),
-  );
+  const queryParams = encodeQueryParams(encodeToastParams(toast));
   window.location.href = `${pathName}${queryParams}`;
 }
 
-export function clientSideReloadWithToast({
-  toastTitle,
-  toastDescription,
-}: ToastPrams) {
-  clientSideRedirectWithToast(
-    window.location.pathname,
-    toastTitle,
-    toastDescription,
-  );
+export function clientSideReloadWithToast(toast: PlaintextToastParams) {
+  clientSideRedirectWithToast(window.location.pathname, toast);
 }

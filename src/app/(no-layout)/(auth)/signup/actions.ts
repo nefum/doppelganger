@@ -75,8 +75,8 @@ export async function signup(
   redirect(
     `${FIRST_PAGE_PATHNAME}${encodeQueryParams(
       encodeToastParams({
-        toastTitle: "Signup Successful",
-        toastDescription: "Please check your email to confirm your account.",
+        title: "Signup Successful",
+        description: "Please check your email to confirm your account.",
       }),
     )}`,
   );

@@ -441,11 +441,11 @@ function NewDeviceForm({
       }
 
       if (result.ok) {
-        clientSideRedirectWithToast(
-          "/devices",
-          `Device "${values.deviceName}" created successfully`,
-          "It may be up to 5 minutes before you can connect to your device for the first time. Subsequent starts will be faster.",
-        );
+        clientSideRedirectWithToast("/devices", {
+          title: `Device "${values.deviceName}" created successfully`,
+          description:
+            "It may be up to 5 minutes before you can connect to your device for the first time. Subsequent starts will be faster.",
+        });
       } else {
         console.error("Failed to create device", result);
         toast({
