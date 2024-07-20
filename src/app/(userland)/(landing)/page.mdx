@@ -7,6 +7,10 @@ import lightModeHeaderImage from "./light mode iphone 15 mockup-left.png";
 import { Button } from "../../../components/ui/button";
 import ScrollerButton from "./scroller-button";
 import { Layout245 } from "../../../components/relume/layout-245";
+import { AiOutlineTeam } from "react-icons/ai";
+import { MdDevicesOther } from "react-icons/md";
+import { BsSignpostSplit } from "react-icons/bs";
+import { LuArrowRight } from "react-icons/lu";
 
 <Header1
   heading={<>Android, on{" "}<strong>any</strong>{" "}device.</>}
@@ -23,6 +27,7 @@ import { Layout245 } from "../../../components/relume/layout-245";
       <Button asChild>
         <Link href={"/signup"}>
           Try it out
+          <LuArrowRight className="ml-1 h-4 w-4" />
         </Link>
       </Button>
       <ScrollerButton />
@@ -30,4 +35,34 @@ import { Layout245 } from "../../../components/relume/layout-245";
   )}
 />
 
-<Layout245 />
+<Layout245
+  tagline="We've all been there."
+  heading="That one app that doesn't have a website, that second account you need notifications from, or that game that doesn't support your current phone."
+  description="No matter your use case, Doppelganger has you covered. With a top-to-bottom custom Android-backed experience running in your browser, you can access any app, game, or service you need. There is no need to carry around a second phone; open your virtual device and use it like any other Android device. Our in-house Pheidippides OS extends Android to make it a cloud-first experience, ensuring your location, camera roll, camera, microphone, and even notifications sent to you by virtualized apps are passed through, enabling a level of integration only matched by native on-site devices. It's a lot, we know, but don't worry; your privacy & security comes first. Check out our Privacy Policy below to learn more. With Doppelganger, you can breathe a sigh of relief knowing that all your app needs are just a click away."
+  sections={[
+    {
+      heading: "Stay up-to-date with that second account, or create an island of isolation for your work account.",
+      description: "On Android, Work Profiles help separate your professional and personal life. However, no such solutions exist for iOS and other mobile operating systems. Doppelganger can fill that gap. With a second device running entirely in the cloud, you can keep those lives separate once again while still notifications and benefitting from rich integrations. Bonus points: have a second account for platforms like Discord, LinkedIn, or others that don't support having two accounts logged in simultaneously? Just install a version on Doppelganger, and you're riding free. Doppelganger gives you the power to manage your accounts the way you want, providing the flexibility and control you need in today's digital world.",
+      icon: <BsSignpostSplit className="h-12 w-12" />,
+    },
+    {
+      heading: "Run that app, even if your device doesn't support it.",
+      description: "On Android, Work Profiles help separate your professional and personal life. However, no such solutions exist for iOS and other mobile operating systems. Doppelganger can fill that gap. With a second device running entirely in the cloud, you can keep those lives separate once again while still notifications and benefitting from rich integrations. Bonus points: have a second account for platforms like Discord, LinkedIn, or others that don't support having two accounts logged in simultaneously? Just install a version on Doppelganger, and you're riding free. Doppelganger gives you the power to manage your accounts how you want, providing the flexibility and control you need in today's digital world.",
+      icon: <MdDevicesOther className="h-12 w-12" />,
+    },
+    {
+      heading: "Quickly share apps with your team.",
+      description: "In our social media-powered world, marketing teams like yours must share access to an account to work in parallel. However, the classic login-sharing workflow has critical issues that often go unnoticed. With all team members logged into your brand's account on their devices, it only takes one rogue actor or unfortunately timed phishing attack to send your brand's identity right down the drain. With Doppelganger, you can stop these threats before they start. Instead of sharing multiple unrestricted logins to various social media accounts, share a Doppelganger account and log in to your accounts once. Because Doppelganger is accessible through any web browser, your team can maintain their current workflow while not having access to your valuable social media logins. Doppelganger provides a secure solution, giving you peace of mind and protecting your brand's identity.",
+      icon: <AiOutlineTeam className="h-12 w-12" />,
+    }
+  ]}
+  buttons={(
+    <>
+      <Button asChild>
+        <Link href={"/types"}>
+          Check out available device types <LuArrowRight className="ml-1 h-4 w-4" />
+        </Link>
+      </Button>
+    </>
+  )}
+/>

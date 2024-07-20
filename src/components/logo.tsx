@@ -1,6 +1,5 @@
 import { clsx } from "clsx";
 import Image from "next/image";
-import Link from "next/link";
 
 function LogoIcon({ className }: Readonly<{ className?: string }>) {
   return (
@@ -16,10 +15,10 @@ function LogoIcon({ className }: Readonly<{ className?: string }>) {
 
 export function LogoMiniHero(): JSX.Element {
   return (
-    <Link href={"/"} className="inline-flex items-center">
+    <div className="inline-flex items-center">
       <LogoIcon className="h-7 w-auto" />
       <span className="shadcn-h3 ml-1">Doppelganger</span>
-    </Link>
+    </div>
   );
 }
 

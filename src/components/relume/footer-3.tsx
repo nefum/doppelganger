@@ -71,7 +71,9 @@ export const Footer3 = (props: Footer3Props) => {
       <div className="container">
         <div className="grid grid-cols-1 gap-x-[4vw] gap-y-12 pb-12 md:gap-y-16 md:pb-18 lg:grid-cols-[1fr_0.5fr] lg:gap-y-4 lg:pb-20">
           <div>
-            <div className="mb-6 md:mb-8">{logo}</div>
+            <div className="mb-6 md:mb-8">
+              <Link href={"/"}>{logo}</Link>
+            </div>
             <div className="mb-6 md:mb-8">
               <div>
                 <p className="mb-1 text-sm font-semibold">{address.label}</p>
@@ -136,6 +138,16 @@ export const Footer3 = (props: Footer3Props) => {
               </li>
             ))}
           </ul>
+        </div>
+        <div className="mt-1">
+          <p className="shadcn-muted">
+            Android, Google, Play Store, iOS, Discord, LinkedIn, and other
+            product names, logos, and brands mentioned on this site are property
+            of their respective owners. The use of these names, logos, and
+            brands does not imply endorsement. Doppelganger is an independent
+            product and is not affiliated with, nor has it been authorized,
+            sponsored, or otherwise approved by these companies.
+          </p>
         </div>
       </div>
     </footer>

@@ -63,7 +63,7 @@ export const Navbar1 = (props: Navbar1Props) => {
     <nav className="flex w-full items-center border-b border-border-primary bg-background-primary lg:min-h-18 lg:px-[5%]">
       <div className="size-full lg:flex lg:items-center lg:justify-between">
         <div className="flex min-h-16 items-center justify-between px-[5%] md:min-h-18 lg:min-h-full lg:px-0">
-          {logo}
+          <Link href="/">{logo}</Link>
           <button
             className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}

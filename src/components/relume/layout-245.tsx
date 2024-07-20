@@ -1,15 +1,8 @@
-import type { ButtonProps } from "@relume_io/relume-ui";
 import { Button } from "@relume_io/relume-ui";
-import Image from "next/image";
 import { RxChevronRight } from "react-icons/rx";
 
-type ImageProps = {
-  src: string;
-  alt?: string;
-};
-
 type SectionProps = {
-  icon: ImageProps;
+  icon: JSX.Element;
   heading: string;
   description: string;
 };
@@ -19,7 +12,7 @@ type Props = {
   heading: string;
   description: string;
   sections: SectionProps[];
-  buttons: ButtonProps[];
+  buttons: JSX.Element;
 };
 
 export type Layout245Props = React.ComponentPropsWithoutRef<"section"> &
@@ -31,8 +24,8 @@ export const Layout245 = (props: Layout245Props) => {
     heading,
     description,
     sections = [],
-    buttons = [],
-  } = { ...props, ...Layout245Defaults };
+    buttons,
+  } = { ...Layout245Defaults, ...props };
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28">
       <div className="container flex flex-col items-start">
@@ -48,15 +41,7 @@ export const Layout245 = (props: Layout245Props) => {
         <div className="grid grid-cols-1 items-start gap-y-12 md:grid-cols-3 md:gap-x-8 md:gap-y-16 lg:gap-x-12">
           {sections.map((section, index) => (
             <div key={index}>
-              <div className="mb-5 md:mb-6">
-                <Image
-                  src={section.icon.src}
-                  width={12}
-                  height={12}
-                  className="size-12"
-                  alt={section.icon.alt ?? "Image"}
-                />
-              </div>
+              <div className="mb-5 md:mb-6">{section.icon}</div>
               <h3 className="mb-5 text-2xl font-bold md:mb-6 md:text-3xl md:leading-[1.3] lg:text-4xl">
                 {section.heading}
               </h3>
@@ -65,11 +50,7 @@ export const Layout245 = (props: Layout245Props) => {
           ))}
         </div>
         <div className="mt-10 flex items-center gap-4 md:mt-14 lg:mt-16">
-          {buttons.map((button, index) => (
-            <Button key={index} {...button}>
-              {button.title}
-            </Button>
-          ))}
+          {buttons}
         </div>
       </div>
     </section>
@@ -83,42 +64,54 @@ export const Layout245Defaults: Layout245Props = {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.",
   sections: [
     {
-      icon: {
-        src: "https://relume-assets.s3.amazonaws.com/relume-icon.svg",
-        alt: "Relume logo 1",
-      },
+      icon: (
+        // eslint-disable-next-line @next/next/no-img-element -- demo only
+        <img
+          src="https://relume-assets.s3.amazonaws.com/relume-icon.svg"
+          alt="Relume logo 1"
+        />
+      ),
       heading: "Medium length section heading goes here",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.",
     },
     {
-      icon: {
-        src: "https://relume-assets.s3.amazonaws.com/relume-icon.svg",
-        alt: "Relume logo 2",
-      },
+      icon: (
+        // eslint-disable-next-line @next/next/no-img-element -- demo only
+        <img
+          src="https://relume-assets.s3.amazonaws.com/relume-icon.svg"
+          alt="Relume logo 1"
+        />
+      ),
       heading: "Medium length section heading goes here",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.",
     },
     {
-      icon: {
-        src: "https://relume-assets.s3.amazonaws.com/relume-icon.svg",
-        alt: "Relume logo 3",
-      },
+      icon: (
+        // eslint-disable-next-line @next/next/no-img-element -- demo only
+        <img
+          src="https://relume-assets.s3.amazonaws.com/relume-icon.svg"
+          alt="Relume logo 1"
+        />
+      ),
       heading: "Medium length section heading goes here",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.",
     },
   ],
-  buttons: [
-    { title: "Button", variant: "secondary" },
-    {
-      title: "Button",
-      variant: "link",
-      size: "link",
-      iconRight: <RxChevronRight className="size-6" />,
-    },
-  ],
+  buttons: (
+    <>
+      <Button variant="primary">Button</Button>
+      <Button
+        variant="link"
+        size="link"
+        iconRight={<RxChevronRight className="size-6" />}
+      >
+        Button
+      </Button>
+    </>
+  ),
 };
 
 Layout245.displayName = "Layout245";
