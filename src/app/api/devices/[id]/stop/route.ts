@@ -32,5 +32,10 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
   await bringDownDevice(device.id);
 
-  return NextResponse.json({}, { status: 200 });
+  return NextResponse.json(
+    {
+      success: true,
+    },
+    { status: 200 },
+  );
 }

@@ -25,7 +25,18 @@ export function ClientDevicePowerStateButtons({
       const response = await fetch(`/api/devices/${deviceInfo.id}/start`, {
         method: "PUT",
       });
-      const responseJson = await response.json();
+      let responseJson: { error?: string };
+      try {
+        responseJson = await response.json();
+      } catch (e) {
+        console.error("Failed to parse response", e);
+        setDeviceUpLoading(false);
+        toast({
+          title: "Failed to start device",
+          description: "Please try again later.",
+        });
+        return;
+      }
       if (response.ok) {
         clientSideReloadWithToast({
           title: "Device started successfully",
@@ -49,7 +60,18 @@ export function ClientDevicePowerStateButtons({
       const response = await fetch(`/api/devices/${deviceInfo.id}/stop`, {
         method: "PUT",
       });
-      const responseJson = await response.json();
+      let responseJson: { error?: string };
+      try {
+        responseJson = await response.json();
+      } catch (e) {
+        console.error("Failed to parse response", e);
+        setDeviceUpLoading(false);
+        toast({
+          title: "Failed to start device",
+          description: "Please try again later.",
+        });
+        return;
+      }
       if (response.ok) {
         clientSideReloadWithToast({
           title: "Device stopped successfully",
