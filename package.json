@@ -18,7 +18,7 @@
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "next lint --max-warnings 0",
     "type-check": "tsc --noEmit --project tsconfig.json",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,md,mdx,js,jsx}\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "ui:add": "pnpx shadcn-ui@latest add"
