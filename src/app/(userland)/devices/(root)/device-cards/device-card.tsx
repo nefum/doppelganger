@@ -26,9 +26,10 @@ import { useEffect, useState } from "react";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import DeleteDeviceButton from "@/app/(userland)/devices/(root)/device-cards/delete-device-button.tsx";
 import DesktopClientButton from "@/app/(userland)/devices/(root)/device-cards/desktop-client-button.tsx";
+import DeviceInfoPageButton from "@/app/(userland)/devices/(root)/device-cards/device-info-page-button.tsx";
 import DeviceQuickSettingsButton from "@/app/(userland)/devices/(root)/device-cards/device-quick-settings-button.tsx";
 import styles from "@/app/(userland)/devices/(root)/device-cards/fill.module.css";
-import { MobileClientButton } from "@/app/(userland)/devices/(root)/device-cards/mobile-client-button.tsx";
+import { ImmersiveClientButton } from "@/app/(userland)/devices/(root)/device-cards/immersive-client-button.tsx";
 import pwaClickHandler from "@/app/(userland)/devices/(root)/device-cards/pwa-click-handler.ts";
 import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
 import { Button } from "@/components/ui/button.tsx";
@@ -103,10 +104,12 @@ export function DeviceCard({
               <p className="text-muted-foreground">{deviceInfo.redroidFps}</p>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <MobileClientButton
+              <DeviceInfoPageButton deviceInfo={deviceInfo} />
+              <ImmersiveClientButton
                 deviceInfo={deviceInfo}
                 dialogOpen={mobileDialogOpen}
                 setDialogOpen={setMobileDialogOpen}
+                className="hidden" // we no longer provide direct access to the immersive/mobile client, but this component still needs to be here as the desktop quick-client button needs to raise its alert when the screen is too small
               />
               <DesktopClientButton
                 deviceIsUp={deviceIsUp}
@@ -126,7 +129,7 @@ export function DeviceCard({
           <link rel="prefetch" href={getSnapshotUrlOfDevice(deviceInfo.id)} />
           <div
             className={clsx(
-              "rounded-lg object-cover aspect-[2/4] relative bg-gray-200 min-w-[200px]",
+              "rounded-lg object-contain aspect-[2/4] relative bg-gray-200 min-w-[200px]",
               styles.fill,
               {
                 "animate-pulse": !loaded,

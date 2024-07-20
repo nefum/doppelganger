@@ -45,8 +45,13 @@ export async function handleDeviceStream(
   let targetWs: WsWebSocket;
 
   try {
-    if (!(await getIsDeviceRunning(deviceInfo))) {
-      await bringUpDevice(deviceInfo.id); // might take a minute
+    try {
+      if (!(await getIsDeviceRunning(deviceInfo))) {
+        await bringUpDevice(deviceInfo); // might take a minute
+      }
+    } catch (e: unknown) {
+      // if we can't bring up the device, we can still try to run scrcpy
+      console.error("error bringing up device", e);
     }
     await runScrcpyServerOnDevice(deviceInfo);
     const wsUrlString = getTargetWsScrcpyUrlForDevice(deviceInfo);

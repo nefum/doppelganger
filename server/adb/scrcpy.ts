@@ -1,12 +1,12 @@
+import {
+  getAdbUdidForDevice,
+  getDefaultRedroidHostname,
+} from "%/device-info/device-info-utils";
 import { DeviceClient } from "@devicefarmer/adbkit";
 import Util from "@devicefarmer/adbkit/dist/src/adb/util";
 import { Device } from "@prisma/client";
 import { spawn } from "child_process";
 import path from "path";
-import {
-  getAdbUdidForDevice,
-  getDefaultRedroidHostname,
-} from "../device-info/device-info";
 import { getRedroidImage } from "../device-info/redroid-images";
 import adb from "./adb";
 
@@ -57,14 +57,14 @@ export type WaitForPidParams = {
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/Device.ts
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/ScrcpyServer.ts
 export class AdbDevice {
-  private deviceId: string | null = null;
-  public adbClient: DeviceClient | null = null;
+  public adbClient: DeviceClient;
   private readonly tag: string;
   private pidDetectionMethod: PID_DETECTION_METHOD =
     PID_DETECTION_METHOD.UNKNOWN;
 
   constructor(public device: Device) {
     this.tag = `[${this.udid}]`;
+    this.adbClient = adb.getDevice(this.udid);
   }
 
   /**
@@ -75,20 +75,16 @@ export class AdbDevice {
     if (isConnected) {
       return;
     }
-    this.deviceId = await adb.connect(
+    await adb.connect(
       this.device.adbHostname ?? getDefaultRedroidHostname(this.device.id),
       this.device.adbPort,
     );
-    this.adbClient = adb.getDevice(this.deviceId!);
   }
 
   async getIsConnected(): Promise<boolean> {
-    if (!this.deviceId) {
-      return false;
-    }
     const allDevices = await adb.listDevices();
     return allDevices.some(
-      (device: AdbListDeviceDevice) => device.id === this.deviceId,
+      (device: AdbListDeviceDevice) => device.id === this.udid,
     );
   }
 
@@ -395,7 +391,6 @@ export class AdbDevice {
    */
   async getGoogleServicesFrameworkID(): Promise<number> {
     const redroidImage = getRedroidImage(this.device.redroidImage)!;
-
     if (!redroidImage.gms) {
       throw new Error("Device does not have Google Mobile Services");
     }
@@ -404,15 +399,38 @@ export class AdbDevice {
       throw new Error("Device is not connected");
     }
 
-    await this.adbClient!.root();
-    // rets android_id|3546527965867813643
+    // adb root
+    // adb shell 'sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db \
+    //     "select * from main where name = \"android_id\";"'
+    await this.getRootSafe();
     const androidIdRet = await this.runShellCommandAdbKit(
-      'sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db "select * from main where name = "android_id";"',
+      `sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db "select * from main where name = \\"android_id\\";"`,
     );
+    // rets android_id|3546527965867813643
 
     const androidIdString = androidIdRet.split("|")[1].trim();
 
     return parseInt(androidIdString, 10);
+  }
+
+  private async getRootSafe(): Promise<void> {
+    if (!(await this.getIsConnected())) {
+      throw new Error("Device is not connected");
+    }
+
+    try {
+      await this.adbClient.root();
+    } catch (e: any) {
+      // we can sometimes get "Error: adbd is already running as root"
+      // this is fine; we can ignore
+      if (!(e as Error).message.includes("already running as root")) {
+        throw e;
+      }
+    }
+  }
+
+  waitForAdbServerToBeReady(maxTimeout?: number): Promise<void> {
+    return waitForAdbServerToBeReady(this.udid, maxTimeout);
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { getAdbUdidForDevice } from "%/device-info/device-info.ts";
+import { getAdbUdidForDevice } from "%/device-info/device-info-utils.ts";
 import JSMpegClient from "@/components/client/jsmpeg-client.tsx";
 import FillingAspectRatio from "@/components/filling-aspect-ratio.tsx";
 import ScrcpyDevicePlayer, {
@@ -9,7 +9,7 @@ import ScrcpyDevicePlayer, {
 import { useToast } from "@/components/ui/use-toast.ts";
 import Size from "@/ws-scrcpy/src/app/Size.ts";
 import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
-import { Device } from "@prisma/client";
+import type { Device } from "@prisma/client";
 import { clsx } from "clsx";
 import {
   forwardRef,

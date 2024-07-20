@@ -8,7 +8,7 @@ function LogoIcon({ className }: Readonly<{ className?: string }>) {
       alt="Doppelganger Logo"
       width={100}
       height={100}
-      className={clsx(className, "dark-mode-invert")}
+      className={clsx(className, "invert-0 dark:invert")}
     />
   );
 }

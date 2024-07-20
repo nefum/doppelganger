@@ -22,7 +22,12 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
   }
 
   if (!(await getIsDeviceRunning(device))) {
-    return NextResponse.json({}, { status: 400 });
+    return NextResponse.json(
+      {
+        error: `Device ${device.id} is not running`,
+      },
+      { status: 400 },
+    );
   }
 
   await bringDownDevice(device.id);

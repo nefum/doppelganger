@@ -31,7 +31,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const adbDevice = new AdbDevice(device);
     await adbDevice.connect();
-    const screencapConnection = await adbDevice.adbClient!.screencap();
+    const screencapConnection = await adbDevice.adbClient.screencap();
     // stream the bytes straight from device to response
     return new NextResponse(screencapConnection, {
       headers: {

@@ -1,3 +1,4 @@
+import { AdbDevice } from "%/adb/scrcpy";
 import { Device } from "@prisma/client";
 import { spawn } from "node:child_process";
 import { rm } from "node:fs/promises";
@@ -47,17 +48,19 @@ export function runDockerCommand(
 
 /**
  * Brings up a device. Does *not* update the DB.
- * @param deviceId
+ * @param device
  */
-export async function bringUpDevice(deviceId: string): Promise<void> {
+export async function bringUpDevice(device: Device): Promise<void> {
   // https://gist.github.com/regulad/0cc0b5d92b35dcd2b679723b5701aacb
   // https://gist.github.com/regulad/6024b520cc1b118088f21cd311133c38
   await runDockerCommand("compose", [
     "-f",
-    getDockerComposeFilePath(deviceId),
+    getDockerComposeFilePath(device.id),
     "up",
     "-d",
   ]);
+  const adbDevice = new AdbDevice(device);
+  await adbDevice.waitForAdbServerToBeReady();
 }
 
 /**

@@ -18,20 +18,22 @@ import { LuExternalLink } from "react-icons/lu";
 export const mobileClientTooltip = "Open Immersive Client";
 export const mobileClientTooltipIcon = <LuExternalLink className="h-5 w-5" />;
 
-export function MobileClientButton({
+export function ImmersiveClientButton({
   deviceInfo,
   dialogOpen,
   setDialogOpen,
+  className,
 }: Readonly<{
   deviceInfo: Device;
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
+  className?: string;
 }>) {
   return (
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <SimpleTooltip content={mobileClientTooltip}>
         <AlertDialogTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className={className}>
             {mobileClientTooltipIcon}
             <span className="sr-only">{mobileClientTooltip}</span>
           </Button>

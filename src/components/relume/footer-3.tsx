@@ -1,3 +1,4 @@
+import { CopyrightDisclaimer } from "@/components/copyright-disclaimer.tsx";
 import { LogoBigHero } from "@/components/logo.tsx";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -140,14 +141,7 @@ export const Footer3 = (props: Footer3Props) => {
           </ul>
         </div>
         <div className="mt-1">
-          <p className="shadcn-muted">
-            Android, Google, Play Store, iOS, Discord, LinkedIn, and other
-            product names, logos, and brands mentioned on this site are property
-            of their respective owners. The use of these names, logos, and
-            brands does not imply endorsement. Doppelganger is an independent
-            product and is not affiliated with, nor has it been authorized,
-            sponsored, or otherwise approved by these companies.
-          </p>
+          <CopyrightDisclaimer />
         </div>
       </div>
     </footer>

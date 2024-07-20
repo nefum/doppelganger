@@ -1,6 +1,4 @@
-import { waitForAdbServerToBeReady } from "%/adb/scrcpy.ts";
 import prisma from "%/database/prisma.ts";
-import { getAdbUdidForDevice } from "%/device-info/device-info.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import { bringUpDevice } from "%/docker/device-state.ts";
 import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
@@ -70,19 +68,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     },
   });
 
-  const fullDevice: Device | null = await prisma.device.findUnique({
+  const fullDevice = (await prisma.device.findUnique({
     where: {
       id: device.id,
     },
-  });
+  })) as Device;
 
-  await bringUpDevice(device.id);
+  await bringUpDevice(fullDevice);
 
-  try {
-    await waitForAdbServerToBeReady(getAdbUdidForDevice(fullDevice!), 60_000); // do not wait longer than 60 seconds
-  } catch (e) {
-    // ignore the fact that the device is not ready; cannot be forcing users to wait forever
-  }
-
-  return NextResponse.json({}, { status: 201 });
+  // passing the whole device is not safe because there are columns in the device that users shouldn't be able to see
+  // we can just send the id
+  return NextResponse.json({ id: device.id }, { status: 201 });
 }

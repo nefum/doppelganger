@@ -420,7 +420,7 @@ function NewDeviceForm({
       setDialogCanClose(false);
 
       let result: Response;
-      let resultJson: { error?: string };
+      let resultJson: { id?: string; error?: string };
       try {
         result = await fetch("/api/devices", {
           method: "POST",
@@ -441,10 +441,13 @@ function NewDeviceForm({
       }
 
       if (result.ok) {
-        clientSideRedirectWithToast("/devices", {
+        const deviceId = resultJson.id!;
+        clientSideRedirectWithToast(`/devices/${deviceId}`, {
           title: `Device "${values.deviceName}" created successfully`,
           description:
-            "It may be up to 5 minutes before you can connect to your device for the first time. Subsequent starts will be faster.",
+            "It may be up to 5 minutes before you can connect to your device for the first time. " +
+            "Subsequent starts will be faster. " +
+            "In the meantime, you may complete the setup of your device.",
         });
       } else {
         console.error("Failed to create device", result);

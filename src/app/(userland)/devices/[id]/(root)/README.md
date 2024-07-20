@@ -1,0 +1,1 @@
+You may notice that there are many calls to getDevice, each of which creates a database call. I have done this in-spite of the performance hit because I have enabeld the Prisma ORM to use an in-memory redis cache and these devices will be gotten uses findUnique and findMany very often.

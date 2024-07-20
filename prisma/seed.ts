@@ -22,7 +22,7 @@ async function main() {
       ownerId: "4d7a801f-130a-438f-b013-31e738693fad",
       adbHostname: "doppelganger.tail11540.ts.net", // my tailscale node (hello scrapers!)
       scrcpyHostname: "doppelganger.tail11540.ts.net", // my tailscale node (hello scrapers!)
-      redroidImage: "redroid/redroid:14.0.0-latest",
+      redroidImage: "abing7k/redroid:a11_gapps_arm",
       redroidFps: 30,
       redroidDpi: 230,
       redroidWidth: 590,
