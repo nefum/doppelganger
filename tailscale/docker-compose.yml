@@ -6,7 +6,7 @@
 # - us-qas-wg-002.mullvad.ts.net = 100.87.148.25
 # - us-qas-wg-003.mullvad.ts.net = 100.127.246.64
 # - us-qas-wg-004.mullvad.ts.net = 100.111.154.112
-# - us-qas-wg-101.mullvad.ts.net = 100.111.50.65
+# - us-qas-wg-101.mullvad.ts.net = 100.111.50.65  # dead
 # - us-qas-wg-102.mullvad.ts.net = 100.116.45.16
 # - us-qas-wg-103.mullvad.ts.net = 100.107.101.135
 
@@ -109,7 +109,7 @@ services:
       TS_AUTHKEY: "${TS_AUTHKEY}"
       TS_SOCKS5_SERVER: ":1055"
       # TS_OUTBOUND_HTTP_PROXY_LISTEN: ":${TS_HTTP_PORT}"
-      TS_EXTRA_ARGS: "--exit-node=100.111.50.65 --exit-node-allow-lan-access --shields-up"
+      TS_EXTRA_ARGS: "--exit-node=100.116.45.16 --exit-node-allow-lan-access --shields-up"
     volumes:
       - "/dev/net/tun:/dev/net/tun"
     cap_add:
