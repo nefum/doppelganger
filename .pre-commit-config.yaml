@@ -7,4 +7,4 @@ repos:
         args: [ "type-check", "lint", "format", "test", "android:fetch" ]
         language: system
         pass_filenames: false
-        files: \.(js|ts|tsx|json|yaml|yml|md|html|css|scss)$
+        files: \.(js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$

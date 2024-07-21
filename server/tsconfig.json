@@ -4,7 +4,7 @@
     "noEmit": false,
     "allowImportingTsExtensions": false,
     "strict": false,
-    "incremental": false,
+    "incremental": false
   },
   "include": ["*.ts"]
 }

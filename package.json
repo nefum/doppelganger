@@ -18,7 +18,7 @@
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "next lint --max-warnings 0",
     "type-check": "tsc --noEmit --project tsconfig.json",
-    "format": "prettier --write \"**/*.{ts,tsx,md,mdx,js,jsx}\"",
+    "format": "prettier --write \"**/*.{json,json5,ts,tsx,md,mdx,js,jsx}\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "ui:add": "pnpx shadcn-ui@latest add"
@@ -154,7 +154,7 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.16.2",
-    "turbo": "^2.0.6",
+    "turbo": "^2.0.9",
     "typescript": "^5.5.3",
     "uglify-js": "^3.18.0",
     "v0": "^2.2.3",

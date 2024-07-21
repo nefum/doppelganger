@@ -29,7 +29,8 @@
   },
   "include": [
     "next-env.d.ts",
-    "*.ts", "**/*.tsx",
+    "*.ts",
+    "**/*.tsx",
     ".next/types/**/*.ts",
     "server/**/*.ts",
     "src/app/**/*.ts",
@@ -40,9 +41,5 @@
     "src/*.ts",
     "src/*.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "src/ws-scrcpy/**/*.ts"
-  ]
+  "exclude": ["node_modules", ".next", "src/ws-scrcpy/**/*.ts"]
 }

@@ -4,10 +4,22 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "licenses:check": {
+      "inputs": ["package.json", "pnpm-lock.yaml"],
+      "outputs": [
+        "src/app/\\(userland\\)/\\(contained\\)/licenses/licenses.json"
+      ]
+    },
     "build": {
-      "dependsOn": ["server:build", "db:generate", "licenses:check"],
+      "dependsOn": [
+        "server:build",
+        "db:generate",
+        "licenses:check",
+        "android:fetch"
+      ],
       "inputs": ["**/*", "!dist/**", "!node_modules/**", "!public/workers/**"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"]
     },
     "dev": {
       "dependsOn": ["db:generate", "licenses:check"],
@@ -40,15 +52,20 @@
     },
     "type-check": {
       "dependsOn": ["db:generate", "licenses:check"],
-      "inputs": ["**/*.{ts,tsx}"],
-      "cache": false
+      "inputs": [
+        "**/*.{ts,tsx,mdx}",
+        "!dist/**",
+        "!node_modules/**",
+        "!public/workers/**",
+        "!src/app/\\(userland\\)/\\(contained\\)/licenses/licenses.json"
+      ]
     },
     "format": {
       "cache": false
     },
     "test": {
-      "dependsOn": ["db:generate"],
-      "cache": false
+      "dependsOn": ["db:generate", "licenses:check"],
+      "inputs": ["**/*", "!dist/**", "!node_modules/**", "!public/workers/**"]
     },
     "android:fetch": {
       "cache": false

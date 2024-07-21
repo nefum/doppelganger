@@ -24,7 +24,7 @@ env:
 jobs:
   build:
     # GitHub does not yet offer native building on arm64 (https://github.blog/changelog/2023-10-30-accelerate-your-ci-cd-with-arm-based-hosted-runners-in-github-actions/)
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-22.04"
     permissions:
       contents: read
       packages: write
@@ -79,11 +79,8 @@ jobs:
       - name: Install dependencies with pnpm
         run: pnpm install
 
-      - name: Lint with Turbo
-        run: pnpx turbo run lint
-
-      - name: Type-check with Turbo
-        run: pnpx turbo run type-check
+      - name: Turbo
+        run: pnpx turbo run lint type-check test
 
       # we choose not to run tests in the CI/CD pipeline, it takes too long and requires a lot of resources as well as tokens
 
