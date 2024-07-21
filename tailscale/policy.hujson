@@ -1,0 +1,38 @@
+// Example/default ACLs for unrestricted connections.
+{
+	// Declare static groups of users. Use autogroups for all users or users with a specific role.
+	// "groups": {
+	//  	"group:example": ["alice@example.com", "bob@example.com"],
+	// },
+
+	// Define the tags which can be applied to devices and by which users.
+	"tagOwners": {
+		"tag:mullvad": ["autogroup:admin"],
+	},
+
+	// Define access control lists for users, groups, autogroups, tags,
+	// Tailscale IP addresses, and subnet ranges.
+	"acls": [
+		// Allows all member devices to access all destinations, but excludes tagged devices (the mullvad devices)
+		{"action": "accept", "src": ["autogroup:member"], "dst": ["*:*"]}
+	],
+	"nodeAttrs": [
+		{
+			// Funnel policy, which lets tailnet members control Funnel
+			// for their own devices.
+			// Learn more at https://tailscale.com/kb/1223/tailscale-funnel/
+			"target": ["autogroup:members"],
+			"attr":   ["funnel"],
+		},
+		{"target": ["tag:mullvad"], "attr": ["mullvad"]},
+	],
+
+	// Test access rules every time they're saved.
+	// "tests": [
+	//  	{
+	//  		"src": "alice@example.com",
+	//  		"accept": ["tag:example"],
+	//  		"deny": ["100.101.102.103:443"],
+	//  	},
+	// ],
+}

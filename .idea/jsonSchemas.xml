@@ -28,6 +28,9 @@
               <option name="patterns">
                 <list>
                   <Item>
+                    <option name="path" value="tailscale/docker-compose.yml" />
+                  </Item>
+                  <Item>
                     <option name="path" value="template/docker-compose.yml" />
                   </Item>
                 </list>
