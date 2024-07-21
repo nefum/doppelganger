@@ -54,6 +54,7 @@ export default async function DeviceScreenshot({
       <CardContent>
         <div className="h-[40em] flex place-content-center">
           <Image
+            unoptimized // cant be cached
             width={device.redroidWidth}
             height={device.redroidHeight}
             src={getSnapshotUrlOfDevice(deviceId)}

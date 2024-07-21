@@ -38,6 +38,7 @@ export default async function Page({
         loadingNode={<ISpinner large />}
         playAudio
         autoCaptureKeyboard
+        autoRotate
       />
     </div>
   );

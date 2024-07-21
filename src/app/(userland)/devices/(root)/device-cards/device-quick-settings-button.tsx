@@ -35,7 +35,7 @@ export default function DeviceQuickSettingsButton({
       </SimpleTooltip>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Device</DialogTitle>
+          <DialogTitle>Quick Settings</DialogTitle>
         </DialogHeader>
         <ClientDevicePowerStateButtons
           deviceInfo={deviceInfo}

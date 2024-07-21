@@ -419,6 +419,13 @@ function NewDeviceForm({
 
       setDialogCanClose(false);
 
+      toast({
+        title: "Creating device...",
+        description:
+          "Please wait while we create your device. This could take up to 5 minutes, please hang on. " +
+          "If you close this dialog, the device creation will continue in the background. Your device will be available in the dashboard once it is ready.",
+      });
+
       let result: Response;
       let resultJson: { id?: string; error?: string };
       try {
@@ -538,7 +545,7 @@ function NewDeviceForm({
         <FooterComp>
           <AdvancedSettings form={form} disabled={!dialogCanClose} />
           <Button type="submit" disabled={!dialogCanClose}>
-            Create (this WILL take a while!)
+            Create
             {!dialogCanClose && (
               <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />
             )}
