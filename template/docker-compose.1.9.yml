@@ -30,7 +30,8 @@ services:
       - "androidboot.redroid_net_ndns=2"
       - "androidboot.redroid_net_dns1=1.1.1.1"
       - "androidboot.redroid_net_dns2=1.0.0.1"
-#      TODO: proxy support
+      - "androidboot.redroid_net_proxy_type=pac" # static only works with http proxy, have to provide a pac file for socks5
+      - "androidboot.redroid_net_proxy_pac=https://doppelgangerhq.com/api/devices/{{ id }}/proxy.pac"
       - "androidboot.redroid_gpu_mode=guest"  # doesn't work with auto/host on oracle
     deploy:
       resources:

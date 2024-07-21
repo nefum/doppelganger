@@ -13,6 +13,7 @@ export const AUTH_REQUIRED_ROUTES_REGEX: RegExp[] = [
    * - /devices/:id/events
    * These are the WS endpoints; authentication will be done manually
    */
+  // no API endpoints!! we check those manually
   /^\/devices(?!\/[^\/]+\/(jsmpeg|scrcpy|kasmvnc|events)).*$/,
   // user management page
   /^\/user.*$/,
