@@ -1,8 +1,8 @@
-import { AdbDevice } from "%/adb/scrcpy";
 import { Device } from "@prisma/client";
 import { spawn } from "node:child_process";
 import { rm } from "node:fs/promises";
 import { stderr as processStderr, stdout as processStdout } from "process";
+import { AdbDevice } from "../adb/scrcpy";
 import { getDockerComposeFilePath, getFoldersOfDevice } from "./device-paths";
 
 export function runDockerCommand(

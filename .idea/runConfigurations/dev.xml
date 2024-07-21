@@ -10,7 +10,7 @@
       <env name="PORT" value="3030" />
     </envs>
     <EXTENSION ID="com.intellij.lang.javascript.buildTools.npm.rc.StartBrowserRunConfigurationExtension">
-      <browser start="true" url="http://localhost:3030" />
+      <browser url="http://localhost:3030" />
     </EXTENSION>
     <method v="2" />
   </configuration>
