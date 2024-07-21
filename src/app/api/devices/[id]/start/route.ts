@@ -17,7 +17,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
   const id = req.nextUrl.pathname.match(deviceApiEndpoint)![1];
   const device = await getDeviceForId(id);
 
-  if (!device) {
+  if (!device || device.ownerId !== user.id) {
     return NextResponse.json({}, { status: 404 });
   }
 

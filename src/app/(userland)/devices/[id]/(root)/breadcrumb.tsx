@@ -1,6 +1,7 @@
 "use server";
 
 import { getDeviceForId } from "%/device-info/device-info.ts";
+import EditDeviceButton from "@/app/(userland)/devices/[id]/(root)/edit.tsx";
 import NotFound from "@/app/not-found.tsx";
 import {
   Breadcrumb,
@@ -42,6 +43,7 @@ export async function DeviceBreadcrumb({
             <Link href={`/devices/${deviceId}`}>{device.name}</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
+        <EditDeviceButton device={device} />
       </BreadcrumbList>
     </Breadcrumb>
   );

@@ -1,5 +1,5 @@
+import prisma from "%/database/prisma.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
-import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { NextRequest, NextResponse } from "next/server";
@@ -21,16 +21,35 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({}, { status: 404 });
   }
 
-  if (!(await getIsDeviceRunning(device))) {
+  let reqJson: { name: string };
+  try {
+    reqJson = await req.json();
+  } catch (e) {
     return NextResponse.json(
       {
-        error: `Device ${device.id} is not running`,
+        error: "Invalid JSON",
       },
       { status: 400 },
     );
   }
 
-  await bringDownDevice(device.id);
+  if (!reqJson.name) {
+    return NextResponse.json(
+      {
+        error: "Missing name",
+      },
+      { status: 400 },
+    );
+  }
+
+  await prisma.device.update({
+    where: {
+      id: device.id,
+    },
+    data: {
+      name: reqJson.name,
+    },
+  });
 
   return NextResponse.json(
     {
