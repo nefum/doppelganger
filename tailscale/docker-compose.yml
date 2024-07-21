@@ -15,6 +15,9 @@
 # exposed socks5 proxy ports 1055-1059
 name: tailscale
 
+# proxy does NOT support socks5h, only regular socks5 without DNS getting passed through
+# verifiable with `curl -x socks5://<hostname>:<port> https://api.ipify.org`
+
 services:
   proxy1:
     image: tailscale/tailscale:stable
