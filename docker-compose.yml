@@ -25,6 +25,9 @@ services:
     environment:
       CRON_SCHEDULE: "* * * * *"
       ENDPOINT: "http://doppelganger:3000/api/cron"
+    networks:
+      # EXTERNAL_NETWORK_NAME
+      - "doppelganger"
 networks:
   doppelganger:
     external: true

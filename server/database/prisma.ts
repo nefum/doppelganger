@@ -22,6 +22,7 @@ function createPrisma() {
       //   },
       // }
     },
+    excludeMethods: ["findMany"],
     cacheTime: 60,
   });
 
