@@ -77,6 +77,19 @@ services:
       # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
     blkio_config:
       weight: 400  # higher than the android, but lower than the orhcestrator
+  logs:  # allows us to see the logs of the device by inspecting into this easily
+    image: "ghcr.io/regulad/adb-logcat-docker:latest"
+    hostname: "{{ id }}-logs"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    environment:
+      ADB_DEVICE: "{{ id }}-redroid:5555"
+    logging:
+      driver: "json-file"
+      options:
+          max-size: "10m"
+          max-file: "3"
 
 networks:
   '{{ externalNetworkName }}':

@@ -33,7 +33,7 @@ interface DeviceClientProps {
   device: Device;
   loadingNode: ReactNode;
 
-  autoCaptureKeyboard?: boolean;
+  captureKeyboard?: boolean;
   playAudio?: boolean;
   autoRotate?: boolean;
 }
@@ -59,7 +59,7 @@ const OneshotDeviceClient = forwardRef<
   const {
     device,
     loadingNode,
-    autoCaptureKeyboard,
+    captureKeyboard,
     playAudio,
     autoRotate,
     hardReset,
@@ -217,8 +217,12 @@ const OneshotDeviceClient = forwardRef<
 
   // turn on keyboard processing when a key is pressed
   useEffect(() => {
-    if (!autoCaptureKeyboard) {
-      return;
+    if (!captureKeyboard) {
+      if (!scrcpyClientRef.current) {
+        return;
+      }
+
+      scrcpyClientRef.current.setKeyboardCapture(false);
     }
 
     function keydown(e: KeyboardEvent) {
@@ -231,7 +235,7 @@ const OneshotDeviceClient = forwardRef<
 
     document.addEventListener("keydown", keydown);
     return () => document.removeEventListener("keydown", keydown);
-  }, [autoCaptureKeyboard]);
+  }, [captureKeyboard]);
 
   useImperativeHandle(ref, () => {
     return {
@@ -248,7 +252,7 @@ const OneshotDeviceClient = forwardRef<
         return scrcpyClientRef.current?.getKeyboardCapture() ?? false;
       },
       setKeyboardCapture: (capture: boolean) => {
-        if (autoCaptureKeyboard) {
+        if (captureKeyboard) {
           console.warn(
             "setKeyboardCapture is disabled because autoListenToKeyboard is enabled",
           );
@@ -311,7 +315,7 @@ const OneshotDeviceClient = forwardRef<
         }
       },
     };
-  }, [autoCaptureKeyboard]);
+  }, [captureKeyboard]);
 
   return (
     <FillingAspectRatio

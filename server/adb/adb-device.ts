@@ -283,10 +283,19 @@ export class AdbDevice {
     // adb shell 'sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db \
     //     "select * from main where name = \"android_id\";"'
     await this.getRootSafe();
-    const androidIdRet = await this.runShellCommandAdbKit(
-      `sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db "select * from main where name = \\"android_id\\";"`,
-    );
-    // rets android_id|3546527965867813643
+
+    let androidIdRet: string;
+    while (true) {
+      try {
+        androidIdRet = await this.runShellCommandAdbKit(
+          `sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db "select * from main where name = \\"android_id\\";"`,
+        );
+        // rets android_id|3546527965867813643
+        break;
+      } catch (e: any) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
 
     const androidIdString = androidIdRet.split("|")[1].trim();
 

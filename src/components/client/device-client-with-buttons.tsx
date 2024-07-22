@@ -6,7 +6,7 @@ import DeviceClient, {
 import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import type { Device } from "@prisma/client";
-import { ReactNode, RefObject, useRef } from "react";
+import { ReactNode, RefObject, useRef, useState } from "react";
 import {
   FullScreen,
   FullScreenHandle,
@@ -52,6 +52,8 @@ function ButtonbarButton({
     </SimpleTooltip>
   );
 }
+
+interface ButtonBarProps {}
 
 function ButtonBar({
   clientRef,
@@ -206,11 +208,25 @@ function ButtonBar({
   );
 }
 
+interface DeviceClientWithButtonsProps {
+  device: Device;
+
+  optionalKeyboardCapture?: boolean;
+  optionalAudio?: boolean;
+}
+
 export default function DeviceClientWithButtons({
   device,
-}: Readonly<{ device: Device }>) {
+  optionalAudio,
+  optionalKeyboardCapture,
+}: Readonly<DeviceClientWithButtonsProps>) {
   const deviceClientHandleRef = useRef<DeviceClientHandle>(null);
   const fullScreenHandle = useFullScreenHandle();
+
+  const [playAudio, setPlayAudio] = useState(optionalAudio ?? true);
+  const [captureKeyboard, setCaptureKeyboard] = useState(
+    optionalKeyboardCapture ?? true,
+  );
 
   return (
     <FullScreen handle={fullScreenHandle}>
@@ -223,8 +239,8 @@ export default function DeviceClientWithButtons({
           ref={deviceClientHandleRef}
           device={device}
           loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
-          autoCaptureKeyboard
-          playAudio
+          captureKeyboard={captureKeyboard}
+          playAudio={playAudio}
         />
       </div>
       <ButtonBar
