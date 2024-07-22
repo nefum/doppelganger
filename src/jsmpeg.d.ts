@@ -35,12 +35,12 @@ declare module "jsmpeg" {
     play(): void;
     pause(): void;
     stop(): void;
-    nextFrame(): void;
+    nextFrame(): boolean;
     get volume(): RangeType<0, 1>;
     set volume(level: RangeType<0, 1>);
     get currentTime(): number;
     set currentTime(time: number);
-    paused: number;
+    paused: boolean;
     destroy(): void;
   }
 }
