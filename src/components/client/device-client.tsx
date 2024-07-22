@@ -346,12 +346,10 @@ const OneshotDeviceClient = forwardRef<
                     description: "Attempting reconnection...",
                   });
 
+                  // this library does not implement any reconnection mechanism
                   setTimeout(() => {
-                    if (!connected) {
-                      // if we're not connected, we're in a bad state, so we need to hard reset
-                      hardReset();
-                    }
-                  }, 300); // give it 300ms to correct itself before we try the nuclear option
+                    hardReset();
+                  }, 1 * 1_000); //  avoid anything faster than a second as it could spam the user
                 }
 
                 setConnected(false);
