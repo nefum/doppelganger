@@ -83,7 +83,7 @@
 
   {
     "name": "Play Store Android 12",
-    "description": "Android 10 with the Play Store installed, fully-featured and ready to go.",
+    "description": "Android 12 (non-L) with the Play Store installed, fully-featured and ready to go.",
     "imageName": "cr.regulad.xyz/regulad/redroid-script:12.0.0-gapps-latest",
     "usable": true,
     "premium": true,
@@ -92,7 +92,7 @@
   },
   {
     "name": "Play Store Android 13",
-    "description": "Android 10 with the Play Store installed, fully-featured and ready to go.",
+    "description": "Android 13 with the Play Store installed, fully-featured and ready to go.",
     "imageName": "cr.regulad.xyz/regulad/redroid-script:13.0.0-gapps-latest",
     "usable": true,
     "premium": true,
