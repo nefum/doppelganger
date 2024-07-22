@@ -10,7 +10,6 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { clsx } from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import { Suspense } from "react";
 import "./globals.css";
 
@@ -103,11 +102,6 @@ export default function RootLayout({
           </Suspense>
         </ProviderComposer>
         {/*no need for a cookie consent manager yet, we only do business in the us*/}
-        <Script
-          src="https://accounts.google.com/gsi/client"
-          strategy="lazyOnload" // while afterInteractive would be more appropriate, the google one tap elements have to laod first. loading the nonce is pretty much instant, but since this script is so common and in the memory cache of chromium-based browser, this tends to be faster.
-          async
-        />
         <GoogleAnalytics gaId="G-KN7ZDR3JD9" />
       </body>
     </html>
