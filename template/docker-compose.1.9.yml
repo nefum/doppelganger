@@ -83,13 +83,15 @@ services:
     tty: true
     stdin_open: true
     restart: unless-stopped
+    networks:
+      - "{{ externalNetworkName }}"
     environment:
       ADB_DEVICE: "{{ id }}-redroid:5555"
     logging:
       driver: "json-file"
       options:
-          max-size: "10m"
-          max-file: "3"
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   '{{ externalNetworkName }}':

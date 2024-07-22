@@ -6,14 +6,16 @@ import DeviceClient, {
 import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import type { Device } from "@prisma/client";
-import { ReactNode, RefObject, useRef, useState } from "react";
+import { clsx } from "clsx";
+import { ReactNode, RefObject, useEffect, useRef, useState } from "react";
 import {
   FullScreen,
   FullScreenHandle,
   useFullScreenHandle,
 } from "react-full-screen";
 import { BsVolumeDown, BsVolumeUp } from "react-icons/bs";
-import { FaArrowsRotate } from "react-icons/fa6";
+import { FaArrowsRotate, FaKeyboard } from "react-icons/fa6";
+import { IoStatsChartOutline } from "react-icons/io5";
 import {
   LuCircle,
   LuLoader2,
@@ -22,6 +24,7 @@ import {
   LuSquare,
   LuTriangle,
 } from "react-icons/lu";
+import { MdOutlineSpeaker } from "react-icons/md";
 import { RiNotification2Line } from "react-icons/ri";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 
@@ -53,19 +56,92 @@ function ButtonbarButton({
   );
 }
 
-interface ButtonBarProps {}
+interface ButtonBarProps {
+  clientRef: RefObject<DeviceClientHandle>;
+  fullScreenHandle: FullScreenHandle;
+
+  optionalAudio?: boolean;
+  playAudio: boolean;
+  setPlayAudio: (value: boolean) => void;
+
+  optionalKeyboardCapture?: boolean;
+  captureKeyboard: boolean;
+  setCaptureKeyboard: (value: boolean) => void;
+}
 
 function ButtonBar({
   clientRef,
   fullScreenHandle,
-}: Readonly<{
-  clientRef: RefObject<DeviceClientHandle>;
-  fullScreenHandle: FullScreenHandle;
-}>): ReactNode {
+
+  optionalAudio,
+  playAudio,
+  setPlayAudio,
+
+  optionalKeyboardCapture,
+  captureKeyboard,
+  setCaptureKeyboard,
+}: Readonly<ButtonBarProps>): ReactNode {
+  // this is only available through a getter
+  const [statsVisible, setStatsVisible] = useState(false);
+
+  useEffect(() => {
+    if (clientRef.current) {
+      setStatsVisible(clientRef.current.getShowQualityStats());
+    }
+  }, [clientRef]);
+
   return (
     <div className="flex flex-row justify-center">
-      {/*no option to show quality stats, don't expose that to the user*/}
+      {/*qualityStats from client ref*/}
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.setShowQualityStats(!statsVisible);
+            setStatsVisible(!statsVisible);
+          }
+        }}
+        label={statsVisible ? "Hide Stats" : "Show Stats"}
+      >
+        <IoStatsChartOutline
+          className={clsx("h-5 w-5", {
+            "text-blue-500": statsVisible,
+          })}
+        />
+      </ButtonbarButton>
 
+      {/*audio, if optionalCapture !== undefined*/}
+      {optionalAudio !== undefined && (
+        <ButtonbarButton
+          onPress={() => {
+            setPlayAudio(!playAudio);
+          }}
+          label={playAudio ? "Mute Audio" : "Unmute Audio"}
+        >
+          <MdOutlineSpeaker
+            className={clsx("h-5 w-5", {
+              "text-blue-500": statsVisible,
+            })}
+          />
+        </ButtonbarButton>
+      )}
+
+      {/*keyboard capture, if optionalKeyboardCapture !== undefined*/}
+      {optionalKeyboardCapture !== undefined && (
+        <ButtonbarButton
+          onPress={() => {
+            setCaptureKeyboard(!captureKeyboard);
+          }}
+          label={captureKeyboard ? "Release Keyboard" : "Capture Keyboard"}
+        >
+          <FaKeyboard
+            className={clsx("h-5 w-5", {
+              "text-blue-500": statsVisible,
+            })}
+          />
+        </ButtonbarButton>
+      )}
+
+      {/* instantaneous only */}
       <ButtonbarButton
         onPress={() => {
           if (clientRef.current) {
@@ -246,6 +322,12 @@ export default function DeviceClientWithButtons({
       <ButtonBar
         clientRef={deviceClientHandleRef}
         fullScreenHandle={fullScreenHandle}
+        optionalAudio={optionalAudio}
+        playAudio={playAudio}
+        setPlayAudio={setPlayAudio}
+        optionalKeyboardCapture={optionalKeyboardCapture}
+        captureKeyboard={captureKeyboard}
+        setCaptureKeyboard={setCaptureKeyboard}
       />
     </FullScreen>
   );
