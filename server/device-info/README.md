@@ -4,3 +4,5 @@ Many of the redroid-images are compiled with one of the following tools:
 2. https://github.com/ayasa520/redroid-script
 3. https://github.com/abing7k/redroid-script
 4. https://github.com/regulad/redroid-script (mine with the mods required to run)
+
+Some prebuilts are available here. https://repo.regulad.xyz/#browse/browse:cr:v2%2Fregulad%2Fredroid-script

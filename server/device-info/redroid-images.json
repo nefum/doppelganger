@@ -63,12 +63,40 @@
     "androidSdkVersion": 27
   },
   {
-    "name": "AOSP Android 11 Play Store",
+    "name": "Play Store Android 11",
     "description": "Android 11 with the Play Store installed, fully-featured and ready to go. Audio is not supported using this image.",
     "imageName": "abing7k/redroid:a11_gapps_arm",
     "usable": false,
     "premium": false,
     "gms": true,
     "androidSdkVersion": 30
+  },
+  {
+    "name": "Play Store Android 10",
+    "description": "Android 10 with the Play Store installed, fully-featured and ready to go.",
+    "imageName": "cr.regulad.xyz/regulad/redroid-script:10.0.0-gapps-latest",
+    "usable": true,
+    "premium": false,
+    "gms": true,
+    "androidSdkVersion": 29
+  },
+
+  {
+    "name": "Play Store Android 12",
+    "description": "Android 10 with the Play Store installed, fully-featured and ready to go.",
+    "imageName": "cr.regulad.xyz/regulad/redroid-script:12.0.0-gapps-latest",
+    "usable": true,
+    "premium": true,
+    "gms": true,
+    "androidSdkVersion": 31
+  },
+  {
+    "name": "Play Store Android 13",
+    "description": "Android 10 with the Play Store installed, fully-featured and ready to go.",
+    "imageName": "cr.regulad.xyz/regulad/redroid-script:13.0.0-gapps-latest",
+    "usable": true,
+    "premium": true,
+    "gms": true,
+    "androidSdkVersion": 33
   }
 ]
