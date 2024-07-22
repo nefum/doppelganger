@@ -1,13 +1,13 @@
-import { Device } from "@prisma/client";
-import { IncomingMessage } from "node:http";
-import { WebSocket as WsWebSocket } from "ws";
-import { getDeviceForId } from "../device-info/device-info";
+import { getDeviceForId } from "%/device-info/device-info";
 import {
   getTargetAudioWebsocketUrlForDevice,
   getTargetVncWebsocketUrlForDevice,
-} from "../device-info/device-info-utils";
-import { audioWsEndpoint, kasmVncWsEndpoint } from "../endpoint-regex";
-import { createClient } from "../supabase/ro-server";
+} from "%/device-info/device-info-utils";
+import { audioWsEndpoint, kasmVncWsEndpoint } from "%/endpoint-regex";
+import { createClient } from "%/supabase/ro-server";
+import { Device } from "@prisma/client";
+import { IncomingMessage } from "node:http";
+import { WebSocket as WsWebSocket } from "ws";
 import { attachUpdateListener } from "./attach-update-listener";
 import { getWsWebSocketOptionForKasmVNC } from "./kasmvnc-connect";
 import { createWebSocketProxy } from "./wsproxy";

@@ -1,6 +1,6 @@
+import { getDefaultRedroidHostname } from "%/device-info/device-info-utils";
 import { Device } from "@prisma/client";
 import path from "path";
-import { getDefaultRedroidHostname } from "../device-info/device-info-utils";
 import { AdbDevice } from "./adb-device";
 
 const localScrcpyServerJarRelative = "../../scrcpy/scrcpy-server.jar";

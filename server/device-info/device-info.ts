@@ -1,5 +1,5 @@
+import prisma from "%/database/prisma";
 import { Device } from "@prisma/client";
-import prisma from "../database/prisma";
 
 export async function getDeviceForId(id: string): Promise<Device | null> {
   if (id.endsWith("staging") && process.env.NODE_ENV === "production") {

@@ -14,5 +14,18 @@
       }
     ]
   ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "cwd": "packagejson",
+        "root": ".",
+        "alias": {
+          "^@/(.+)": "./src/\\1",
+          "^%/(.+)": "./server/\\1"
+        }
+      }
+    ]
+  ],
   "sourceMaps": true
 }

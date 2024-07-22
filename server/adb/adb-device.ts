@@ -1,12 +1,12 @@
+import {
+  getAdbUdidForDevice,
+  getDefaultRedroidHostname,
+} from "%/device-info/device-info-utils";
+import { getRedroidImage } from "%/device-info/redroid-images";
 import { DeviceClient } from "@devicefarmer/adbkit";
 import Util from "@devicefarmer/adbkit/dist/src/adb/util";
 import { Device } from "@prisma/client";
 import { spawn } from "child_process";
-import {
-  getAdbUdidForDevice,
-  getDefaultRedroidHostname,
-} from "../device-info/device-info-utils";
-import { getRedroidImage } from "../device-info/redroid-images";
 import adb from "./adb";
 
 enum PID_DETECTION_METHOD {

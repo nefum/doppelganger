@@ -1,13 +1,13 @@
-import { IncomingMessage } from "node:http";
-import { WebSocket as WsWebSocket } from "ws";
 import {
   getTargetWsScrcpyUrlForDevice,
   runScrcpyServerOnDevice,
-} from "../adb/scrcpy";
-import { getDeviceForId } from "../device-info/device-info";
-import { bringUpDevice, getIsDeviceRunning } from "../docker/device-state";
-import { scrcpyWsEndpoint } from "../endpoint-regex";
-import { createClient } from "../supabase/ro-server";
+} from "%/adb/scrcpy";
+import { getDeviceForId } from "%/device-info/device-info";
+import { bringUpDevice, getIsDeviceRunning } from "%/docker/device-state";
+import { scrcpyWsEndpoint } from "%/endpoint-regex";
+import { createClient } from "%/supabase/ro-server";
+import { IncomingMessage } from "node:http";
+import { WebSocket as WsWebSocket } from "ws";
 import { attachUpdateListener } from "./attach-update-listener";
 import { createWebSocketProxy } from "./wsproxy";
 
