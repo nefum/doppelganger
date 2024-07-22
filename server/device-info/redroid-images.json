@@ -28,9 +28,9 @@
   },
   {
     "name": "AOSP Android 11",
-    "description": "Bog-standard Android. No Play Store.",
+    "description": "Bog-standard Android. No Play Store. Audio is not supported using this image.",
     "imageName": "redroid/redroid:11.0.0-latest",
-    "usable": true,
+    "usable": false,
     "premium": false,
     "gms": false,
     "androidSdkVersion": 30
@@ -66,7 +66,7 @@
     "name": "AOSP Android 11 Play Store",
     "description": "Android 11 with the Play Store installed, fully-featured and ready to go. Audio is not supported using this image.",
     "imageName": "abing7k/redroid:a11_gapps_arm",
-    "usable": true,
+    "usable": false,
     "premium": false,
     "gms": true,
     "androidSdkVersion": 30

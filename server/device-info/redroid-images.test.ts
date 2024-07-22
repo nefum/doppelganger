@@ -30,4 +30,14 @@ describe("Redroid Images Tests", () => {
     );
     expect(usableFreeImage).toBe(true);
   });
+
+  it("should not contain usable images that are either older than Android 10 (api 29) or exactly Android 11 (api 30)", () => {
+    // requirement for sound copying: https://github.com/Genymobile/scrcpy/blob/master/doc/audio.md
+    allRedroidImages.forEach((image) => {
+      if (image.usable) {
+        expect(image.androidSdkVersion).toBeGreaterThanOrEqual(29);
+        expect(image.androidSdkVersion).not.toBe(30);
+      }
+    });
+  });
 });
