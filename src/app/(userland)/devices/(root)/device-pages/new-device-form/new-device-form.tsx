@@ -389,20 +389,20 @@ function NewDeviceForm({
   setDialogCanClose,
   footerComponentType: FooterComp,
 }: Readonly<NewDeviceFormProps>): ReactNode {
+  const { toast } = useToast();
+  const userIsPremium = subscriptionStatus === SubscriptionStatus.ACTIVE;
+  const maxFps = userIsPremium ? PREMIUM_MAX_FPS : FREE_MAX_FPS;
   const form = useForm<formType>({
     resolver: zodResolver(newDeviceFormSchema),
     defaultValues: {
-      deviceName: "My Device",
+      deviceName: "My New Device",
       redroidImage: defaultRedroidImage.imageName,
-      fps: FREE_MAX_FPS,
+      fps: maxFps,
       width: defaultSampleDeviceSpecs.width,
       height: defaultSampleDeviceSpecs.height,
       dpi: defaultSampleDeviceSpecs.dpi,
     },
   });
-  const { toast } = useToast();
-  const userIsPremium = subscriptionStatus === SubscriptionStatus.ACTIVE;
-  const maxFps = userIsPremium ? PREMIUM_MAX_FPS : FREE_MAX_FPS;
 
   const onSubmit = useMemo(
     () => async (values: formType) => {
@@ -422,7 +422,7 @@ function NewDeviceForm({
       toast({
         title: "Creating device...",
         description:
-          "Please wait while we create your device. This could take up to 5 minutes, please hang on. " +
+          "Please wait while we create your device. This could take up to 5 minutes, so please hang on. " +
           "If you close this dialog, the device creation will continue in the background. Your device will be available in the dashboard once it is ready.",
       });
 
@@ -535,8 +535,8 @@ function NewDeviceForm({
                 </div>
               </FormControl>
               <FormDescription>
-                Higher FPS will use more of the limited resources provided to
-                your device and may result in a slower experience.
+                Higher FPS yields a smoother experience, but also consumes more
+                of the limited resources allocated to each device.
               </FormDescription>
               <FormMessage />
             </FormItem>

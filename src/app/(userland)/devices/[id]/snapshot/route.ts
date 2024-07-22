@@ -1,4 +1,4 @@
-import { AdbDevice } from "%/adb/scrcpy.ts";
+import { AdbDevice } from "%/adb/adb-device.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceEndpoint } from "%/endpoint-regex.ts";
 import { createClient } from "@/utils/supabase/server.ts";

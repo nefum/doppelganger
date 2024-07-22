@@ -22,7 +22,7 @@ jest.mock("%/docker/device-state.ts", () => ({
   getRedroidContainerName: jest.fn().mockReturnValue("redroid_container"),
 }));
 
-jest.mock("%/adb/scrcpy.ts", () => ({
+jest.mock("%/adb/adb-device.ts", () => ({
   AdbDevice: jest.fn().mockImplementation(() => ({
     getIsConnected: jest.fn(),
   })),
@@ -56,14 +56,14 @@ describe("Device Stats Functions", () => {
 
   describe("getConnectionStatus", () => {
     it("should return true when device is connected", async () => {
-      require("%/adb/scrcpy.ts").AdbDevice.mockImplementation(() => ({
+      require("%/adb/adb-device.ts").AdbDevice.mockImplementation(() => ({
         getIsConnected: jest.fn().mockResolvedValue(true),
       }));
       await expect(getConnectionStatus(mockDevice)).resolves.toBe(true);
     });
 
     it("should return false when device is not connected", async () => {
-      require("%/adb/scrcpy.ts").AdbDevice.mockImplementation(() => ({
+      require("%/adb/adb-device.ts").AdbDevice.mockImplementation(() => ({
         getIsConnected: jest.fn().mockResolvedValue(false),
       }));
       await expect(getConnectionStatus(mockDevice)).resolves.toBe(false);

@@ -1,0 +1,1 @@
+I was going to give the user the option to switch to scrcpy v2.5 to use audio, but upon reading the documentation (https://github.com/Genymobile/scrcpy/blob/master/doc/audio.md), I realized that there is no way to support audio under Android 10 anyway. So although the file is here for reference, it is never used.

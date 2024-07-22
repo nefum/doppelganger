@@ -77,7 +77,10 @@ export default function ForgotPasswordForm() {
         </CardDescription>
       </CardHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit, console.error)}
+          className="space-y-4"
+        >
           <CardContent>
             <FormField
               control={form.control}

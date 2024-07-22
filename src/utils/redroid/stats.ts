@@ -1,4 +1,4 @@
-import { AdbDevice } from "%/adb/scrcpy.ts";
+import { AdbDevice } from "%/adb/adb-device.ts";
 import { getDataDirOfDevice } from "%/docker/device-paths.ts";
 import {
   getIsDeviceRunning,

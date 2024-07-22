@@ -1,5 +1,7 @@
+"use server";
+
 // DeviceChecklist Components
-import { AdbDevice } from "%/adb/scrcpy.ts";
+import { AdbDevice } from "%/adb/adb-device.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import { ClientSideIsPwaChecklistItem } from "@/app/(userland)/devices/[id]/(root)/clientside-checklist.tsx";
@@ -45,7 +47,7 @@ export async function DeviceChecklist({
   const gmsId =
     deviceHasGms &&
     deviceConnected &&
-    (await adbDevice.getGoogleServicesFrameworkID());
+    (await adbDevice.getGoogleServicesFrameworkID()).toString(10);
 
   return (
     <Card className="mb-6">
