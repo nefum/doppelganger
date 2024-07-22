@@ -1,4 +1,6 @@
 declare module "jsmpeg" {
+  import { RangeType } from "@/utils/types/range-type.ts";
+
   interface JSMpegOptions {
     canvas?: HTMLCanvasElement;
     loop?: boolean;
@@ -34,8 +36,8 @@ declare module "jsmpeg" {
     pause(): void;
     stop(): void;
     nextFrame(): void;
-    get volume(): Range<0, 1>;
-    set volume(level: Range<0, 1>);
+    get volume(): RangeType<0, 1>;
+    set volume(level: RangeType<0, 1>);
     get currentTime(): number;
     set currentTime(time: number);
     paused: number;
