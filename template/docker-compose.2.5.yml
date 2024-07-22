@@ -33,6 +33,7 @@ services:
       - "androidboot.redroid_net_proxy_type=pac" # static only works with http proxy, have to provide a pac file for socks5
       - "androidboot.redroid_net_proxy_pac=https://doppelgangerhq.com/api/devices/{{ id }}/proxy.pac"
       - "androidboot.redroid_gpu_mode=guest"  # doesn't work with auto/host on oracle
+      - "ro.setupwizard.mode=DISABLED"  # our custom images do not force disable the gapps setup, we can do that here
     deploy:
       resources:
         limits:
@@ -76,6 +77,21 @@ services:
       # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
     blkio_config:
       weight: 400  # higher than the android, but lower than the orhcestrator
+  logs:  # allows us to see the logs of the device by inspecting into this easily
+    image: "ghcr.io/regulad/adb-logcat-docker:latest"
+    hostname: "{{ id }}-logs"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - "{{ externalNetworkName }}"
+    environment:
+      ADB_DEVICE: "{{ id }}-redroid:5555"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   '{{ externalNetworkName }}':
