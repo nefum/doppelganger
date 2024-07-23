@@ -39,7 +39,11 @@ export async function DeviceChecklist({
 
   const deviceUp = await getRunningStatus(device);
   if (deviceUp) {
-    await adbDevice.connect();
+    try {
+      await adbDevice.connect();
+    } catch (e) {
+      console.error(e);
+    }
   }
   const deviceConnected = await adbDevice.getIsConnected();
 
@@ -88,7 +92,9 @@ export async function DeviceChecklist({
                     >
                       Click this link to jump to the portal.
                     </a>{" "}
-                    After that setup, remember to login to your Google account!
+                    After you have submitted the code, stop and then start your
+                    device using the buttons above. When the device comes back
+                    up, you will be able to sign into your Google account!
                   </small>
                 </label>
               </div>
