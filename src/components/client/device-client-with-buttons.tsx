@@ -19,6 +19,7 @@ import { FaArrowsRotate, FaKeyboard } from "react-icons/fa6";
 import { IoStatsChartOutline } from "react-icons/io5";
 import {
   LuCircle,
+  LuClipboardPaste,
   LuLoader2,
   LuPower,
   LuSettings2,
@@ -142,6 +143,17 @@ function ButtonBar({
           />
         </ButtonbarButton>
       )}
+
+      <ButtonbarButton
+        onPress={() => {
+          if (clientRef.current) {
+            clientRef.current.doPaste();
+          }
+        }}
+        label={"Paste Clipboard"}
+      >
+        <LuClipboardPaste className="h-5 w-5" />
+      </ButtonbarButton>
 
       {/* instantaneous only */}
       <ButtonbarButton

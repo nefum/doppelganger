@@ -12,6 +12,7 @@ import ScrcpyDevicePlayer, {
   ScrcpyDevicePlayerHandle,
 } from "@/components/scrcpy/scrcpy-device-player.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
+import { CommandControlMessage } from "@/ws-scrcpy/src/app/controlMessage/CommandControlMessage.ts";
 import Size from "@/ws-scrcpy/src/app/Size.ts";
 import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
 import type { Device } from "@prisma/client";
@@ -53,8 +54,16 @@ function getInitialMaxSize(device: Device): Size {
 
 export type DeviceClientHandle = Omit<
   ScrcpyDevicePlayerHandle,
-  "getVideoSettings" | "setVideoSettings" | "containerRef" | "getName"
->;
+  | "getVideoSettings"
+  | "setVideoSettings"
+  | "containerRef"
+  | "getName"
+  | "streamClientRef"
+  | "getKeyboardCapture"
+  | "setKeyboardCapture"
+> & {
+  doPaste: () => void;
+};
 
 // this is called the oneshot device client because it cannot rerender itself from scratch in case of an error, it excepts a function that can do that
 const OneshotDeviceClient = forwardRef<
@@ -246,6 +255,43 @@ const OneshotDeviceClient = forwardRef<
     return () => document.removeEventListener("keydown", keydown);
   }, [captureKeyboard]);
 
+  const doPaste = useMemo(
+    () => () => {
+      navigator.clipboard.readText().then((text) => {
+        if (
+          !scrcpyClientRef.current ||
+          !scrcpyClientRef.current.streamClientRef.current
+        ) {
+          return;
+        }
+
+        const streamClient = scrcpyClientRef.current.streamClientRef.current;
+
+        streamClient.sendMessage(
+          CommandControlMessage.createSetClipboardCommand(text, true),
+        );
+      });
+    },
+    [],
+  );
+
+  // there are only two events that can reliably be captured: keydown & keyup
+  // everything else, paste, touch, pointer, etc. is completely suppressed by the client.
+  // this gives us some trouble because we can't get a paste event, but we CAN listen to a keydown for ctrl+v or cmd+v
+  // and then read the clipboard
+  useEffect(() => {
+    if (!captureKeyboard) {
+      return;
+    }
+
+    function keydown(e: KeyboardEvent) {
+      if (e.key === "v" && (e.ctrlKey || e.metaKey)) doPaste();
+    }
+
+    document.addEventListener("keydown", keydown);
+    return () => document.removeEventListener("keydown", keydown);
+  }, [captureKeyboard, doPaste]);
+
   useImperativeHandle(ref, () => {
     return {
       getShowQualityStats: () => {
@@ -254,21 +300,6 @@ const OneshotDeviceClient = forwardRef<
       setShowQualityStats: (show: boolean) => {
         if (scrcpyClientRef.current) {
           scrcpyClientRef.current.setShowQualityStats(show);
-        }
-      },
-
-      getKeyboardCapture: () => {
-        return scrcpyClientRef.current?.getKeyboardCapture() ?? false;
-      },
-      setKeyboardCapture: (capture: boolean) => {
-        if (captureKeyboard) {
-          console.warn(
-            "setKeyboardCapture is disabled because autoListenToKeyboard is enabled",
-          );
-          return;
-        }
-        if (scrcpyClientRef.current) {
-          scrcpyClientRef.current.setKeyboardCapture(capture);
         }
       },
 
@@ -323,8 +354,9 @@ const OneshotDeviceClient = forwardRef<
           scrcpyClientRef.current.pressDeviceAppSwitchButton(action);
         }
       },
+      doPaste,
     };
-  }, [captureKeyboard]);
+  }, [doPaste]);
 
   return (
     <FillingAspectRatio

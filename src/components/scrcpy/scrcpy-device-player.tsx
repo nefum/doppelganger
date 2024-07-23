@@ -17,6 +17,7 @@ import { ParamsStreamScrcpy } from "@/ws-scrcpy/src/types/ParamsStreamScrcpy";
 import { clsx } from "clsx";
 import {
   forwardRef,
+  MutableRefObject,
   RefObject,
   useEffect,
   useImperativeHandle,
@@ -62,6 +63,7 @@ export interface ScrcpyDevicePlayerHandle {
   setKeyboardCapture: (capture: boolean) => void;
 
   containerRef: RefObject<HTMLDivElement>;
+  streamClientRef: MutableRefObject<StreamClientScrcpy | null>;
 }
 
 const ScrcpyDevicePlayer = forwardRef<
@@ -366,11 +368,17 @@ const ScrcpyDevicePlayer = forwardRef<
       },
 
       containerRef,
+      streamClientRef: streamClient,
     };
   }, [keyboardListening]);
 
   return (
-    <div ref={containerRef} className={clsx("device-view", className)}>
+    <div
+      ref={containerRef}
+      className={clsx("device-view", className)}
+      contentEditable={true}
+      inputMode={"none"}
+    >
       <canvas ref={canvasRef} />
     </div>
   );
