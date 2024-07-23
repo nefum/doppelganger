@@ -2,7 +2,7 @@ export const TAGLINE = "Android, on any device.";
 export const BASE_ORIGIN =
   process.env.NODE_ENV === "production"
     ? "https://doppelgangerhq.com"
-    : "http://localhost:3030";
+    : `http://localhost:${process.env.PORT || 3000}`;
 
 export const AUTH_REQUIRED_ROUTES_REGEX: RegExp[] = [
   /*

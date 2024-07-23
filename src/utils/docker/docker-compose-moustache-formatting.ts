@@ -51,6 +51,9 @@ export interface DockerComposeMoustacheView extends Partial<Device> {
   redroidHeight: number;
 
   externalNetworkName: string;
+
+  doppelgangerOrigin: string;
+  doppelgangerSecret: string;
 }
 
 export async function createDockerTemplateFromView(
@@ -91,5 +94,7 @@ export function getInsertableDeviceForView(
     redroidDpi: view.redroidDpi,
     redroidWidth: view.redroidWidth,
     redroidHeight: view.redroidHeight,
+
+    redroidSecret: view.doppelgangerSecret,
   };
 }

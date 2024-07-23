@@ -31,9 +31,12 @@ services:
       - "androidboot.redroid_net_dns1=1.1.1.1"
       - "androidboot.redroid_net_dns2=1.0.0.1"
       - "androidboot.redroid_net_proxy_type=pac" # static only works with http proxy, have to provide a pac file for socks5
-      - "androidboot.redroid_net_proxy_pac=https://doppelgangerhq.com/api/devices/{{ id }}/proxy.pac"
+      - "androidboot.redroid_net_proxy_pac={{ &doppelgangerOrigin }}/api/devices/{{ id }}/proxy.pac"
       - "androidboot.redroid_gpu_mode=guest"  # doesn't work with auto/host on oracle
       - "ro.setupwizard.mode=DISABLED"  # our custom images do not force disable the gapps setup, we can do that here
+      - "ro.doppelganger.origin={{ &doppelgangerOrigin }}"
+      - "ro.doppelganger.secret={{ &doppelgangerSecret }}"
+      - "ro.doppelganger.device={{ id }}"
     deploy:
       resources:
         limits:

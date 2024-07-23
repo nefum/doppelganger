@@ -6,6 +6,7 @@ import {
   getDockerComposeFileDirectory,
   getDockerComposePathInFolder,
 } from "%/docker/device-paths.ts";
+import { BASE_ORIGIN } from "@/app/constants.ts";
 import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
 import {
   createDockerTemplateFromView,
@@ -20,6 +21,7 @@ import {
   getPathFriendlyStringForDockerImageInfo,
 } from "@/utils/docker/docker-image-parsing.ts";
 import { createId } from "@paralleldrive/cuid2";
+import { randomBytes } from "crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
 
@@ -35,6 +37,13 @@ type FunctionalDeviceSpecs = Pick<
   SampleDeviceSpecs,
   "dpi" | "height" | "width"
 >;
+
+function generateDoppelgangerSecret(): string {
+  // Generate a 32-byte random value
+  const secret = randomBytes(32);
+  // Convert the secret to a base64 string for easy storage and transmission
+  return secret.toString("base64");
+}
 
 export async function createView(
   selectedImage: RedroidImage,
@@ -63,6 +72,8 @@ export async function createView(
     redroidDpi: specs.dpi,
     redroidWidth: specs.width,
     redroidHeight: specs.height,
+    doppelgangerOrigin: BASE_ORIGIN,
+    doppelgangerSecret: generateDoppelgangerSecret(),
   };
 }
 
