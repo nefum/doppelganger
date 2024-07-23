@@ -22,22 +22,22 @@ export class ScrcpyFilePushStream extends FilePushStream {
 
     public sendEventAppend({ id, chunk }: { id: number; chunk: Uint8Array }): void {
         const appendParams = { id, chunk, state: FilePushState.APPEND };
-        this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(appendParams));
+        // this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(appendParams));
     }
 
     public sendEventFinish({ id }: { id: number }): void {
         const finishParams = { id, state: FilePushState.FINISH };
-        this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(finishParams));
+        // this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(finishParams));
     }
 
     public sendEventNew({ id }: { id: number }): void {
         const newParams = { id, state: FilePushState.NEW };
-        this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(newParams));
+        // this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(newParams));
     }
 
     public sendEventStart({ id, fileName, fileSize }: { id: number; fileName: string; fileSize: number }): void {
         const startParams = { id, fileName, fileSize, state: FilePushState.START };
-        this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(startParams));
+        // this.streamReceiver.sendEvent(CommandControlMessage.createPushFileCommand(startParams));
     }
 
     public release(): void {

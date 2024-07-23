@@ -337,7 +337,7 @@ export class StreamClientScrcpy
         const element = player.getTouchableElement();
         const logger = new DragAndPushLogger(element);
         this.filePushHandler = new FilePushHandler(element, new ScrcpyFilePushStream(this.streamReceiver));
-        this.filePushHandler.addEventListener(logger);
+        // this.filePushHandler.addEventListener(logger);
 
         const streamReceiver = this.streamReceiver;
         streamReceiver.on('deviceMessage', this.OnDeviceMessage);
