@@ -11,6 +11,14 @@ import { stringify as stringifyYaml, parse as yamlParse } from "yaml";
 import dockerComposeSpec from "./compose_spec.json";
 import { createView } from "./deployment.ts";
 
+jest.mock("@/utils/docker/docker-api-utils.ts", () => ({
+  getLatestDigestOfImage: jest.fn().mockResolvedValue("sha256:digest"),
+  upgradeDockerImageInfo: jest.fn().mockImplementation(async (info) => ({
+    ...info,
+    digest: "sha256:digest",
+  })),
+}));
+
 const ajv = new Ajv({
   schemaId: "id",
   meta: false,
