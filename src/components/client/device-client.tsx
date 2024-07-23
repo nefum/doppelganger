@@ -23,6 +23,10 @@ import {
   useState,
 } from "react";
 import styles from "./sizer.module.css";
+import {
+  getOrientationFromRatio,
+  getOrientationFromUseOrientationOrientationType, Orientation
+} from "@/components/client/orientation.ts";
 
 // 8 MB/s
 const DEVICE_BITRATE_BYTES = 8_000_000;
@@ -65,8 +69,6 @@ const OneshotDeviceClient = forwardRef<
     hardReset,
   } = props;
   const { type: orientationType } = useOrientation();
-  const [knownOrientationType, setKnownOrientationType] =
-    useState(orientationType);
 
   const { toast } = useToast();
 
@@ -92,18 +94,23 @@ const OneshotDeviceClient = forwardRef<
       return;
     }
 
-    if (orientationType === knownOrientationType) {
+    const clientOrientation = getOrientationFromUseOrientationOrientationType(orientationType);
+    const streamOrientation = getOrientationFromRatio(aspectRatio);
+
+    if (clientOrientation === Orientation.INDETERMINATE) {
       return;
     }
 
-    setKnownOrientationType(orientationType);
+    if (clientOrientation === streamOrientation) {
+      return; // orientations match we needn't do anything
+    }
 
     if (!scrcpyClientRef.current) {
       return;
     }
 
     scrcpyClientRef.current.rotateDevice();
-  }, [autoRotate, knownOrientationType, orientationType]);
+  }, [aspectRatio, autoRotate, orientationType]);
 
   useEffect(() => {
     const scrcpyWsUrl = new URL(window.location.href);
