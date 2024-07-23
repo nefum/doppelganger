@@ -34,6 +34,8 @@ model Device {
   redroidWidth  Int @map(name: "redroid_width")
   redroidHeight Int @map(name: "redroid_height")
 
+  redroidSecret String? @map(name: "redroid_secret")
+
   adbHostname String? @map(name: "adb_hostname") // if null, see getDefaultRedroidHostname
   adbPort     Int     @default(5555) @map(name: "adb_port")
 
