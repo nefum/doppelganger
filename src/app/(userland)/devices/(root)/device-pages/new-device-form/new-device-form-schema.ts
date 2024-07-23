@@ -1,5 +1,5 @@
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
-import { FREE_MAX_FPS, MIN_FPS, PREMIUM_MAX_FPS } from "@/app/constants.ts";
+import { FREE_MAX_FPS, MIN_FPS, PREMIUM_MAX_FPS } from "@/constants.ts";
 import { z } from "zod";
 
 export const newDeviceFormSchema = z.object({

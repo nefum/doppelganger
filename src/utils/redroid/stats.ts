@@ -8,7 +8,7 @@ import {
   CPU_LIMIT_CPUS,
   MEMORY_LIMIT_BYTES,
   VOLUME_SIZE_LIMIT_BYTES,
-} from "@/app/constants.ts";
+} from "@/constants.ts";
 import {
   getCpuUsageOfDockerContainerCpus,
   getMemoryUsageOfDockerContainerBytes,

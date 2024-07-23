@@ -1,6 +1,6 @@
 import prisma from "%/database/prisma.ts";
 import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
-import { FREE_TIER_IDLE_TIME_MS } from "@/app/constants.ts";
+import { FREE_TIER_IDLE_TIME_MS } from "@/constants.ts";
 import {
   getSubscriptionStatus,
   SubscriptionStatus,

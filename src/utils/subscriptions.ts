@@ -1,4 +1,4 @@
-import { MAX_DEVICES_FREE, MAX_DEVICES_PREMIUM } from "@/app/constants.ts";
+import { MAX_DEVICES_FREE, MAX_DEVICES_PREMIUM } from "@/constants.ts";
 
 export enum SubscriptionStatus {
   ACTIVE = "ACTIVE",

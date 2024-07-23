@@ -6,7 +6,7 @@ import {
   getDockerComposeFileDirectory,
   getDockerComposePathInFolder,
 } from "%/docker/device-paths.ts";
-import { BASE_ORIGIN } from "@/app/constants.ts";
+import { BASE_ORIGIN } from "@/constants.ts";
 import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
 import {
   createDockerTemplateFromView,

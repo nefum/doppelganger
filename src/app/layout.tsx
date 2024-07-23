@@ -1,4 +1,3 @@
-import { BASE_ORIGIN, TAGLINE } from "@/app/constants.ts";
 import GoogleOneTap from "@/components/google/google-one-tap.tsx";
 import GoogleSigninHandlerProvider from "@/components/google/google-signin-handler-provider.tsx";
 import { NonceProvider } from "@/components/google/nonce-provider.tsx";
@@ -6,6 +5,7 @@ import ProviderComposer from "@/components/providers.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
+import { BASE_ORIGIN, TAGLINE } from "@/constants.ts";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { clsx } from "clsx";
 import type { Metadata } from "next";

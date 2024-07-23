@@ -13,7 +13,6 @@ import {
   isFreeTierCompatible,
   newDeviceFormSchema,
 } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
-import { FREE_MAX_FPS, MIN_FPS, PREMIUM_MAX_FPS } from "@/app/constants.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Command,
@@ -65,6 +64,7 @@ import {
   type toast as baseToast,
   useToast,
 } from "@/components/ui/use-toast.ts";
+import { FREE_MAX_FPS, MIN_FPS, PREMIUM_MAX_FPS } from "@/constants.ts";
 import { cn } from "@/lib/utils.ts";
 import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";

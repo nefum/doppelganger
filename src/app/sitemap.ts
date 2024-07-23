@@ -1,4 +1,4 @@
-import { BASE_ORIGIN } from "@/app/constants.ts";
+import { BASE_ORIGIN } from "@/constants.ts";
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
