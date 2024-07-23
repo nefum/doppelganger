@@ -20,10 +20,6 @@ export function ConfiguredNavbar() {
           title: "My Devices",
         },
         {
-          url: "/multiview",
-          title: "Multiview",
-        },
-        {
           url: "/about",
           title: "About Us",
         },
@@ -66,8 +62,8 @@ export function ConfiguredFooter() {
               url: "/support",
             },
             {
-              title: "Premium",
-              url: "/subscribe",
+              title: "Contact",
+              url: "/contact",
             },
           ],
         },
@@ -86,8 +82,12 @@ export function ConfiguredFooter() {
               url: "/opensource",
             },
             {
-              title: "Contact",
-              url: "/contact",
+              title: "Premium",
+              url: "/subscribe",
+            },
+            {
+              title: "Multiview",
+              url: "/multiview",
             },
           ],
         },
