@@ -24,19 +24,19 @@ describe("Redroid Images Tests", () => {
   });
 
   // Test for At Least One Usable Free Image
-  it("there should be at least one usable free image", () => {
+  it("there should be at least one usable free image with gms", () => {
     const usableFreeImage = allRedroidImages.some(
-      (image) => image.usable && !image.premium,
+      (image) => image.usable && image.gms && !image.premium,
     );
     expect(usableFreeImage).toBe(true);
   });
 
-  it("should not contain usable images that are either older than Android 10 (api 29) or exactly Android 11 (api 30)", () => {
+  it("should not contain usable images that are older than Android 12", () => {
     // requirement for sound copying: https://github.com/Genymobile/scrcpy/blob/master/doc/audio.md
     allRedroidImages.forEach((image) => {
       if (image.usable) {
-        expect(image.androidSdkVersion).toBeGreaterThanOrEqual(29);
-        expect(image.androidSdkVersion).not.toBe(30);
+        // if its not Android 12 or newer, audio doesn't work. don't give the users the option to use it
+        expect(image.androidSdkVersion).toBeGreaterThanOrEqual(31);
       }
     });
   });

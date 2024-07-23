@@ -22,7 +22,7 @@
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:12.0.0-latest",
     "usable": true,
-    "premium": true,
+    "premium": false,
     "gms": false,
     "androidSdkVersion": 31
   },
@@ -39,7 +39,7 @@
     "name": "AOSP Android 10",
     "description": "Bog-standard Android. No Play Store.",
     "imageName": "redroid/redroid:10.0.0-latest",
-    "usable": true,
+    "usable": false,
     "premium": false,
     "gms": false,
     "androidSdkVersion": 29
@@ -75,7 +75,7 @@
     "name": "Play Store Android 10",
     "description": "Android 10 with the Play Store installed, fully-featured and ready to go.",
     "imageName": "cr.regulad.xyz/regulad/redroid-script:10.0.0-gapps-latest",
-    "usable": true,
+    "usable": false,
     "premium": false,
     "gms": true,
     "androidSdkVersion": 29
@@ -86,7 +86,7 @@
     "description": "Android 12 (non-L) with the Play Store installed, fully-featured and ready to go.",
     "imageName": "cr.regulad.xyz/regulad/redroid-script:12.0.0-gapps-latest",
     "usable": true,
-    "premium": true,
+    "premium": false,
     "gms": true,
     "androidSdkVersion": 31
   },
