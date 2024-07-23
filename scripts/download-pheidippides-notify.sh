@@ -9,13 +9,6 @@ DESTINATION_FILE="$DESTINATION_DIR/pheidippides-notify.apk"
 # Create destination directory if it doesn't exist
 mkdir -p "$DESTINATION_DIR"
 
-# Check if the destination file already exists
-if [ -f "$DESTINATION_FILE" ]; then
-    echo "$DESTINATION_FILE already exists. Skipping download."
-    rm -rf "$TEMP_DIR"
-    exit 0
-fi
-
 # Download the zip file
 echo "Downloading apk.zip..."
 if ! curl -L "$DOWNLOAD_URL" -o "$TEMP_DIR/apk.zip"; then
