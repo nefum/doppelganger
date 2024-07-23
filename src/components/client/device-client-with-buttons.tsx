@@ -323,7 +323,7 @@ export default function DeviceClientWithButtons({
               styles.fullscreenInnerContainer,
               {
                 "min-h-[35vh] max-h-[70vh]": !fullScreenHandle.active,
-                "flex-grow": fullScreenHandle.active,
+                "flex-grow max-h-[93%]": fullScreenHandle.active,
               },
             )}
           >
