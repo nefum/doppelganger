@@ -1,4 +1,6 @@
-import allRedroidImages from "%/device-info/redroid-images.ts";
+import allRedroidImages, {
+  RedroidImage,
+} from "%/device-info/redroid-images.ts";
 import {
   Tooltip,
   TooltipContent,
@@ -7,6 +9,14 @@ import {
 import { ReactNode } from "react";
 import { FaAndroid } from "react-icons/fa6";
 import { LuCrown } from "react-icons/lu";
+
+function getComparisonNumberOfDevice(redroidImage: RedroidImage) {
+  return (
+    redroidImage.androidSdkVersion +
+    (redroidImage.premium ? 1000 : 0) +
+    (redroidImage.gms ? 0.5 : 0)
+  );
+}
 
 function PremiumButton() {
   return (
@@ -27,6 +37,11 @@ export default function DeviceTypes(): ReactNode {
   return (
     <ul className="shadcn-ul">
       {allRedroidImages
+        .toSorted(
+          (a, b) =>
+            getComparisonNumberOfDevice(a) - getComparisonNumberOfDevice(b),
+        )
+        .toReversed()
         .filter((redroidImage) => redroidImage.usable)
         .map((redroidImage) => (
           <li key={redroidImage.imageName}>

@@ -20,6 +20,10 @@ export function ConfiguredNavbar() {
           title: "My Devices",
         },
         {
+          url: "/multiview",
+          title: "Multiview",
+        },
+        {
           url: "/about",
           title: "About Us",
         },

@@ -1,7 +1,7 @@
 [
   {
     "name": "AOSP Android 14",
-    "description": "Bog-standard Android. No Play Store.",
+    "description": "Android Open Source Project (AOSP) Android 14.0.0. No Play Store.",
     "imageName": "redroid/redroid:14.0.0-latest",
     "usable": true,
     "premium": true,
@@ -10,7 +10,7 @@
   },
   {
     "name": "AOSP Android 13",
-    "description": "Bog-standard Android. No Play Store.",
+    "description": "Android Open Source Project (AOSP) Android 13.0.0. No Play Store.",
     "imageName": "redroid/redroid:13.0.0-latest",
     "usable": true,
     "premium": true,
@@ -19,7 +19,7 @@
   },
   {
     "name": "AOSP Android 12",
-    "description": "Bog-standard Android. No Play Store.",
+    "description": "Android Open Source Project (AOSP) Android 12.0.0 (non-L). No Play Store.",
     "imageName": "redroid/redroid:12.0.0-latest",
     "usable": true,
     "premium": false,
@@ -28,7 +28,7 @@
   },
   {
     "name": "AOSP Android 11",
-    "description": "Bog-standard Android. No Play Store. Audio is not supported using this image.",
+    "description": "Android Open Source Project (AOSP) Android 11.0.0. No Play Store. Audio is not supported using this image.",
     "imageName": "redroid/redroid:11.0.0-latest",
     "usable": false,
     "premium": false,
@@ -37,7 +37,7 @@
   },
   {
     "name": "AOSP Android 10",
-    "description": "Bog-standard Android. No Play Store.",
+    "description": "Android Open Source Project (AOSP) Android 10.0.0. No Play Store. Audio is not supported using this image.",
     "imageName": "redroid/redroid:10.0.0-latest",
     "usable": false,
     "premium": false,
@@ -46,7 +46,7 @@
   },
   {
     "name": "AOSP Android 9",
-    "description": "Bog-standard Android. No Play Store.",
+    "description": "Android Open Source Project (AOSP) Android 9.0.0. No Play Store. Audio is not supported using this image.",
     "imageName": "redroid/redroid:9.0.0-latest",
     "usable": false,
     "premium": false,
@@ -55,7 +55,7 @@
   },
   {
     "name": "AOSP Android 8.1",
-    "description": "Bog-standard Android. No Play Store.",
+    "description": "Android Open Source Project (AOSP) Android 8.1.0. No Play Store. Audio is not supported using this image.",
     "imageName": "redroid/redroid:8.1.0-latest",
     "usable": false,
     "premium": false,
@@ -73,7 +73,7 @@
   },
   {
     "name": "Play Store Android 10",
-    "description": "Android 10 with the Play Store installed, fully-featured and ready to go.",
+    "description": "Android 10 with the Play Store installed, fully-featured and ready to go. Audio is not supported using this image.",
     "imageName": "cr.regulad.xyz/regulad/redroid-script:10.0.0-gapps-latest",
     "usable": false,
     "premium": false,
