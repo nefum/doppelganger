@@ -3,6 +3,7 @@
 import DeviceClient, {
   DeviceClientHandle,
 } from "@/components/client/device-client.tsx";
+import MaxWidthHardlimiter from "@/components/max-width-hardlimiter.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import type { Device } from "@prisma/client";
@@ -27,6 +28,7 @@ import {
 import { MdOutlineSpeaker } from "react-icons/md";
 import { RiNotification2Line } from "react-icons/ri";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
+import styles from "./client.module.css";
 
 function ButtonbarButton({
   onPress,
@@ -305,30 +307,55 @@ export default function DeviceClientWithButtons({
   );
 
   return (
-    <FullScreen handle={fullScreenHandle}>
-      <div
-        // i have long tried to remove the minimum height, but it is not worth it.
-        className="flex justify-center items-center place-items-center w-full min-h-[35vh] max-h-[70vh]"
-      >
-        {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
-        <DeviceClient
-          ref={deviceClientHandleRef}
-          device={device}
-          loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
-          captureKeyboard={captureKeyboard}
-          playAudio={playAudio}
-        />
-      </div>
-      <ButtonBar
-        clientRef={deviceClientHandleRef}
-        fullScreenHandle={fullScreenHandle}
-        optionalAudio={optionalAudio}
-        playAudio={playAudio}
-        setPlayAudio={setPlayAudio}
-        optionalKeyboardCapture={optionalKeyboardCapture}
-        captureKeyboard={captureKeyboard}
-        setCaptureKeyboard={setCaptureKeyboard}
-      />
-    </FullScreen>
+    <div>
+      <MaxWidthHardlimiter>
+        <FullScreen
+          handle={fullScreenHandle}
+          className={clsx({
+            "flex flex-col justify-between": fullScreenHandle.active,
+            "h-full w-full": !fullScreenHandle.active,
+          })}
+        >
+          <div
+            // i have long tried to remove the minimum height, but it is not worth it.
+            className={clsx(
+              "flex justify-center items-center place-items-center w-full",
+              styles.fullscreenInnerContainer,
+              {
+                "min-h-[35vh] max-h-[70vh]": !fullScreenHandle.active,
+                "flex-grow": fullScreenHandle.active,
+              },
+            )}
+          >
+            {/*theres no need to worry about resource freeing, this client isn't created when this page isn't open*/}
+            <DeviceClient
+              ref={deviceClientHandleRef}
+              device={device}
+              loadingNode={<LuLoader2 className="h-20 w-20 animate-spin" />}
+              captureKeyboard={captureKeyboard}
+              playAudio={playAudio}
+            />
+          </div>
+          <div className={clsx("flex flex-col justify-end align-middle")}>
+            <div
+              className={clsx({
+                "my-2": fullScreenHandle.active,
+              })}
+            >
+              <ButtonBar
+                clientRef={deviceClientHandleRef}
+                fullScreenHandle={fullScreenHandle}
+                optionalAudio={optionalAudio}
+                playAudio={playAudio}
+                setPlayAudio={setPlayAudio}
+                optionalKeyboardCapture={optionalKeyboardCapture}
+                captureKeyboard={captureKeyboard}
+                setCaptureKeyboard={setCaptureKeyboard}
+              />
+            </div>
+          </div>
+        </FullScreen>
+      </MaxWidthHardlimiter>
+    </div>
   );
 }

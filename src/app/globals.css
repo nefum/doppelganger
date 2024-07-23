@@ -168,3 +168,8 @@ html, body {
   height: 100%;
   margin: 0;
 }
+
+.fullscreen-enabled {
+  background: hsl(var(--background));
+}
+

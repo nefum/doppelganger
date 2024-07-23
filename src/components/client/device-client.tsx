@@ -32,7 +32,7 @@ import styles from "./sizer.module.css";
 // 8 MB/s
 const DEVICE_BITRATE_BYTES = 8_000_000;
 // for some bizzarre reason, the video is always a bit too small, so we overscan it
-const OVERSCAN_MULTIPLIER = 1.05;
+const OVERSCAN_MULTIPLIER = 1.025;
 
 interface DeviceClientProps {
   device: Device;
