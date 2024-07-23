@@ -19,7 +19,7 @@ enum PID_DETECTION_METHOD {
 
 interface AdbListDeviceDevice {
   id: string;
-  type: string;
+  type: "emulator" | "device" | "offline" | "unauthorized";
 }
 
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/Device.ts
@@ -52,7 +52,10 @@ export class AdbDevice {
   async getIsConnected(): Promise<boolean> {
     const allDevices = await adb.listDevices();
     return allDevices.some(
-      (device: AdbListDeviceDevice) => device.id === this.udid,
+      (device: AdbListDeviceDevice) =>
+        device.id === this.udid &&
+        device.type !== "unauthorized" &&
+        device.type !== "offline",
     );
   }
 
