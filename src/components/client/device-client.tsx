@@ -2,6 +2,11 @@
 
 import { getAdbUdidForDevice } from "%/device-info/device-info-utils.ts";
 import JSMpegClient from "@/components/client/jsmpeg-client.tsx";
+import {
+  getOrientationFromRatio,
+  getOrientationFromUseOrientationOrientationType,
+  Orientation,
+} from "@/components/client/orientation.ts";
 import FillingAspectRatio from "@/components/filling-aspect-ratio.tsx";
 import ScrcpyDevicePlayer, {
   ScrcpyDevicePlayerHandle,
@@ -23,10 +28,6 @@ import {
   useState,
 } from "react";
 import styles from "./sizer.module.css";
-import {
-  getOrientationFromRatio,
-  getOrientationFromUseOrientationOrientationType, Orientation
-} from "@/components/client/orientation.ts";
 
 // 8 MB/s
 const DEVICE_BITRATE_BYTES = 8_000_000;
@@ -94,7 +95,8 @@ const OneshotDeviceClient = forwardRef<
       return;
     }
 
-    const clientOrientation = getOrientationFromUseOrientationOrientationType(orientationType);
+    const clientOrientation =
+      getOrientationFromUseOrientationOrientationType(orientationType);
     const streamOrientation = getOrientationFromRatio(aspectRatio);
 
     if (clientOrientation === Orientation.INDETERMINATE) {

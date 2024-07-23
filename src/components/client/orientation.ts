@@ -1,13 +1,15 @@
 export enum Orientation {
   LANDSCAPE,
   PORTRAIT,
-  INDETERMINATE
+  INDETERMINATE,
 }
 
 /*
  * https://usehooks.com/useorientation Returns the orientation from the type output of this hook
  */
-export function getOrientationFromUseOrientationOrientationType(ret: string): Orientation {
+export function getOrientationFromUseOrientationOrientationType(
+  ret: string,
+): Orientation {
   if (ret.startsWith("landscape-")) {
     return Orientation.LANDSCAPE;
   } else if (ret.startsWith("portrait-")) {
