@@ -54,6 +54,9 @@ export default async function DeviceScreenshot({
       <CardContent>
         <div className="h-[40em] flex place-content-center">
           <Image
+            style={{
+              background: "no-repeat center url('/noconnect.svg')",
+            }}
             unoptimized // cant be cached
             width={device.redroidWidth}
             height={device.redroidHeight}
@@ -62,7 +65,7 @@ export default async function DeviceScreenshot({
             blurDataURL={
               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAJ0lEQVR4nGPY2fXjv458/H9Bbtf/IDbD/7v//8/Mvfq/J+nEfxAbAF3NFsFiuaE1AAAAAElFTkSuQmCC"
             }
-            className="object-contain h-full"
+            className="object-contain bg-black h-full"
             alt={`Device ID ${deviceId} Snapshot`}
           />
         </div>

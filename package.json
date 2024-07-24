@@ -9,7 +9,7 @@
     "db:migrate": "dotenvx run --env-file=.env.local -- prisma migrate dev",
     "db:seed": "dotenvx run --env-file=.env.local -- tsx prisma/seed.ts",
     "server:build": "rimraf -rf dist/ && babel --config-file \"./server/babel.config.json\" --copy-files -x \".ts\" server/src -d dist && sentry-cli sourcemaps inject dist && sentry-cli sourcemaps upload dist",
-    "server:dev": "tsx server/index.ts",
+    "server:dev": "tsx server/src/index.ts",
     "workers:dev": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs",
     "workers:build": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs --mode production",
     "licenses:check": "rimraf \"src/app/(userland)/(contained)/licenses/licenses.json\" && license-checker --production --json --out \"src/app/(userland)/(contained)/licenses/licenses.json\"",
