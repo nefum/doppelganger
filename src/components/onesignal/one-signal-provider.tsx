@@ -1,5 +1,6 @@
 "use client";
 
+import { OneSignalHashReturn } from "@/app/api/onesignal/route.ts";
 import { createClient } from "@/utils/supabase/client.ts";
 import * as Sentry from "@sentry/nextjs";
 import { User } from "@supabase/supabase-js";
@@ -30,19 +31,26 @@ const ONE_SIGNAL_PARAMS = {
 const OneSignalContext = createContext<boolean>(false);
 
 async function updateOneSignalUsingSupabase(user: User): Promise<void> {
+  // although I have the code implemented to pass an HMAC on the server side, it can't be listened to on OneSignal's side because it is not yet working
+  // therefore, the following notice still applies:
   // SECURITY NOTE: anybody can forge a request to OneSignal using an arbitrary User ID and receive their notifications
-  // there appears to be an undocumented jwt option on the login method, but lord knows what it does
   // this pretty much makes Supabase User IDs a secret, which is weird. thanks onesignal!
-  await OneSignal.login(user.id); // must login before updating user data
+
+  const hashResponse = await fetch("/api/onesignal");
+  const hashJson = (await hashResponse.json()) as OneSignalHashReturn;
+
+  await OneSignal.login(user.id, hashJson.externalIdHash); // must login before updating user data
 
   const { email, phone } = user;
 
   if (email) {
-    OneSignal.User.addEmail(email);
+    // @ts-expect-error -- the version with the 2-argument signature is not in the types
+    OneSignal.User.addEmail(email, hashJson.emailHash!);
   }
 
   if (phone) {
-    OneSignal.User.addSms(phone);
+    // @ts-expect-error -- the version with the 2-argument signature is not in the types
+    OneSignal.User.addSms(phone, hashJson.phoneHash!);
   }
 }
 
@@ -57,15 +65,19 @@ export default function OneSignalProvider({
       .then(() => {
         setOneSignalInitialized(true);
 
-        supabaseClient.auth.getUser().then(({ data: { user } }) => {
+        supabaseClient.auth.getUser().then(async ({ data: { user } }) => {
           if (user) {
-            updateOneSignalUsingSupabase(user);
+            await updateOneSignalUsingSupabase(user);
           }
         });
 
+        // making this async makes supabase methods unavailable until these calls are done, don't do that
         supabaseClient.auth.onAuthStateChange((event, session) => {
           if (event === "SIGNED_OUT") {
-            OneSignal.logout();
+            OneSignal.logout().catch((error) => {
+              Sentry.captureException(error);
+              console.error("OneSignal logout failed:", error);
+            });
             return;
           } else if (!(event === "SIGNED_IN" || event === "USER_UPDATED")) {
             return; // this event is irrelevant to push notifications
@@ -77,7 +89,10 @@ export default function OneSignalProvider({
             return;
           }
 
-          updateOneSignalUsingSupabase(user);
+          updateOneSignalUsingSupabase(user).catch((error) => {
+            Sentry.captureException(error);
+            console.error("OneSignal update failed:", error);
+          });
         });
       })
       .catch((error) => {
