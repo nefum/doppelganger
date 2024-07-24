@@ -38,8 +38,14 @@ COPY . .
 # Build database client
 RUN pnpm run db:generate
 
+# provide sentry for the server
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_RELEASE
+ENV SENTRY_ORG=regulad
+ENV SENTRY_PROJECT=doppelganger-server
+
 # Build the server-side code
-RUN pnpm run server:build
+RUN pnpm run server:build && unset SENTRY_AUTH_TOKEN && unset SENTRY_RELEASE && unset SENTRY_ORG && unset SENTRY_PROJECT
 
 # Generate licenses
 RUN pnpm run licenses:check
@@ -50,8 +56,14 @@ RUN pnpm run workers:build
 # Provide public (NEXT_PUBLIC_) environment variables
 RUN cp .env.local.public .env.local
 
+# Use ARG to accept the token during build
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_RELEASE
+ENV SENTRY_ORG=regulad
+ENV SENTRY_PROJECT=doppelganger-front
+
 # Build the application
-RUN pnpm run build
+RUN SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$SENTRY_RELEASE pnpm run build && unset SENTRY_AUTH_TOKEN && unset SENTRY_RELEASE && unset SENTRY_ORG && unset SENTRY_PROJECT
 
 # Expose the port the app runs on
 EXPOSE 3000
