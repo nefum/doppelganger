@@ -1,5 +1,10 @@
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
+import {
+  ONESIGNAL_APP_ID,
+  oneSignalClient,
+} from "@/utils/onesignal/onesignal-server.ts";
+import * as OneSignal from "@onesignal/node-onesignal";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -69,7 +74,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       { status: 400 },
     );
   }
-  const { success: parseSuccess, data: notification } =
+  const { success: parseSuccess, data: incomingNotification } =
     await incomingNotificationSchema.spa(notificationBody);
 
   if (!parseSuccess) {
@@ -81,7 +86,36 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  // TODO: Implement sending the notification to the device
+  const destinationNotification = new OneSignal.Notification();
+  destinationNotification.app_id = ONESIGNAL_APP_ID;
+  destinationNotification.include_aliases = { external_id: [device.ownerId] };
+
+  // wrap all fields of the incomingNotification
+  destinationNotification.headings = {
+    en: `${incomingNotification.appName} via ${device.name}`,
+  };
+  destinationNotification.contents = {
+    en: incomingNotification.title
+      ? `${incomingNotification.title}: ${incomingNotification.text || ""}`
+      : incomingNotification.text || "",
+  };
+  if (
+    incomingNotification.appIconDataUrl ||
+    incomingNotification.smallIconDataUrl
+  ) {
+    destinationNotification.big_picture =
+      incomingNotification.appIconDataUrl ||
+      incomingNotification.smallIconDataUrl;
+    destinationNotification.large_icon =
+      incomingNotification.appIconDataUrl ||
+      incomingNotification.smallIconDataUrl;
+  }
+  destinationNotification.priority = incomingNotification.priority;
+  if (incomingNotification.bigText) {
+    destinationNotification.subtitle = { en: incomingNotification.bigText };
+  }
+
+  await oneSignalClient.createNotification(destinationNotification);
 
   return NextResponse.json(
     {

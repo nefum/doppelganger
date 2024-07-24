@@ -1,6 +1,6 @@
 import * as OneSignal from "@onesignal/node-onesignal";
 
-const ONESIGNAL_APP_ID = process.env.ONESIGNAL_APP_ID!;
+export const ONESIGNAL_APP_ID = process.env.ONESIGNAL_APP_ID!;
 const ONESIGNAL_USER_AUTH_KEY = process.env.ONESIGNAL_USER_AUTH_KEY!;
 export const ONESIGNAL_API_KEY = process.env.ONESIGNAL_API_KEY!;
 
