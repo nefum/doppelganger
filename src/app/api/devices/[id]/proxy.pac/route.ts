@@ -1,4 +1,3 @@
-import { deviceApiEndpoint } from "%/endpoint-regex.ts";
 import { RangeType } from "@/utils/types/range-type.ts";
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
@@ -35,26 +34,35 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // impl: we cannot return anything to the user that suggests if a device with this id exists or not
   // everything has to be deterministic!!
 
-  const id = req.nextUrl.pathname.match(deviceApiEndpoint)![1];
-  const proxyNum = getProxyNumberForId(id);
-  const firstChoicePort = 1055 - 1 + proxyNum; // 1055, 1056, 1057, 1058, 1059
-  const ports = portOptions();
-  // get rid of the first choice
-  delete ports[ports.indexOf(firstChoicePort)];
-
-  let proxyString = proxyStringFor(
-    getProxyOriginNoProtocolForPort(firstChoicePort),
-  );
-
-  for (const port of ports) {
-    if (!port) {
-      continue;
-    }
-    proxyString += `; ${proxyStringFor(getProxyOriginNoProtocolForPort(port))}`;
-  }
+  // const id = req.nextUrl.pathname.match(deviceApiEndpoint)![1];
+  // const proxyNum = getProxyNumberForId(id);
+  // const firstChoicePort = 1055 - 1 + proxyNum; // 1055, 1056, 1057, 1058, 1059
+  // const ports = portOptions();
+  // // get rid of the first choice
+  // delete ports[ports.indexOf(firstChoicePort)];
+  //
+  // let proxyString = proxyStringFor(
+  //   getProxyOriginNoProtocolForPort(firstChoicePort),
+  // );
+  //
+  // for (const port of ports) {
+  //   if (!port) {
+  //     continue;
+  //   }
+  //   proxyString += `; ${proxyStringFor(getProxyOriginNoProtocolForPort(port))}`;
+  // }
+  //
+  // return new NextResponse(
+  //   `function FindProxyForURL(url, host) {return "${proxyString}; DIRECT";}`,
+  //   {
+  //     headers: {
+  //       "Content-Type": "application/x-ns-proxy-autoconfig",
+  //     },
+  //   },
+  // );
 
   return new NextResponse(
-    `function FindProxyForURL(url, host) {return "${proxyString}; DIRECT";}`,
+    `function FindProxyForURL(url, host) {return "DIRECT";}`,
     {
       headers: {
         "Content-Type": "application/x-ns-proxy-autoconfig",

@@ -1,3 +1,5 @@
+### NOTE: These are no longer in use on prod. They go down too often and the connection to a DERP adds extra latency. If I need to readd proxies, I would do it with the LinuxServer docker image connected directly to Mullvad
+
 # Tailscale Mullvad Proxies
 
 To supply fresh proxies to the Android clients, we use a docker compose file running Tailscale containers that connect through to Mullvad.
