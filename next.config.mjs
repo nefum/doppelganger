@@ -85,6 +85,10 @@ const sentryConfig = withSentryConfig(nextConfig, {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
+
+  env: {
+    NODE_ENV: process.env.NODE_ENV,
+  }
 });
 
 const mdxConfig = withMdxFactory({

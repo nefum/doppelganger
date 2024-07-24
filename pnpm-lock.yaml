@@ -209,6 +209,9 @@ dependencies:
   react-icons:
     specifier: ^5.2.1
     version: 5.2.1(react@18.3.1)
+  react-onesignal:
+    specifier: ^3.0.1
+    version: 3.0.1(react@18.3.1)
   react-resizable-panels:
     specifier: ^2.0.22
     version: 2.0.22(react-dom@18.3.1)(react@18.3.1)
@@ -12529,6 +12532,15 @@ packages:
   /react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
     dev: true
+
+  /react-onesignal@3.0.1(react@18.3.1):
+    resolution: {integrity: sha512-AfAtGdXRcuMhVf+9OXehGcQeiJIYl1ihAByvfVNa3RCA1Vnn19tBha4XQB+o3ukUh2IQn0yiflRO4vXgI9nOng==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '>= 16.8'
+    dependencies:
+      react: 18.3.1
+    dev: false
 
   /react-remove-scroll-bar@2.3.6(@types/react@18.3.3)(react@18.3.1):
     resolution: {integrity: sha512-DtSYaao4mBmX+HDo5YWYdBWQwYIQQshUV/dVxFxK+KM26Wjwp1gZ6rv6OC3oujI6Bfu6Xyg3TwK533AQutsn/g==}

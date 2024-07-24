@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
@@ -13,6 +14,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { LuSettings2 } from "react-icons/lu";
 
 import { ClientDevicePowerStateButtons } from "@/app/(userland)/devices/[id]/(root)/client-power-state.tsx";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 const quickSettingsTooltip = "Quick Settings";
 
@@ -37,6 +39,11 @@ export default function DeviceQuickSettingsButton({
         <DialogHeader>
           <DialogTitle>Quick Settings</DialogTitle>
         </DialogHeader>
+        <VisuallyHidden.Root>
+          <DialogDescription>
+            Quick settings for {deviceInfo.name}
+          </DialogDescription>
+        </VisuallyHidden.Root>
         <ClientDevicePowerStateButtons
           deviceInfo={deviceInfo}
           deviceIsUp={deviceIsUp}

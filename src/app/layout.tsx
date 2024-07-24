@@ -1,6 +1,7 @@
 import GoogleOneTap from "@/components/google/google-one-tap.tsx";
 import GoogleSigninHandlerProvider from "@/components/google/google-signin-handler-provider.tsx";
 import { NonceProvider } from "@/components/google/nonce-provider.tsx";
+import OneSignalProvider from "@/components/onesignal/one-signal-provider.tsx";
 import ProviderComposer from "@/components/providers.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
@@ -91,6 +92,7 @@ export default function RootLayout({
               },
             ],
             [GoogleSigninHandlerProvider],
+            [OneSignalProvider],
           ]}
         >
           <main>{children}</main>
