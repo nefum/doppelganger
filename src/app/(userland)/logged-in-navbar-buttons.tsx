@@ -15,7 +15,7 @@ import { createClient } from "@/utils/supabase/client.ts";
 import { User } from "@supabase/supabase-js";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { LuChevronDown, LuUser } from "react-icons/lu";
 
 async function getAvatarUrl(user: User): Promise<string | null> {
@@ -43,7 +43,7 @@ export function LoggedInNavbarButtons({
 }: Readonly<{ user: User }>): ReactNode {
   const email = user.email ?? "user@example.com";
   const firstTwoChars = email.slice(0, 2).toUpperCase();
-  const supabaseClient = useMemo(() => createClient(), []);
+  const supabaseClient = createClient();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   useEffect(() => {

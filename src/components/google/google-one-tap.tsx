@@ -3,10 +3,10 @@
 import { useHashedNonce } from "@/components/google/hashed-nonce.ts";
 import { createClient } from "@/utils/supabase/client.ts";
 import Script from "next/script";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 function useIsSignedIn(): boolean | null {
-  const supabaseClient = useMemo(() => createClient(), []);
+  const supabaseClient = createClient();
   const [userIsSignedIn, setUserIsSignedIn] = useState<boolean | null>(null);
 
   useEffect(() => {

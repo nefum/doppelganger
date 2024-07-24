@@ -5,7 +5,7 @@ import { useNonce } from "@/components/google/nonce-provider.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { createClient } from "@/utils/supabase/client.ts";
 import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
-import { ReactNode, useEffect, useMemo } from "react";
+import { ReactNode, useEffect } from "react";
 
 /**
  * https://developers.google.com/identity/gsi/web/reference/js-reference#CredentialResponse
@@ -43,7 +43,7 @@ export default function GoogleSigninHandlerProvider({
 }: Readonly<{ children?: ReactNode }>): ReactNode {
   const nonce = useNonce();
   const { toast } = useToast();
-  const supabaseClient = useMemo(() => createClient(), []);
+  const supabaseClient = createClient();
 
   useEffect(() => {
     async function handleSignInWithGoogle(response: CredentialResponse) {
