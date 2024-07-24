@@ -1,5 +1,6 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 
+import * as Sentry from "@sentry/node";
 import { createServer } from "http";
 import next from "next";
 import { parse } from "url";
@@ -50,7 +51,9 @@ app.prepare().then(() => {
       }
 
       handle(req, res, parsedUrl);
-    } catch (err) {
+    } catch (err: any) {
+      Sentry.captureException(err);
+
       console.error("Error occurred handling", req.url, err);
       res.statusCode = 500;
       res.setHeader("Content-Type", "text/plain");
@@ -72,18 +75,24 @@ app.prepare().then(() => {
       ).length;
 
       if (hits) {
-        wss.handleUpgrade(request, socket, head, (ws) => {
-          // open the websocket asap, do our processing lazily
-          if (hitsScrcpy) {
-            handleDeviceStream(request, ws);
-          } else if (hitsEvents) {
-            handleEventStream(request, ws);
-          } else if (hitsKasmVnc) {
-            handleKasmVNC(request, ws);
-          } else if (hitsAudio) {
-            handleAudio(request, ws);
-          }
-        });
+        try {
+          wss.handleUpgrade(request, socket, head, (ws) => {
+            // open the websocket asap, do our processing lazily
+            if (hitsScrcpy) {
+              handleDeviceStream(request, ws);
+            } else if (hitsEvents) {
+              handleEventStream(request, ws);
+            } else if (hitsKasmVnc) {
+              handleKasmVNC(request, ws);
+            } else if (hitsAudio) {
+              handleAudio(request, ws);
+            }
+          });
+        } catch (e: any) {
+          console.error("Error occurred handling WS upgrade", e);
+          Sentry.captureException(e);
+          socket.destroy();
+        }
       }
       // don't destroy the socket, something else may be listening for it
     })

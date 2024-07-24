@@ -6,6 +6,7 @@ import { getDeviceForId } from "%/device-info/device-info";
 import { bringUpDevice, getIsDeviceRunning } from "%/docker/device-state";
 import { scrcpyWsEndpoint } from "%/endpoint-regex";
 import { createClient } from "%/supabase/ro-server";
+import * as Sentry from "@sentry/node";
 import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
 import { attachUpdateListener } from "./attach-update-listener";
@@ -58,6 +59,7 @@ export async function handleDeviceStream(
     const wsUrl = new URL(wsUrlString);
     targetWs = await createWebSocketProxy(wsUrl, req, ws);
   } catch (e) {
+    Sentry.captureException(e);
     console.error("error creating websocket proxy", e);
     ws.close(1014);
     return;

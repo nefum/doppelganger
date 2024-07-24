@@ -9,6 +9,7 @@ Sentry.init({
   integrations: [
     // Add our Profiling integration
     nodeProfilingIntegration(),
+    Sentry.anrIntegration({ captureStackTrace: true }),
   ],
 
   // Add Tracing by setting tracesSampleRate

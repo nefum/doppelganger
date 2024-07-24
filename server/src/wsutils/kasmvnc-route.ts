@@ -6,6 +6,7 @@ import {
 import { audioWsEndpoint, kasmVncWsEndpoint } from "%/endpoint-regex";
 import { createClient } from "%/supabase/ro-server";
 import { Device } from "@prisma/client";
+import * as Sentry from "@sentry/node";
 import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
 import { attachUpdateListener } from "./attach-update-listener";
@@ -92,6 +93,7 @@ async function handleKasmVncDeviceEndpoint(
         break;
     }
   } catch (e) {
+    Sentry.captureException(e);
     console.error("error creating websocket proxy", e);
     ws.close(1014);
     return;
