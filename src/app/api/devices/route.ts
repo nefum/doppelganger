@@ -2,7 +2,7 @@ import prisma from "%/database/prisma.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import { bringUpDevice } from "%/docker/device-state.ts";
 import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
-import { getUsersDevices } from "@/utils/devices.ts";
+import { getDevicesForUser } from "@/utils/devices.ts";
 import { initializeDevice } from "@/utils/redroid/deployment.ts";
 import {
   getMaxDeviceCount,
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   // don't let the user create more devices than their subscription allows
-  const existingDevices = await getUsersDevices(user);
+  const existingDevices = await getDevicesForUser(user);
   const subscriptionStatus = await getSubscriptionStatus(user.id);
   const maxDevices = getMaxDeviceCount(subscriptionStatus);
   if (existingDevices.length >= maxDevices) {

@@ -35,7 +35,10 @@ async function shutdownAbandonedDevice(device: Device): Promise<void> {
 async function handleOwner(ownerId: string, devices: Device[]): Promise<void> {
   const subscriptionStatus = await getSubscriptionStatus(ownerId);
 
-  if (subscriptionStatus === SubscriptionStatus.ACTIVE) {
+  if (
+    subscriptionStatus === SubscriptionStatus.PRO ||
+    subscriptionStatus === SubscriptionStatus.PLUS
+  ) {
     // do nothing, their devices are allowed to run in the background
     return;
   }

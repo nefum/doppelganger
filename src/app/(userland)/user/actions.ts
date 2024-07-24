@@ -2,7 +2,7 @@
 
 import prisma from "%/database/prisma.ts";
 import { destroyDevice } from "%/docker/device-state.ts";
-import { getUsersDevices } from "@/utils/devices.ts";
+import { getDevicesForUser } from "@/utils/devices.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device, DeviceState } from "@prisma/client";
 
@@ -25,7 +25,7 @@ export default async function handleDeleteUser() {
 
   // first, delete the devices that this user owns
 
-  const devices = await getUsersDevices(user);
+  const devices = await getDevicesForUser(user);
 
   async function deleteDevice(deviceToDelete: Device) {
     await prisma.device.update({

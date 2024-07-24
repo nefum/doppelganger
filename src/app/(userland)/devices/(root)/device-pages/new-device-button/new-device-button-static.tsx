@@ -11,7 +11,6 @@ export function NewDeviceButtonStatic({
 }: Readonly<{ className?: string } & ButtonProps>): ReactNode {
   return (
     <Button
-      variant="outline"
       className={clsx("flex items-center gap-2", className)}
       asChild
       {...props}

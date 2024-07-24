@@ -27,10 +27,11 @@ Sentry.init({
       maskAllText: true,
       blockAllMedia: true,
     }),
-    Sentry.feedbackIntegration({
-      // Additional SDK configuration goes in here, for example:
-      colorScheme: "system",
-      enableScreenshot: false,
-    }),
+    // pw: this renders RIGHT where our toast notifications are, so we're disabling it for now
+    // Sentry.feedbackIntegration({
+    //   // Additional SDK configuration goes in here, for example:
+    //   colorScheme: "system",
+    //   enableScreenshot: false,
+    // }),
   ],
 });

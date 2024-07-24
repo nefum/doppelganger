@@ -1,7 +1,7 @@
 import { getIsDeviceRunning } from "%/docker/device-state.ts";
 import { DeviceCard } from "@/app/(userland)/devices/(root)/device-cards/device-card.tsx";
 import NoDevicesCard from "@/app/(userland)/devices/(root)/device-pages/no-devices-card.tsx";
-import { getUsersDevices } from "@/utils/devices.ts";
+import { getDevicesForUser } from "@/utils/devices.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device } from "@prisma/client";
 import NotFound from "next/dist/client/components/not-found-error";
@@ -16,7 +16,7 @@ export default async function UserDevices() {
     return <NotFound />;
   }
 
-  const clientDevices = await getUsersDevices(user);
+  const clientDevices = await getDevicesForUser(user);
 
   const clientDeviceUpStates: { [id: string]: boolean } = {};
 

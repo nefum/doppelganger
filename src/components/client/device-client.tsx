@@ -28,7 +28,7 @@ import {
   useRef,
   useState,
 } from "react";
-import styles from "./sizer.module.css";
+import styles from "../center.module.css";
 
 // 8 MB/s
 const DEVICE_BITRATE_BYTES = 8_000_000;
@@ -180,20 +180,18 @@ const OneshotDeviceClient = forwardRef<
     [createVideoSettingsWithBound, getMaxBounds],
   );
 
-  const sizerResizeObserver = useMemo(() => {
-    return new ResizeObserver(updateBoundsRuntime);
-  }, [updateBoundsRuntime]);
-
   useEffect(() => {
     if (!sizerRef.current) {
       return;
     }
 
-    sizerResizeObserver.observe(sizerRef.current);
+    const resizeObserver = new ResizeObserver(updateBoundsRuntime);
+
+    resizeObserver.observe(sizerRef.current);
     return () => {
-      sizerResizeObserver.disconnect();
+      resizeObserver.disconnect();
     };
-  }, [sizerResizeObserver]);
+  }, [updateBoundsRuntime]);
 
   const handleRatioChange = useMemo(
     () => () => {
@@ -215,23 +213,19 @@ const OneshotDeviceClient = forwardRef<
     [aspectRatio],
   );
 
-  const scrcpyContainerResizeObserver = useMemo(() => {
-    return new ResizeObserver(handleRatioChange);
-  }, [handleRatioChange]);
-
   useEffect(() => {
     if (!connected && !scrcpyClientRef.current) {
       return;
     }
 
     const scrcpyContainer = scrcpyClientRef.current!.containerRef.current!;
-    const resizeObserver = scrcpyContainerResizeObserver;
+    const resizeObserver = new ResizeObserver(handleRatioChange);
 
     resizeObserver.observe(scrcpyContainer);
     return () => {
       resizeObserver.disconnect();
     };
-  }, [connected, scrcpyContainerResizeObserver]);
+  }, [connected, handleRatioChange]);
 
   // turn on keyboard processing when a key is pressed
   useEffect(() => {

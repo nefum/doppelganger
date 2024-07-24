@@ -37,7 +37,7 @@ describe("GET function in route.ts", () => {
       { id: "device1", ownerId: "owner1", lastConnectedAt: new Date() },
     ]);
     // @ts-expect-error -- testing purposes
-    getSubscriptionStatus.mockResolvedValue(SubscriptionStatus.ACTIVE);
+    getSubscriptionStatus.mockResolvedValue(SubscriptionStatus.PRO);
     // @ts-expect-error -- testing purposes
     getIsDeviceRunning.mockResolvedValue(true);
     // @ts-expect-error -- testing purposes

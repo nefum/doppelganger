@@ -122,7 +122,7 @@ function ButtonBar({
         >
           <MdOutlineSpeaker
             className={clsx("h-5 w-5", {
-              "text-blue-500": statsVisible,
+              "text-blue-500": playAudio,
             })}
           />
         </ButtonbarButton>
@@ -138,7 +138,7 @@ function ButtonBar({
         >
           <FaKeyboard
             className={clsx("h-5 w-5", {
-              "text-blue-500": statsVisible,
+              "text-blue-500": captureKeyboard,
             })}
           />
         </ButtonbarButton>
@@ -303,29 +303,41 @@ interface DeviceClientWithButtonsProps {
 
   optionalKeyboardCapture?: boolean;
   optionalAudio?: boolean;
+
+  outerMostClassName?: string;
+  widthLimiterClassName?: string;
+  fullscreenInnerContainerClassName?: string;
+
+  forceFullScreenHandling?: boolean;
 }
 
 export default function DeviceClientWithButtons({
   device,
   optionalAudio,
   optionalKeyboardCapture,
+  outerMostClassName,
+  widthLimiterClassName,
+  fullscreenInnerContainerClassName,
+  forceFullScreenHandling,
 }: Readonly<DeviceClientWithButtonsProps>) {
   const deviceClientHandleRef = useRef<DeviceClientHandle>(null);
   const fullScreenHandle = useFullScreenHandle();
+  // allows customization in multiview
+  const handleAsFullScreen = forceFullScreenHandling || fullScreenHandle.active;
 
-  const [playAudio, setPlayAudio] = useState(optionalAudio ?? true);
+  const [playAudio, setPlayAudio] = useState(!optionalAudio);
   const [captureKeyboard, setCaptureKeyboard] = useState(
-    optionalKeyboardCapture ?? true,
+    !optionalKeyboardCapture,
   );
 
   return (
-    <div>
-      <MaxWidthHardlimiter>
+    <div className={outerMostClassName}>
+      <MaxWidthHardlimiter className={widthLimiterClassName}>
         <FullScreen
           handle={fullScreenHandle}
-          className={clsx({
-            "flex flex-col justify-between": fullScreenHandle.active,
-            "h-full w-full": !fullScreenHandle.active,
+          className={clsx(fullscreenInnerContainerClassName, {
+            "flex flex-col justify-between": handleAsFullScreen,
+            "h-full w-full": !handleAsFullScreen,
           })}
         >
           <div
@@ -334,8 +346,8 @@ export default function DeviceClientWithButtons({
               "flex justify-center items-center place-items-center w-full",
               styles.fullscreenInnerContainer,
               {
-                "min-h-[35vh] max-h-[70vh]": !fullScreenHandle.active,
-                "flex-grow max-h-[93%]": fullScreenHandle.active,
+                "min-h-[35vh] max-h-[70vh]": !handleAsFullScreen,
+                "flex-grow max-h-[93%]": handleAsFullScreen,
               },
             )}
           >
@@ -351,7 +363,7 @@ export default function DeviceClientWithButtons({
           <div className={clsx("flex flex-col justify-end align-middle")}>
             <div
               className={clsx({
-                "my-2": fullScreenHandle.active,
+                "my-2 mx-2": handleAsFullScreen,
               })}
             >
               <ButtonBar

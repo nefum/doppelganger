@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 
 export default function MaxWidthHardlimiter({
   children,
+  className,
 }: {
   children: React.ReactNode;
+  className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,5 +36,9 @@ export default function MaxWidthHardlimiter({
     };
   }, []); // Empty dependency array ensures this effect runs only on mount and unmount
 
-  return <div ref={ref}>{children}</div>;
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
 }

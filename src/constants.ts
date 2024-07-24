@@ -27,7 +27,7 @@ export const AUTHORIZED_USERS_FORBIDDEN_REGEX: RegExp[] = [
 export const MIN_FPS = 10;
 
 export const MAX_DEVICES_FREE = 1;
-export const MAX_DEVICES_PREMIUM = 3;
+export const MAX_DEVICES_PRO = 3;
 
 export const FREE_MAX_FPS = 15; // 15 is pretty crap but suprisingly usable, incentive to push to premium
 export const PREMIUM_MAX_FPS = 60; // 60 will absolutely desimate the server, but without it there is not much incentive to upgrade

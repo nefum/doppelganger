@@ -390,7 +390,9 @@ function NewDeviceForm({
   footerComponentType: FooterComp,
 }: Readonly<NewDeviceFormProps>): ReactNode {
   const { toast } = useToast();
-  const userIsPremium = subscriptionStatus === SubscriptionStatus.ACTIVE;
+  const userIsPremium =
+    subscriptionStatus === SubscriptionStatus.PRO ||
+    subscriptionStatus === SubscriptionStatus.PLUS;
   const maxFps = userIsPremium ? PREMIUM_MAX_FPS : FREE_MAX_FPS;
   const form = useForm<formType>({
     resolver: zodResolver(newDeviceFormSchema),
