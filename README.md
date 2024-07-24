@@ -1,3 +1,5 @@
+[![wakatime](https://wakatime.com/badge/github/regulad/doppelganger-front.svg)](https://wakatime.com/badge/github/regulad/doppelganger-front)
+
 # doppelganger-front
 
 This is the frontend/backend code for the Doppelganger project.
