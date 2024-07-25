@@ -1,6 +1,5 @@
-import { AdbDevice } from "%/adb/adb-device.ts";
+import { AdbDevice, readStreamIntoBufferAndClose } from "%/adb/adb-device.ts";
 import type { DeviceClient } from "@devicefarmer/adbkit";
-import adb from "@devicefarmer/adbkit";
 import { Device } from "@prisma/client";
 import ApkReader from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
@@ -34,7 +33,7 @@ async function installOrUpdateApkAndGrantAllPermissions(
   if (packageIsInstalled) {
     const androidVersionRet: string = await adbClient
       .shell(`dumpsys package ${packageName} | grep versionCode`)
-      .then(adb.util.readAll)
+      .then(readStreamIntoBufferAndClose)
       .then((output: Buffer) => output.toString().trim());
     //     versionCode=599311101 minSdk=24 targetSdk=34
     const installedVersionCode = BigInt(
@@ -50,9 +49,10 @@ async function installOrUpdateApkAndGrantAllPermissions(
     if (isOurPackage) {
       // we use debug versions of the apps to enable logcat logging, so we need to uninstall to clear the
       await adbClient.uninstall(packageName);
+      // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
       await adbClient
         .shell(`pm uninstall ${packageName}`)
-        .then(adb.util.readAll); // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
+        .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
     }
     await adbClient.install(apkPath);
   }
@@ -64,7 +64,7 @@ async function installOrUpdateApkAndGrantAllPermissions(
       grantPromises.push(
         adbClient
           .shell(`pm grant ${packageName} ${permission}`)
-          .then(adb.util.readAll)
+          .then(readStreamIntoBufferAndClose)
           .catch(() => {}), // errors in permission granting are not fatal
       );
     }

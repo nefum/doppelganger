@@ -4,9 +4,9 @@ import {
 } from "%/device-info/device-info-utils";
 import { getRedroidImage } from "%/device-info/redroid-images";
 import type { DeviceClient } from "@devicefarmer/adbkit";
-import adbKit from "@devicefarmer/adbkit";
 import { Device } from "@prisma/client";
 import { spawn } from "child_process";
+import { Duplex } from "node:stream";
 import adb from "./adb";
 
 enum PID_DETECTION_METHOD {
@@ -20,6 +20,27 @@ enum PID_DETECTION_METHOD {
 interface AdbListDeviceDevice {
   id: string;
   type: "emulator" | "device" | "offline" | "unauthorized";
+}
+
+export function readStreamIntoBufferAndClose(stream: Duplex): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+
+    stream.on("data", (chunk: Buffer) => {
+      chunks.push(chunk);
+    });
+
+    stream.on("end", () => {
+      const result = Buffer.concat(chunks);
+      stream.destroy();
+      resolve(result);
+    });
+
+    stream.on("error", (error: Error) => {
+      stream.destroy();
+      reject(error);
+    });
+  });
 }
 
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/Device.ts
@@ -69,7 +90,7 @@ export class AdbDevice {
     }
     return this.adbClient
       .shell(command)
-      .then(adbKit.util.readAll)
+      .then(readStreamIntoBufferAndClose)
       .then((output: Buffer) => output.toString().trim());
   }
 
