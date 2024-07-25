@@ -1,15 +1,14 @@
-import type { Client as ClientType } from "@devicefarmer/adbkit";
+import type { Client } from "@devicefarmer/adbkit";
 import adbKit from "@devicefarmer/adbkit";
-// @ts-expect-error -- improperly exported
-const { Client } = adbKit;
 
 interface CustomNodeJsGlobal {
-  ___adb: ClientType;
+  ___adb: Client;
 }
 
 declare const globalThis: CustomNodeJsGlobal & { [key: string]: any };
 
-const adb = globalThis.___adb || new Client();
+// @ts-expect-error -- this lib is so weird
+const adb = globalThis.___adb || adbKit.createClient?.() || new adbKit.Client();
 
 globalThis.___adb = adb;
 
