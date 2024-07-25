@@ -3,10 +3,12 @@ import { DeviceClient } from "@devicefarmer/adbkit";
 import Util from "@devicefarmer/adbkit/dist/src/adb/util";
 import { Device } from "@prisma/client";
 import ApkReader from "adbkit-apkreader";
-import { globStream } from "glob";
+// import { globStream } from "glob"; // glob doesn't webpack
+import { globby } from "globby";
 import path from "path";
 
-const apksDir = process.env.NODE_ENV ? "../../android" : "../../../android";
+const apksDir =
+  process.env.NODE_ENV === "production" ? "../../android" : "../../../android";
 const absoluteApksDir = path.resolve(__dirname, apksDir);
 
 async function installOrUpdateApkAndGrantAllPermissions(
@@ -97,20 +99,10 @@ export default async function doInitialDeviceSetup(
   const adbClient = adbDevice.adbClient;
 
   // glob the apks in absoluteApksDir
-  const apkStream = globStream(absoluteApksDir + "/*.apk");
-
-  const installPromises: Promise<void>[] = [];
-
-  apkStream.on("data", (apkPath) => {
-    installPromises.push(
+  const apks = await globby(absoluteApksDir + "/*.apk");
+  await Promise.all(
+    apks.map((apkPath) =>
       installOrUpdateApkAndGrantAllPermissions(adbClient, apkPath),
-    );
-  });
-
-  // wait for the stream to be depleted
-  await new Promise((resolve) => {
-    apkStream.on("end", () => resolve(null));
-  });
-
-  await Promise.all(installPromises);
+    ),
+  );
 }
