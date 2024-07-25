@@ -2,10 +2,7 @@ import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
 import getStaticUrlForImageDataUrl from "@/app/api/render/path.ts";
 import { BASE_ORIGIN } from "@/constants.ts";
-import {
-  ONESIGNAL_APP_ID,
-  oneSignalClient,
-} from "@/utils/onesignal/onesignal-server.ts";
+import getOneSignalClient from "@/utils/onesignal/onesignal-server.ts";
 import * as OneSignal from "@onesignal/node-onesignal";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -89,7 +86,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const destinationNotification = new OneSignal.Notification();
-  destinationNotification.app_id = ONESIGNAL_APP_ID;
+  destinationNotification.app_id = process.env.ONESIGNAL_APP_ID!;
   destinationNotification.include_aliases = { external_id: [device.ownerId] };
   destinationNotification.target_channel = "push";
 
@@ -149,6 +146,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   destinationNotification.ios_badge_type = "Increase";
   destinationNotification.ios_badge_count = 1;
+
+  const oneSignalClient = getOneSignalClient();
 
   await oneSignalClient.createNotification(destinationNotification);
 
