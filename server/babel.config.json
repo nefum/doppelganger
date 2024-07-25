@@ -3,7 +3,7 @@
     [
       "@babel/preset-env",
       {
-        "modules": "commonjs"
+        "modules": false
       }
     ],
     [
@@ -25,7 +25,8 @@
           "^%/(.+)": "./server/src/\\1"
         }
       }
-    ]
+    ],
+    "./babel-plugin-add-js-extension.cjs"
   ],
   "sourceMaps": true
 }

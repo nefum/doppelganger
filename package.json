@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "init": "git submodule update --init --recursive",
-    "android:fetch": "bash scripts/download-scrcpy-server.sh & find scripts -name 'download-pheidippides-*.sh' -type f | xargs -I {} -P 0 bash {}",
+    "android:fetch": "bash scripts/download-scrcpy-server.sh & bash scripts/download-fdroid.sh & find scripts -name 'download-pheidippides-*.sh' -type f | xargs -I {} -P 0 bash {}",
     "db:generate": "prisma generate",
     "db:migrate": "dotenvx run --env-file=.env.local -- prisma migrate dev",
     "db:seed": "dotenvx run --env-file=.env.local -- tsx prisma/seed.ts",
@@ -23,7 +23,7 @@
     "test:watch": "jest --watch",
     "ui:add": "pnpx shadcn-ui@latest add"
   },
-  "type": "commonjs",
+  "type": "module",
   "engines": {
     "node": ">=22.4.0"
   },
@@ -80,8 +80,9 @@
     "dockerode-compose": "^1.4.0",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
+    "fast-glob": "^3.3.2",
+    "find-up": "^7.0.0",
     "framer-motion": "^11.3.4",
-    "globby": "^14.0.2",
     "h264-converter": "^0.1.4",
     "image-size": "^1.1.1",
     "ioredis": "^5.4.1",

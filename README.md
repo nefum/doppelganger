@@ -13,7 +13,6 @@ Illegal reuse/rehosting will be met with a DMCA takedown request, and litigation
 
 - `dockerode-compose` is really weird. It doesn't call the docker-compose backend, instead it recreates the container definiton. For this reason, it is not used in this project.
 - `next-ws` is extremely unstable and uses an odd "plugin" (patching) install technique. It will not be used for this reason; all WS paths are implemented manually in the server/\* package.
-- Cannot set type: module in the package.json because it stops babel from working on the server folder, and I couldn't get webpack to work in the server folder.
 
 ## Installation
 

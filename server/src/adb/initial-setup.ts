@@ -4,12 +4,12 @@ import Util from "@devicefarmer/adbkit/dist/src/adb/util";
 import { Device } from "@prisma/client";
 import ApkReader from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
-import { globby } from "globby";
+// import { globby } from "globby"; // globby is esm-only and this module gets transpiled to cjs
+import { glob } from "fast-glob";
+import { findUpSync } from "find-up";
 import path from "path";
 
-const apksDir =
-  process.env.NODE_ENV === "production" ? "../../android" : "../../../android";
-const absoluteApksDir = path.resolve(__dirname, apksDir);
+const apksDir = path.resolve(findUpSync("package.json")!, "../android"); // may be called from any directory
 
 async function installOrUpdateApkAndGrantAllPermissions(
   adbClient: DeviceClient,
@@ -64,7 +64,8 @@ async function installOrUpdateApkAndGrantAllPermissions(
         adbClient
           .shell(`pm grant ${packageName} ${permission}`)
           .then(Util.readAll)
-          .then(() => {}),
+          .then(() => {})
+          .catch(() => {}), // errors in permission granting are not fatal
       );
     }
     await Promise.all(grantPromises);
@@ -99,7 +100,7 @@ export default async function doInitialDeviceSetup(
   const adbClient = adbDevice.adbClient;
 
   // glob the apks in absoluteApksDir
-  const apks = await globby(absoluteApksDir + "/*.apk");
+  const apks = await glob(apksDir + "/*.apk");
   await Promise.all(
     apks.map((apkPath) =>
       installOrUpdateApkAndGrantAllPermissions(adbClient, apkPath),

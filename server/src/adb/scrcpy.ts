@@ -1,16 +1,13 @@
 import { getDefaultRedroidHostname } from "%/device-info/device-info-utils";
 import { Device } from "@prisma/client";
+import { findUpSync } from "find-up";
 import path from "path";
 import { AdbDevice } from "./adb-device";
 
-const localScrcpyServerJarRelative =
-  process.env.NODE_ENV === "production"
-    ? "../../scrcpy/scrcpy-server.jar"
-    : "../../../scrcpy/scrcpy-server.jar";
 const LOCAL_SCRCPY_SERVER_PATH = path.resolve(
-  __dirname,
-  localScrcpyServerJarRelative,
-);
+  findUpSync("package.json")!,
+  "../scrcpy/scrcpy-server.jar",
+); // may be called from any directory
 const SCRCPY_WS_PORT = 8886;
 // this is a temporary path in android, it can be used to store the scrcpy server binary
 const TEMP_PATH = "/data/local/tmp/";
