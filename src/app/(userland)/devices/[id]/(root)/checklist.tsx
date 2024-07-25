@@ -4,7 +4,10 @@
 import { AdbDevice } from "%/adb/adb-device.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
-import { ClientSideIsPwaChecklistItem } from "@/app/(userland)/devices/[id]/(root)/clientside-checklist.tsx";
+import {
+  ClientSideIsPwaChecklistItem,
+  ClientSideIsSignedUpForNotificationsChecklistItem,
+} from "@/app/(userland)/devices/[id]/(root)/clientside-checklist.tsx";
 import NotFound from "@/app/not-found.tsx";
 import CopyButton from "@/components/copy-button.tsx";
 import {
@@ -113,6 +116,7 @@ export async function DeviceChecklist({
             </div>
           )}
           <ClientSideIsPwaChecklistItem />
+          <ClientSideIsSignedUpForNotificationsChecklistItem />
         </div>
       </CardContent>
     </Card>
