@@ -13,6 +13,7 @@ Illegal reuse/rehosting will be met with a DMCA takedown request, and litigation
 
 - `dockerode-compose` is really weird. It doesn't call the docker-compose backend, instead it recreates the container definiton. For this reason, it is not used in this project.
 - `next-ws` is extremely unstable and uses an odd "plugin" (patching) install technique. It will not be used for this reason; all WS paths are implemented manually in the server/\* package.
+- Do not set `"type": "module"` in the package.json, it breaks certain interop modules.
 
 ## Installation
 
