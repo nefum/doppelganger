@@ -27,6 +27,7 @@ async function main() {
       redroidDpi: 230,
       redroidWidth: 590,
       redroidHeight: 1140,
+      redroidSecret: "tee/hee",
     },
   });
 }

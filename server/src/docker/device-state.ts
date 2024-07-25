@@ -1,5 +1,7 @@
 import { AdbDevice } from "%/adb/adb-device";
+import doInitialDeviceSetup from "%/adb/initial-setup.ts";
 import { Device } from "@prisma/client";
+import * as Sentry from "@sentry/nextjs";
 import { spawn } from "node:child_process";
 import { rm } from "node:fs/promises";
 import { stderr as processStderr, stdout as processStdout } from "process";
@@ -53,14 +55,25 @@ export function runDockerCommand(
 export async function bringUpDevice(device: Device): Promise<void> {
   // https://gist.github.com/regulad/0cc0b5d92b35dcd2b679723b5701aacb
   // https://gist.github.com/regulad/6024b520cc1b118088f21cd311133c38
-  await runDockerCommand("compose", [
-    "-f",
-    getDockerComposeFilePath(device.id),
-    "up",
-    "-d",
-  ]);
-  const adbDevice = new AdbDevice(device);
-  await adbDevice.waitForAdbServerToBeReady();
+  try {
+    await runDockerCommand("compose", [
+      "-f",
+      getDockerComposeFilePath(device.id),
+      "up",
+      "-d",
+    ]);
+  } catch (error: any) {
+    Sentry.captureException(error);
+    console.error("Error bringing up docker device:", error.message);
+  }
+  try {
+    const adbDevice = new AdbDevice(device);
+    await adbDevice.waitForAdbServerToBeReady();
+    await doInitialDeviceSetup(device);
+  } catch (error: any) {
+    Sentry.captureException(error);
+    console.error("Error setting up device:", error.message);
+  }
 }
 
 /**

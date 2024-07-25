@@ -1,16 +1,9 @@
 const path = require('path');
-const glob = require('glob');
-
-// Dynamically find all TypeScript files in the workers directory
-const workerEntries = glob.sync('./workers/**/*.ts').reduce((acc, path) => {
-  const entryKey = path.replace('./workers/', '').replace('.ts', '');
-  acc[entryKey] = path;
-  return acc;
-}, {});
+const globEntries = require('webpack-glob-entries');
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
-  entry: workerEntries,
+  entry: globEntries('./workers/**/*.ts'),
   module: {
     rules: [
       {

@@ -4,7 +4,7 @@
 DOWNLOAD_URL="https://nightly.link/nefum/pheidippides-notify/workflows/android/master/apk.zip"
 TEMP_DIR=$(mktemp -d)
 DESTINATION_DIR="./android"
-DESTINATION_FILE="$DESTINATION_DIR/pheidippides-notify.apk"
+DESTINATION_FILE="$DESTINATION_DIR/PheidippidesNotify.apk"
 
 # Create destination directory if it doesn't exist
 mkdir -p "$DESTINATION_DIR"
@@ -36,4 +36,4 @@ fi
 # Clean up
 rm -rf "$TEMP_DIR"
 
-echo "Successfully downloaded and placed pheidippides-notify.apk in $DESTINATION_FILE"
+echo "Successfully downloaded and placed PheidippidesNotify.apk in $DESTINATION_FILE"

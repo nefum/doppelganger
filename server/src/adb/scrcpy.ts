@@ -3,7 +3,10 @@ import { Device } from "@prisma/client";
 import path from "path";
 import { AdbDevice } from "./adb-device";
 
-const localScrcpyServerJarRelative = "../../scrcpy/scrcpy-server.jar";
+const localScrcpyServerJarRelative =
+  process.env.NODE_ENV === "production"
+    ? "../../scrcpy/scrcpy-server.jar"
+    : "../../../scrcpy/scrcpy-server.jar";
 const LOCAL_SCRCPY_SERVER_PATH = path.resolve(
   __dirname,
   localScrcpyServerJarRelative,

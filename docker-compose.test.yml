@@ -1,0 +1,78 @@
+name: staging1
+
+services:
+  redroid:
+    restart: "unless-stopped"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.1'
+          memory: 700M
+    image: "abing7k/redroid:a11_gapps_arm"
+    hostname: "redroid"
+    ports:
+      - "5555:5555/tcp"
+      - "8886:8886/tcp"
+    privileged: true  # required for redroid
+    volumes:
+      - type: volume
+        source: redroid-data
+        target: /data
+    environment:
+      TZ: "EST+5EDT"
+    command:
+      - "androidboot.use_memfd=true"
+      - "androidboot.redroid_fps=${MAX_FPS:-30}"
+      - "androidboot.redroid_width=${DEVICE_WIDTH:-1170}"
+      - "androidboot.redroid_height=${DEVICE_HEIGHT:-2532}"
+      - "androidboot.redroid_dpi=${DEVICE_DPI:-460}"
+      - "androidboot.redroid_net_ndns=2"
+      - "androidboot.redroid_net_dns1=1.1.1.1"
+      - "androidboot.redroid_net_dns2=1.0.0.1"
+      - "androidboot.redroid_gpu_mode=guest"
+      - "ro.doppelganger.origin=http://100.79.179.5:3030"
+      - "ro.doppelganger.device=staging"
+      - "ro.doppelganger.secret=tee/hee"
+  scrcpy:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 300M
+        reservations:
+          cpus: '0.1'
+          memory: 20M
+    image: "ghcr.io/regulad/workspaces-images:sndcpy"
+    ports:
+      - "6901:6901/tcp"
+      - "4901:4901/tcp"
+    shm_size: "512m"
+    restart: "unless-stopped"
+    tty: true
+    stdin_open: true
+    depends_on:
+      - "redroid"
+    environment:
+      ADB_DEVICE: "redroid:5555"
+      SCRCPY_FPS: ${MAX_FPS:-30}
+      SCRCPY_WIDTH: ${DEVICE_WIDTH:-1170}
+      SCRCPY_HEIGHT: ${DEVICE_HEIGHT:-2532}
+      VNC_PW: ${VNC_PW:-password1234}
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  redroid-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/doppelganger/staging/staging1
+    name: redroid-data
+    labels:
+      com.docker.storage.quota.size: "34359738368"  # 32GB in bytes
