@@ -1,4 +1,4 @@
-import pwaClickHandler from "@/app/(userland)/devices/(root)/device-cards/pwa-click-handler.ts";
+import pwaClickHandler from "@/app/(userland)/devices/pwa-click-handler.ts";
 import DeviceClientWithButtons from "@/components/client/device-client-with-buttons.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {

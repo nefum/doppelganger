@@ -6,7 +6,11 @@ import { TbBoxMultiple } from "react-icons/tb";
 import { useMediaQuery } from "usehooks-ts";
 
 export default function MultiviewButtonClient() {
-  const isSmallScreen = useMediaQuery("(max-width: 768px)");
+  // this is ssr'd
+  const isSmallScreen = useMediaQuery("(max-width: 768px)", {
+    defaultValue: true,
+    initializeWithValue: false,
+  });
 
   if (isSmallScreen) {
     return null;

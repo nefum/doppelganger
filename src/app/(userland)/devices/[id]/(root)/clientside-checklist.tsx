@@ -18,8 +18,7 @@ export function ClientSideIsPwaChecklistItem() {
           {!isPwa
             ? "Doppelganger supports installation as a PWA to provide a rich integration with your device. " +
               "You can install it by clicking the install button in the address bar, or by clicking share and then add to home screen in iOS."
-            : "Doppelganger is running inside of a PWA! When loading a device from the dashboard, " +
-              "the device will be loaded completely full-screen. To leave this mode, you will need to restart the PWA."}
+            : "Doppelganger is running inside of a PWA! You can connect to your devices immersively"}
         </small>
       </label>
     </div>

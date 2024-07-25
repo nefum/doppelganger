@@ -2,6 +2,12 @@ import { checkPWA } from "@/utils/hooks/use-is-pwa.ts";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { MouseEvent as ReactMouseEvent } from "react";
 
+/**
+ * Catches a click on a "Click Device" or "Interact" button to redirect to the PWA-specific immersive view.
+ * @param router
+ * @param deviceInfo
+ * @param e
+ */
 export default function pwaClickHandler(
   router: AppRouterInstance,
   deviceInfo: { id: string },

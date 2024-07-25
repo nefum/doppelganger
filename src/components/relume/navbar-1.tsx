@@ -57,7 +57,10 @@ export const Navbar1 = (props: Navbar1Props) => {
   } as Props;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 991px)");
+  const isMobile = useMediaQuery("(max-width: 991px)", {
+    defaultValue: false,
+    initializeWithValue: false, // ssr
+  });
 
   return (
     <nav className="flex w-full items-center border-b border-border-primary bg-background-primary lg:min-h-18 lg:px-[5%]">

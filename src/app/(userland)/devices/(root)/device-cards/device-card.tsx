@@ -30,8 +30,8 @@ import DeviceInfoPageButton from "@/app/(userland)/devices/(root)/device-cards/d
 import DeviceQuickSettingsButton from "@/app/(userland)/devices/(root)/device-cards/device-quick-settings-button.tsx";
 import styles from "@/app/(userland)/devices/(root)/device-cards/fill.module.css";
 import { ImmersiveClientButton } from "@/app/(userland)/devices/(root)/device-cards/immersive-client-button.tsx";
-import pwaClickHandler from "@/app/(userland)/devices/(root)/device-cards/pwa-click-handler.ts";
 import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
+import pwaClickHandler from "@/app/(userland)/devices/pwa-click-handler.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { toTitleCase } from "@/utils/misc.ts";

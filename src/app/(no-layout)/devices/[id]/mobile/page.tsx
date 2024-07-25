@@ -1,4 +1,5 @@
 import { getDeviceForId } from "%/device-info/device-info.ts";
+import CornerBackButton from "@/app/(no-layout)/devices/[id]/mobile/corner-back-button.tsx";
 import ISpinner from "@/app/(no-layout)/devices/[id]/mobile/ispinner.tsx";
 import DeviceClient from "@/components/client/device-client.tsx";
 import { createClient } from "@/utils/supabase/server.ts";
@@ -32,14 +33,17 @@ export default async function Page({
   }
 
   return (
-    <div className="flex justify-center items-center place-items-center h-screen w-screen">
-      <DeviceClient
-        device={deviceInfo}
-        loadingNode={<ISpinner large />}
-        playAudio
-        captureKeyboard
-        autoRotate
-      />
-    </div>
+    <>
+      <div className="flex justify-center items-center place-items-center h-screen w-screen">
+        <DeviceClient
+          device={deviceInfo}
+          loadingNode={<ISpinner large />}
+          playAudio
+          captureKeyboard
+          autoRotate
+        />
+      </div>
+      <CornerBackButton />
+    </>
   );
 }
