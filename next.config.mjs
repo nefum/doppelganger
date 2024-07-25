@@ -1,7 +1,6 @@
 // @ts-check
 import {withSentryConfig} from "@sentry/nextjs";
 import withMdxFactory from '@next/mdx';
-import withPwaFactory from "next-pwa";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
 import remarkFrontmatter from "remark-frontmatter";
@@ -98,9 +97,5 @@ const mdxConfig = withMdxFactory({
     rehypePlugins: [],
   }
 })(sentryConfig);
-
-// const pwaConfig = withPwaFactory({
-//
-// })(mdxConfig);
 
 export default mdxConfig;

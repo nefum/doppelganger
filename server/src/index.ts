@@ -5,7 +5,7 @@ import { createServer } from "http";
 import next from "next";
 import { parse } from "url";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
-import { WebSocket as WsWebSocket } from "ws";
+import { WebSocketServer } from "ws";
 import {
   audioWsEndpoint,
   eventsWsEndpoint,
@@ -34,7 +34,7 @@ const handle = app.getRequestHandler();
 // it doesn't even support dynamic URLs, which is not only a fundamental feature of Next.js, but also required for
 // this project. i am implementing any WS communication manually
 
-const wss = new WsWebSocket.Server({
+const wss = new WebSocketServer({
   noServer: true,
   perMessageDeflate: false, // https://www.npmjs.com/package/ws/v/8.0.0#websocket-compression
 });

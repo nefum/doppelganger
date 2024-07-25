@@ -1,12 +1,11 @@
 import { AdbDevice } from "%/adb/adb-device.ts";
-import { DeviceClient } from "@devicefarmer/adbkit";
-import Util from "@devicefarmer/adbkit/dist/src/adb/util";
+import type { DeviceClient } from "@devicefarmer/adbkit";
+import adb from "@devicefarmer/adbkit";
 import { Device } from "@prisma/client";
 import ApkReader from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
-// import { globby } from "globby"; // globby is esm-only and this module gets transpiled to cjs
-import { glob } from "fast-glob";
 import { findUpSync } from "find-up";
+import { globby } from "globby";
 import path from "path";
 
 const apksDir = path.resolve(findUpSync("package.json")!, "../android"); // may be called from any directory
@@ -35,7 +34,7 @@ async function installOrUpdateApkAndGrantAllPermissions(
   if (packageIsInstalled) {
     const androidVersionRet: string = await adbClient
       .shell(`dumpsys package ${packageName} | grep versionCode`)
-      .then(Util.readAll)
+      .then(adb.util.readAll)
       .then((output: Buffer) => output.toString().trim());
     //     versionCode=599311101 minSdk=24 targetSdk=34
     const installedVersionCode = BigInt(
@@ -51,7 +50,9 @@ async function installOrUpdateApkAndGrantAllPermissions(
     if (isOurPackage) {
       // we use debug versions of the apps to enable logcat logging, so we need to uninstall to clear the
       await adbClient.uninstall(packageName);
-      await adbClient.shell(`pm uninstall ${packageName}`); // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
+      await adbClient
+        .shell(`pm uninstall ${packageName}`)
+        .then(adb.util.readAll); // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
     }
     await adbClient.install(apkPath);
   }
@@ -63,8 +64,7 @@ async function installOrUpdateApkAndGrantAllPermissions(
       grantPromises.push(
         adbClient
           .shell(`pm grant ${packageName} ${permission}`)
-          .then(Util.readAll)
-          .then(() => {})
+          .then(adb.util.readAll)
           .catch(() => {}), // errors in permission granting are not fatal
       );
     }
@@ -100,7 +100,7 @@ export default async function doInitialDeviceSetup(
   const adbClient = adbDevice.adbClient;
 
   // glob the apks in absoluteApksDir
-  const apks = await glob(apksDir + "/*.apk");
+  const apks = await globby(apksDir + "/*.apk");
   await Promise.all(
     apks.map((apkPath) =>
       installOrUpdateApkAndGrantAllPermissions(adbClient, apkPath),
