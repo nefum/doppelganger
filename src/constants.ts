@@ -30,9 +30,10 @@ export const MAX_DEVICES_FREE = 1;
 export const MAX_DEVICES_PRO = 3;
 
 export const FREE_MAX_FPS = 15; // 15 is pretty crap but suprisingly usable, incentive to push to premium
-export const PREMIUM_MAX_FPS = 60; // 60 will absolutely desimate the server, but without it there is not much incentive to upgrade
+export const PLUS_MAX_FPS = 30; // 30 is pretty good, but not quite as good as pro
+export const PRO_MAX_FPS = 60; // 60 will absolutely desimate the server, but without it there is not much incentive to upgrade
 
-export const FREE_TIER_IDLE_TIME_MS = 1_000 * 5 * 60; // 5 minutes
+export const FREE_TIER_IDLE_TIME_MS = 1_000 * 60 * 5; // 5 minutes
 
 // from template/docker-compose.1.9.yml
 export const VOLUME_SIZE_LIMIT_BYTES = 17_179_869_184; // 16 GiB

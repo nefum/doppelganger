@@ -6,13 +6,23 @@ import { getDevicesForUser } from "@/utils/devices.ts";
 import { initializeDevice } from "@/utils/redroid/deployment.ts";
 import {
   getMaxDeviceCount,
+  getMaxFps,
   getSubscriptionStatus,
+  SubscriptionStatus,
 } from "@/utils/subscriptions.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export interface NewDeviceResponse {
+  id?: string;
+  error?: string;
+  details?: string;
+}
+
+export async function POST(
+  req: NextRequest,
+): Promise<NextResponse<NewDeviceResponse>> {
   const supabaseClient = createClient();
   const {
     data: { user },
@@ -32,7 +42,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   if (!parseSuccess) {
     return NextResponse.json(
-      { error: "Invalid request", details: error },
+      { error: "Invalid request", details: error?.message },
       { status: 400 },
     );
   }
@@ -51,13 +61,39 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { deviceName, redroidImage, fps, width, height, dpi } = data!;
+  const {
+    deviceName,
+    redroidImage: redroidImageName,
+    fps,
+    width,
+    height,
+    dpi,
+  } = data!;
   const specs = { width, height, dpi };
+  const redroidImage = getRedroidImage(redroidImageName)!;
+
+  if (redroidImage.premium && subscriptionStatus === SubscriptionStatus.FREE) {
+    return NextResponse.json(
+      {
+        error: "You need to upgrade to a Pro subscription to use this image",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (fps > getMaxFps(subscriptionStatus)) {
+    return NextResponse.json(
+      {
+        error: "You need to upgrade to a Pro subscription to use this fps",
+      },
+      { status: 400 },
+    );
+  }
 
   const device = await initializeDevice(
     user.id,
     deviceName,
-    getRedroidImage(redroidImage)!,
+    redroidImage,
     fps,
     specs,
   );

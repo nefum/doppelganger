@@ -9,10 +9,8 @@ import allRedroidImages, {
   RedroidImage,
 } from "%/device-info/redroid-images.ts";
 import NewDeviceButtonClient from "@/app/(userland)/devices/(root)/device-pages/new-device-button/new-device-button-client.tsx";
-import {
-  isFreeTierCompatible,
-  newDeviceFormSchema,
-} from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
+import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
+import { NewDeviceResponse } from "@/app/api/devices/route.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Command,
@@ -64,9 +62,9 @@ import {
   type toast as baseToast,
   useToast,
 } from "@/components/ui/use-toast.ts";
-import { FREE_MAX_FPS, MIN_FPS, PREMIUM_MAX_FPS } from "@/constants.ts";
+import { MIN_FPS } from "@/constants.ts";
 import { cn } from "@/lib/utils.ts";
-import { SubscriptionStatus } from "@/utils/subscriptions.ts";
+import { getMaxFps, SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -393,7 +391,7 @@ function NewDeviceForm({
   const userIsPremium =
     subscriptionStatus === SubscriptionStatus.PRO ||
     subscriptionStatus === SubscriptionStatus.PLUS;
-  const maxFps = userIsPremium ? PREMIUM_MAX_FPS : FREE_MAX_FPS;
+  const maxFps = getMaxFps(subscriptionStatus);
   const form = useForm<formType>({
     resolver: zodResolver(newDeviceFormSchema),
     defaultValues: {
@@ -408,17 +406,6 @@ function NewDeviceForm({
 
   const onSubmit = useMemo(
     () => async (values: formType) => {
-      if (!userIsPremium) {
-        const freeTierCompatible = isFreeTierCompatible(values);
-        if (!freeTierCompatible) {
-          toast({
-            title: "Premium Required",
-            description: "You need premium to create this device.",
-          });
-          return;
-        }
-      }
-
       setDialogCanClose(false);
 
       toast({
@@ -429,7 +416,7 @@ function NewDeviceForm({
       });
 
       let result: Response;
-      let resultJson: { id?: string; error?: string };
+      let resultJson: NewDeviceResponse;
       try {
         result = await fetch("/api/devices", {
           method: "POST",
@@ -467,7 +454,7 @@ function NewDeviceForm({
         setDialogCanClose(true);
       }
     },
-    [setDialogCanClose, toast, userIsPremium],
+    [setDialogCanClose, toast],
   );
 
   return (

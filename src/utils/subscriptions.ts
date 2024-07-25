@@ -1,9 +1,15 @@
-import { MAX_DEVICES_FREE, MAX_DEVICES_PRO } from "@/constants.ts";
+import {
+  FREE_MAX_FPS,
+  MAX_DEVICES_FREE,
+  MAX_DEVICES_PRO,
+  PLUS_MAX_FPS,
+  PRO_MAX_FPS,
+} from "@/constants.ts";
 
 export enum SubscriptionStatus {
   PRO = "PRO",
   PLUS = "PLUS",
-  INACTIVE = "INACTIVE",
+  FREE = "FREE",
 }
 
 export async function getSubscriptionStatus(
@@ -11,7 +17,7 @@ export async function getSubscriptionStatus(
 ): Promise<SubscriptionStatus> {
   return userId === "4d7a801f-130a-438f-b013-31e738693fad"
     ? SubscriptionStatus.PRO
-    : SubscriptionStatus.INACTIVE; // TODO
+    : SubscriptionStatus.FREE; // TODO
 }
 
 export function getMaxDeviceCount(
@@ -22,5 +28,17 @@ export function getMaxDeviceCount(
       return MAX_DEVICES_PRO;
     default:
       return MAX_DEVICES_FREE;
+  }
+}
+
+export function getMaxFps(subscriptionStatus: SubscriptionStatus): number {
+  switch (subscriptionStatus) {
+    case SubscriptionStatus.PRO:
+      return PRO_MAX_FPS;
+    case SubscriptionStatus.PLUS:
+      return PLUS_MAX_FPS;
+    default:
+    case SubscriptionStatus.FREE:
+      return FREE_MAX_FPS;
   }
 }
