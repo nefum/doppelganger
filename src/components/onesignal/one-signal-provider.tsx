@@ -95,7 +95,11 @@ export default function OneSignalProvider({
           });
         });
       })
-      .catch((error) => {
+      .catch((error: any) => {
+        if (error.message && error.message === "OneSignal is already initialized.") {
+          return; // this failure is inconsequential
+        }
+
         Sentry.captureException(error);
         console.error("OneSignal initialization failed:", error);
       });
