@@ -96,7 +96,10 @@ export default function OneSignalProvider({
         });
       })
       .catch((error: any) => {
-        if (error.message && error.message === "OneSignal is already initialized.") {
+        if (
+          error.message &&
+          error.message === "OneSignal is already initialized."
+        ) {
           return; // this failure is inconsequential
         }
 

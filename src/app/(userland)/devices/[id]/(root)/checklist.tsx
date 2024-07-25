@@ -43,7 +43,7 @@ export async function DeviceChecklist({
   const deviceUp = await getRunningStatus(device);
   if (deviceUp) {
     try {
-      await adbDevice.connect();
+      await adbDevice.connectRobust(15_000);
     } catch (e) {
       console.error(e);
     }

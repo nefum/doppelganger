@@ -68,7 +68,7 @@ export async function bringUpDevice(device: Device): Promise<void> {
   }
   try {
     const adbDevice = new AdbDevice(device);
-    await adbDevice.waitForAdbServerToBeReady();
+    await adbDevice.connectRobust(30_000); // 30 sec
     await doInitialDeviceSetup(device);
   } catch (error: any) {
     Sentry.captureException(error);

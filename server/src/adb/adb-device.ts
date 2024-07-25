@@ -70,13 +70,27 @@ export class AdbDevice {
     );
   }
 
+  async connectRobust(timeout?: number): Promise<void> {
+    // keep trying to run connect until either the timeout is reached or the device is connected
+    const startTime = Date.now();
+    while (true) {
+      try {
+        await this.connect();
+        return;
+      } catch (e: any) {
+        if (timeout && Date.now() - startTime > timeout) {
+          throw new Error("Timeout waiting for device to connect");
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
+  }
+
   async getIsConnected(): Promise<boolean> {
     const allDevices = await adb.listDevices();
     return allDevices.some(
       (device: AdbListDeviceDevice) =>
-        device.id === this.udid &&
-        device.type !== "unauthorized" &&
-        device.type !== "offline",
+        device.id === this.udid && device.type === "device",
     );
   }
 
@@ -341,58 +355,4 @@ export class AdbDevice {
       }
     }
   }
-
-  waitForAdbServerToBeReady(maxTimeout?: number): Promise<void> {
-    return waitForAdbServerToBeReady(this.udid, maxTimeout);
-  }
-}
-
-/**
- * Continuously queries a device over ADB until it is connectable and ready to accept commands.
- * @param adbSeverUdid The udid of the device to query.
- * @param maxTimeout
- */
-function waitForAdbServerToBeReady(
-  adbSeverUdid: string,
-  maxTimeout?: number,
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    const startTime = Date.now();
-    const checkConnection = async () => {
-      try {
-        // if there is a : we need to split into host, port
-        if (adbSeverUdid.includes(":")) {
-          const [host, port] = adbSeverUdid.split(":");
-          await adb.connect(host, parseInt(port, 10));
-        } else {
-          await adb.connect(adbSeverUdid);
-        }
-      } catch (e) {
-        console.error("Failed to connect to ADB server", e);
-      }
-
-      try {
-        const devices = await adb.listDevices();
-        if (
-          devices.some(
-            (device: AdbListDeviceDevice) => device.id === adbSeverUdid,
-          )
-        ) {
-          resolve();
-          return;
-        }
-      } catch (e) {
-        console.error("Failed to list devices", e);
-      }
-
-      if (maxTimeout && Date.now() - startTime > maxTimeout) {
-        reject(new Error("Timeout waiting for ADB server to be ready"));
-        return;
-      }
-
-      setTimeout(checkConnection, 1000);
-    };
-
-    checkConnection();
-  });
 }
