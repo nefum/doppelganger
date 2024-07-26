@@ -1,6 +1,7 @@
 import { AdbDevice, readStreamIntoBufferAndClose } from "%/adb/adb-device.ts";
 import type { DeviceClient } from "@devicefarmer/adbkit";
 import { Device } from "@prisma/client";
+import * as Sentry from "@sentry/node";
 import ApkReader from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
 import { findUpSync } from "find-up";
@@ -46,13 +47,18 @@ async function installOrUpdateApkAndGrantAllPermissions(
 
   // step 3: if not, install the apk
   if (shouldInstall) {
-    if (isOurPackage) {
-      // we use debug versions of the apps to enable logcat logging, so we need to uninstall to clear the
-      await adbClient.uninstall(packageName);
+    if (isOurPackage && packageIsInstalled) {
+      // we use debug versions of the apps to enable logcat logging, so we need to uninstall to clear the keys
       // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
-      await adbClient
-        .shell(`pm uninstall ${packageName}`)
-        .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
+      try {
+        await adbClient.uninstall(packageName);
+        await adbClient
+          .shell(`pm uninstall ${packageName}`)
+          .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
+      } catch (e: any) {
+        console.log("Failed to uninstall, continuing anyway", packageName, e);
+        Sentry.captureException(e);
+      }
     }
     await adbClient.install(apkPath);
   }
