@@ -131,7 +131,7 @@ export async function runScrcpyServerOnDevice(
 ): Promise<void> {
   // this is from https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/ScrcpyServer.ts
   const adbDevice = new ScrcpyAdbDevice(deviceInfo);
-  await adbDevice.connectRobust(2_000); // needs to be fast
+  await adbDevice.connect();
   const runningServers = await adbDevice.getScrcpyServerPid();
   if (Array.isArray(runningServers) && runningServers.length) {
     return; // server is already running; we are done

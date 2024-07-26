@@ -30,7 +30,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   try {
     const adbDevice = new AdbDevice(device);
-    await adbDevice.connectRobust(10_000);
+    await adbDevice.connectRobust(600_000);
     const screencapConnection = await adbDevice.adbClient.screencap();
     // stream the bytes straight from device to response
     return new NextResponse(screencapConnection, {

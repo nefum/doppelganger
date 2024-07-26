@@ -13,13 +13,13 @@ import {
   scrcpyWsEndpoint,
 } from "./endpoint-regex";
 
-// load environment variables
 import handleEventStream from "./events/route";
 import { loadEnvironment } from "./load-environment";
 import { handleAudio, handleKasmVNC } from "./wsutils/kasmvnc-route";
 import { handleDeviceStream } from "./wsutils/scrcpy-route";
 import { isWebSocketRequest } from "./wsutils/wsutils";
-// like during development the IDEA runner and during production the docker container
+
+// load environment variables
 loadEnvironment();
 
 // for prod, see this file for reference: https://gist.github.com/regulad/9c5529137ebac136288f9627815d8933

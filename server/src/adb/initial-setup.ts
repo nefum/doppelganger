@@ -96,7 +96,7 @@ export default async function doInitialDeviceSetup(
   device: Device,
 ): Promise<void> {
   const adbDevice = new AdbDevice(device);
-  await adbDevice.connectRobust(5_000); // if we are already connected, this will be a no-op
+  await adbDevice.connectRobust(600_000);
   const adbClient = adbDevice.adbClient;
 
   // glob the apks in absoluteApksDir

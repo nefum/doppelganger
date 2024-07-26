@@ -43,7 +43,7 @@ export async function DeviceChecklist({
   const deviceUp = await getRunningStatus(device);
   if (deviceUp) {
     try {
-      await adbDevice.connectRobust(15_000);
+      await adbDevice.connectRobust(600_000);
     } catch (e) {
       console.error(e);
     }
@@ -54,7 +54,7 @@ export async function DeviceChecklist({
   const gmsId =
     deviceHasGms &&
     deviceConnected &&
-    (await adbDevice.getGoogleServicesFrameworkID()).toString(10);
+    (await adbDevice.getGoogleServicesFrameworkID(600_000)).toString(10);
 
   return (
     <Card className="mb-6">

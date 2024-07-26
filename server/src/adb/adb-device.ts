@@ -73,16 +73,20 @@ export class AdbDevice {
   async connectRobust(timeout?: number): Promise<void> {
     // keep trying to run connect until either the timeout is reached or the device is connected
     const startTime = Date.now();
+    let connected = await this.getIsConnected();
+    if (connected) return;
     while (true) {
       try {
         await this.connect();
-        return;
+        connected = await this.getIsConnected();
+        if (connected) return;
       } catch (e: any) {
-        if (timeout && Date.now() - startTime > timeout) {
-          throw new Error("Timeout waiting for device to connect");
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // ignore and continue loop
       }
+      if (timeout && Date.now() - startTime > timeout) {
+        throw new Error("Timeout waiting for device to connect");
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
   }
 
@@ -307,7 +311,9 @@ export class AdbDevice {
   /**
    * Gets the Framework ID for an Android device so that it may be registered with Google at https://www.google.com/android/uncertified
    */
-  async getGoogleServicesFrameworkID(): Promise<BigInt> {
+  async getGoogleServicesFrameworkID(timeout?: number): Promise<BigInt> {
+    const startTime = Date.now();
+
     const redroidImage = getRedroidImage(this.device.redroidImage)!;
     if (!redroidImage.gms) {
       throw new Error("Device does not have Google Mobile Services");
@@ -331,7 +337,10 @@ export class AdbDevice {
         // rets android_id|3546527965867813643
         break;
       } catch (e: any) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (timeout && Date.now() - startTime > timeout) {
+          throw new Error("Timeout waiting for device to connect");
+        }
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
     }
 
