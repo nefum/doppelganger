@@ -4,7 +4,7 @@ repos:
       - id: lint
         name: lint
         entry: "turbo"
-        args: [ "type-check", "lint", "format", "test", "android:fetch" ]
+        args: [ "type-check", "lint", "format", "test" ]
         language: system
         pass_filenames: false
         files: \.(js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$

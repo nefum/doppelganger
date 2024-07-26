@@ -10,6 +10,8 @@ Sentry.init({
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
+  // Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
+  tracePropagationTargets: ["localhost", /^https:\/\/doppelgangerhq\.com\/api/],
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
@@ -27,6 +29,7 @@ Sentry.init({
       maskAllText: true,
       blockAllMedia: true,
     }),
+    Sentry.browserProfilingIntegration(),
     // pw: this renders RIGHT where our toast notifications are, so we're disabling it for now
     // Sentry.feedbackIntegration({
     //   // Additional SDK configuration goes in here, for example:
@@ -34,4 +37,11 @@ Sentry.init({
     //   enableScreenshot: false,
     // }),
   ],
+
+  // Set profilesSampleRate to 1.0 to profile every transaction.
+  // Since profilesSampleRate is relative to tracesSampleRate,
+  // the final profiling rate can be computed as tracesSampleRate * profilesSampleRate
+  // For example, a tracesSampleRate of 0.5 and profilesSampleRate of 0.5 would
+  // results in 25% of transactions being profiled (0.5*0.5=0.25)
+  profilesSampleRate: 1.0,
 });

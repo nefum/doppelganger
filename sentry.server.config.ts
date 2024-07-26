@@ -3,10 +3,17 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 Sentry.init({
   dsn: "https://c16d073a0fdaea2761e0f3f26ad856e7@o4506961510596608.ingest.us.sentry.io/4507558058721280",
   enabled: process.env.NODE_ENV === "production",
+
+  integrations: [
+    // Add our Profiling integration
+    nodeProfilingIntegration(),
+    Sentry.anrIntegration({ captureStackTrace: true }),
+  ],
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,

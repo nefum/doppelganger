@@ -7,6 +7,20 @@ import remarkFrontmatter from "remark-frontmatter";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // for sentry profiling
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Document-Policy",
+            value: "js-profiling",
+          },
+        ],
+      },
+    ];
+  },
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   output: "standalone",
   // https://nextjs.org/docs/messages/swc-disabled // we use the babel.config.json for our server
