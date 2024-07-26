@@ -33,7 +33,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     await adbDevice.connectRobust(600_000);
     const screencapConnection = await adbDevice.adbClient.screencap();
     // stream the bytes straight from device to response
-    return new NextResponse(screencapConnection, {
+    // it is not a perfect fit into ReadableStream, but it defines all of the methods that are needed
+    return new NextResponse(screencapConnection as unknown as ReadableStream, {
       headers: {
         "Content-Type": "image/png",
         "Content-Disposition": "inline; filename=screenshot.png",

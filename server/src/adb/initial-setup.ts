@@ -15,7 +15,7 @@ async function getInstalledVersionOfPackageOnClient(
   adbClient: DeviceClient,
   packageName: string,
 ): Promise<bigint> {
-  const androidVersionRet: string = await adbClient
+  const androidVersionRet = await adbClient
     .shell(`dumpsys package ${packageName} | grep versionCode`)
     .then(readStreamIntoBufferAndClose)
     .then((output: Buffer) => output.toString().trim());
@@ -64,7 +64,7 @@ async function getIsPackageDebug(
     .then((output: Buffer) => output.toString().trim());
 
   return (
-    rawFlagString &&
+    !!rawFlagString &&
     (rawFlagString.includes("DEBUGGABLE") ||
       rawFlagString.includes("TEST_ONLY"))
   );
@@ -75,20 +75,20 @@ async function grantAllPermissionsOfPackage(
   manifest: ManifestObject,
 ): Promise<void> {
   const packageName = manifest.package;
-  const requestedPermissions = manifest.usesPermissions.map((p) => p.name);
-  const grantPromises: Promise<void>[] = [];
-  for (const permission of requestedPermissions) {
-    grantPromises.push(
-      adbClient
-        .shell(`pm grant ${packageName} ${permission}`)
-        .then(readStreamIntoBufferAndClose)
-        .catch((e: any) => {
-          console.error("Failed to grant permission", permission, e);
-          Sentry.captureException(e);
-        }), // errors in permission granting are not fatal
+  const requestedPermissions = manifest.usesPermissions
+    .map((p) => p.name)
+    .map(
+      (p) =>
+        adbClient
+          .shell(`pm grant ${packageName} ${p}`)
+          .then(readStreamIntoBufferAndClose)
+          .then((output: Buffer) => {}) // void out the buffer
+          .catch((e: any) => {
+            console.error("Failed to grant permission", p, e);
+            Sentry.captureException(e);
+          }), // errors in permission granting are not fatal
     );
-  }
-  await Promise.all(grantPromises);
+  await Promise.all(requestedPermissions);
 }
 
 // NOTE: if we want to protect a Phedippides module from uninstallation, we need to either have some app installed as a device manager or set it as a manager.
@@ -131,15 +131,10 @@ async function uninstallPackageCompletely(
   if (packageIsInstalled) {
     return;
   }
-  try {
-    await adbClient.uninstall(packageName);
-    await adbClient
-      .shell(`pm uninstall ${packageName}`)
-      .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
-  } catch (e: any) {
-    console.log("Failed to uninstall, continuing anyway", packageName, e);
-    Sentry.captureException(e);
-  }
+  await adbClient.uninstall(packageName);
+  await adbClient
+    .shell(`pm uninstall ${packageName}`)
+    .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
 }
 
 async function installOrUpdateApkAndGrantAllPermissions(
@@ -168,8 +163,26 @@ async function installOrUpdateApkAndGrantAllPermissions(
   if (shouldInstall) {
     // we use debug versions of the apps to enable logcat logging, so we need to uninstall to clear the keys
     // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
-    const appIsDebug = await getIsPackageDebug(adbClient, packageName);
-    if (appIsDebug) await uninstallPackageCompletely(adbClient, packageName);
+    const appIsDebug = await getIsPackageDebug(adbClient, packageName).catch(
+      (e) => {
+        console.error(
+          "Failed to check if package is debug, assuming it is and continuing",
+          packageName,
+          e,
+        );
+        Sentry.captureException(e);
+        return true;
+      },
+    );
+    if (appIsDebug)
+      await uninstallPackageCompletely(adbClient, packageName).catch((e) => {
+        console.error(
+          "Failed to uninstall package, continuing",
+          packageName,
+          e,
+        );
+        Sentry.captureException(e);
+      });
     await adbClient.install(apkPath);
     await grantAllPermissionsOfPackage(adbClient, manifest);
   }
