@@ -1,4 +1,3 @@
-import { AdbDevice } from "%/adb/adb-device";
 import doInitialDeviceSetup from "%/adb/initial-setup.ts";
 import { Device } from "@prisma/client";
 import * as Sentry from "@sentry/nextjs";
@@ -66,14 +65,11 @@ export async function bringUpDevice(device: Device): Promise<void> {
     Sentry.captureException(error);
     console.error("Error bringing up docker device:", error.message);
   }
-  try {
-    const adbDevice = new AdbDevice(device);
-    await adbDevice.connectRobust(600_000);
-    await doInitialDeviceSetup(device);
-  } catch (error: any) {
-    Sentry.captureException(error);
-    console.error("Error setting up device:", error.message);
-  }
+  // todo: kinggrand
+  doInitialDeviceSetup(device).catch((e) => {
+    Sentry.captureException(e);
+    console.error("Error setting up device:", e.message);
+  });
 }
 
 /**

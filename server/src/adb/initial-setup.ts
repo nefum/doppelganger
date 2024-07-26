@@ -2,82 +2,31 @@ import { AdbDevice, readStreamIntoBufferAndClose } from "%/adb/adb-device.ts";
 import type { DeviceClient } from "@devicefarmer/adbkit";
 import { Device } from "@prisma/client";
 import * as Sentry from "@sentry/node";
-import ApkReader from "adbkit-apkreader";
+import ApkReader, { ManifestObject } from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
+import { resolveOrDefaultValue } from "%/utils/promise-utils.ts";
 import { findUpSync } from "find-up";
 import { globby } from "globby";
 import path from "path";
 
 const apksDir = path.resolve(findUpSync("package.json")!, "../android"); // may be called from any directory
 
-async function installOrUpdateApkAndGrantAllPermissions(
+async function getInstalledVersionOfPackageOnClient(
   adbClient: DeviceClient,
-  apkPath: string,
+  packageName: string,
+): Promise<bigint> {
+  const androidVersionRet: string = await adbClient
+    .shell(`dumpsys package ${packageName} | grep versionCode`)
+    .then(readStreamIntoBufferAndClose)
+    .then((output: Buffer) => output.toString().trim());
+  //     versionCode=599311101 minSdk=24 targetSdk=34
+  return BigInt(androidVersionRet.split("=")[1].split(" ")[0]);
+}
+
+async function doSpecialSetupAndStarting(
+  adbClient: DeviceClient,
+  packageName: string,
 ): Promise<void> {
-  // step 1: parse the apk to get the version, package name, and any requested permissions
-  const apkReader = await ApkReader.open(apkPath);
-  const manifest = await apkReader.readManifest();
-
-  const newVersionCode = manifest.versionCode;
-  const packageName = manifest.package;
-  const requestedPermissions = manifest.usesPermissions.map((p) => p.name);
-
-  const isOurPackage = packageName.startsWith("xyz.regulad.pheidippides");
-
-  if (process.env.NODE_ENV !== "production" && !isOurPackage) {
-    return; // if we are in dev, we only are going to install our own apks
-  }
-
-  // step 2: check if the apk is already installed or the same version
-  let shouldInstall = true;
-  const packageIsInstalled = await adbClient.isInstalled(packageName);
-  if (packageIsInstalled) {
-    const androidVersionRet: string = await adbClient
-      .shell(`dumpsys package ${packageName} | grep versionCode`)
-      .then(readStreamIntoBufferAndClose)
-      .then((output: Buffer) => output.toString().trim());
-    //     versionCode=599311101 minSdk=24 targetSdk=34
-    const installedVersionCode = BigInt(
-      androidVersionRet.split("=")[1].split(" ")[0],
-    );
-    if (installedVersionCode >= newVersionCode) {
-      shouldInstall = false;
-    }
-  }
-
-  // step 3: if not, install the apk
-  if (shouldInstall) {
-    if (isOurPackage && packageIsInstalled) {
-      // we use debug versions of the apps to enable logcat logging, so we need to uninstall to clear the keys
-      // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
-      try {
-        await adbClient.uninstall(packageName);
-        await adbClient
-          .shell(`pm uninstall ${packageName}`)
-          .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
-      } catch (e: any) {
-        console.log("Failed to uninstall, continuing anyway", packageName, e);
-        Sentry.captureException(e);
-      }
-    }
-    await adbClient.install(apkPath);
-  }
-
-  // step 4: grant all requested permissions
-  if (shouldInstall) {
-    const grantPromises: Promise<void>[] = [];
-    for (const permission of requestedPermissions) {
-      grantPromises.push(
-        adbClient
-          .shell(`pm grant ${packageName} ${permission}`)
-          .then(readStreamIntoBufferAndClose)
-          .catch(() => {}), // errors in permission granting are not fatal
-      );
-    }
-    await Promise.all(grantPromises);
-  }
-
-  // step 5: special cases
   try {
     await adbClient.root();
   } catch (e: any) {
@@ -95,6 +44,141 @@ async function installOrUpdateApkAndGrantAllPermissions(
 }
 
 /**
+ * Queries an ADB device to determine if a package was installed with Debug keys. With debug (self-signed) keys, the app must be uninstalled before a new update is installed or Android will return an error
+ */
+async function getIsPackageDebug(
+  adbClient: DeviceClient,
+  packageName: string,
+): Promise<boolean> {
+  // debug dumpsys: https://gist.github.com/regulad/574f9bbcc6218ca7a4a36f35e086a5c6
+  //     flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA TEST_ONLY ]
+  // prod dympsys: https://gist.github.com/regulad/48c4e192a9ad065ae5c5db8e9b209141
+  //     flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+  const packageIsInstalled = await adbClient.isInstalled(packageName);
+  if (!packageIsInstalled) {
+    return false;
+  }
+  const rawFlagString = await adbClient
+    .shell(`dumpsys package ${packageName} | grep "flags=\["`)
+    .then(readStreamIntoBufferAndClose)
+    .then((output: Buffer) => output.toString().trim());
+
+  return (
+    rawFlagString &&
+    (rawFlagString.includes("DEBUGGABLE") ||
+      rawFlagString.includes("TEST_ONLY"))
+  );
+}
+
+async function grantAllPermissionsOfPackage(
+  adbClient: DeviceClient,
+  manifest: ManifestObject,
+): Promise<void> {
+  const packageName = manifest.package;
+  const requestedPermissions = manifest.usesPermissions.map((p) => p.name);
+  const grantPromises: Promise<void>[] = [];
+  for (const permission of requestedPermissions) {
+    grantPromises.push(
+      adbClient
+        .shell(`pm grant ${packageName} ${permission}`)
+        .then(readStreamIntoBufferAndClose)
+        .catch((e: any) => {
+          console.error("Failed to grant permission", permission, e);
+          Sentry.captureException(e);
+        }), // errors in permission granting are not fatal
+    );
+  }
+  await Promise.all(grantPromises);
+}
+
+// NOTE: if we want to protect a Phedippides module from uninstallation, we need to either have some app installed as a device manager or set it as a manager.
+// TODO: best solution: create a device manager app that is installed on the device and can manage the other apps
+
+/**
+ * Determines if a package needs installation or installation by querying the device for the current installed version
+ * @param adbClient
+ * @param manifest
+ */
+async function determineIfPackageNeedsInstallation(
+  adbClient: DeviceClient,
+  manifest: ManifestObject,
+): Promise<boolean> {
+  const newVersionCode = manifest.versionCode;
+  const packageName = manifest.package;
+  const packageIsInstalled = await adbClient.isInstalled(packageName);
+  if (packageIsInstalled) {
+    const installedVersionCode = await resolveOrDefaultValue(
+      getInstalledVersionOfPackageOnClient(adbClient, packageName),
+      -1n,
+    );
+    if (installedVersionCode >= newVersionCode) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Attempts to uninstall a package completely and clear any storage. If the package is not installed, this will fail silently.
+ * @param adbClient
+ * @param packageName
+ */
+async function uninstallPackageCompletely(
+  adbClient: DeviceClient,
+  packageName: string,
+): Promise<void> {
+  const packageIsInstalled = await adbClient.isInstalled(packageName);
+  if (packageIsInstalled) {
+    return;
+  }
+  try {
+    await adbClient.uninstall(packageName);
+    await adbClient
+      .shell(`pm uninstall ${packageName}`)
+      .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
+  } catch (e: any) {
+    console.log("Failed to uninstall, continuing anyway", packageName, e);
+    Sentry.captureException(e);
+  }
+}
+
+async function installOrUpdateApkAndGrantAllPermissions(
+  adbClient: DeviceClient,
+  apkPath: string,
+): Promise<void> {
+  // step 1: parse the apk to get the version, package name, and any requested permissions
+  const apkReader = await ApkReader.open(apkPath);
+  const manifest = await apkReader.readManifest();
+  const packageName = manifest.package;
+
+  const isOurPackage = packageName.startsWith("xyz.regulad.pheidippides");
+
+  if (process.env.NODE_ENV !== "production" && !isOurPackage) {
+    return; // if we are in dev, we only are going to install our own apks
+  }
+
+  // step 2: check if the apk is already installed or the same version
+  const shouldInstall = await determineIfPackageNeedsInstallation(
+    adbClient,
+    manifest,
+  );
+
+  // step 3: if not, install the apk
+  // step 4: grant all requested permissions
+  if (shouldInstall) {
+    // we use debug versions of the apps to enable logcat logging, so we need to uninstall to clear the keys
+    // https://stackoverflow.com/questions/71872027/how-to-fix-signatures-do-not-match-previously-installed-version-error
+    const appIsDebug = await getIsPackageDebug(adbClient, packageName);
+    if (appIsDebug) await uninstallPackageCompletely(adbClient, packageName);
+    await adbClient.install(apkPath);
+    await grantAllPermissionsOfPackage(adbClient, manifest);
+  }
+
+  // step 5: special cases
+  await doSpecialSetupAndStarting(adbClient, packageName);
+}
+
+/**
  * Performs setup/update tasks for a device. This promise should be run in the background each time a device is connected.
  * @param device
  */
@@ -108,8 +192,14 @@ export default async function doInitialDeviceSetup(
   // glob the apks in absoluteApksDir
   const apks = await globby(apksDir + "/*.apk");
   await Promise.all(
-    apks.map((apkPath) =>
-      installOrUpdateApkAndGrantAllPermissions(adbClient, apkPath),
+    apks.map(
+      (apkPath) =>
+        installOrUpdateApkAndGrantAllPermissions(adbClient, apkPath).catch(
+          (e) => {
+            console.error("Failed to install apk", apkPath, e);
+            Sentry.captureException(e);
+          },
+        ), // don't propagate error
     ),
   );
 }

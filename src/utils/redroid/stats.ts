@@ -4,6 +4,7 @@ import {
   getIsDeviceRunning,
   getRedroidContainerName,
 } from "%/docker/device-state.ts";
+import { ignoreNumberRejection } from "%/utils/promise-utils.ts";
 import {
   CPU_LIMIT_CPUS,
   MEMORY_LIMIT_BYTES,
@@ -15,21 +16,6 @@ import {
   getTotalDiskUsageOfDirectoryBytes,
 } from "@/utils/docker/resource-utils.ts";
 import { Device } from "@prisma/client";
-
-/**
- * Ignores rejection and returns -1 for any number promise that rejects.
- * @param {Promise<number>} promise The promise to process.
- * @returns {Promise<number>} The resolved value or -1 if rejected.
- */
-async function ignoreNumberRejection(
-  promise: Promise<number>,
-): Promise<number> {
-  try {
-    return await promise;
-  } catch (e) {
-    return -1;
-  }
-}
 
 /**
  * Retrieves the running status of the device.

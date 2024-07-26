@@ -48,7 +48,7 @@ async function shutdownAbandonedDevice(device: Device): Promise<void> {
   // shutdown the device
   await bringDownDevice(device.id);
 
-  // todo: if i migrate to serverless, do I need to wait for these to be sent out?
+  // todo: kinggrand
   sendDeviceDeletedNotification(device).catch((e) => {
     console.error("Failed to send device deleted notification", e);
     Sentry.captureException(e);
