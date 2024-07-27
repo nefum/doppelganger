@@ -108,6 +108,9 @@ jobs:
           distribution: ${{ env.DISTRIBUTION }}
           cache: gradle
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
