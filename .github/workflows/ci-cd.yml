@@ -241,7 +241,7 @@ jobs:
 
   deploy:
     needs:
-      - build
+      - build-docker
       - check
     runs-on: "ubuntu-22.04"
     steps:
