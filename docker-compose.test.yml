@@ -6,17 +6,17 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: "2.0"
           memory: 2G
         reservations:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 700M
     image: "abing7k/redroid:a11_gapps_arm"
     hostname: "redroid"
     ports:
       - "5555:5555/tcp"
       - "8886:8886/tcp"
-    privileged: true  # required for redroid
+    privileged: true # required for redroid
     volumes:
       - type: volume
         source: redroid-data
@@ -40,10 +40,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 300M
         reservations:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 20M
     image: "ghcr.io/regulad/workspaces-images:sndcpy"
     ports:
@@ -75,4 +75,4 @@ volumes:
       device: /mnt/doppelganger/staging/staging1
     name: redroid-data
     labels:
-      com.docker.storage.quota.size: "34359738368"  # 32GB in bytes
+      com.docker.storage.quota.size: "34359738368" # 32GB in bytes

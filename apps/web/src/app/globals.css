@@ -164,7 +164,8 @@
 }
 
 /*https://stackoverflow.com/questions/31945544/why-is-object-fit-not-working-with-max-height-container*/
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -172,4 +173,3 @@ html, body {
 .fullscreen-enabled {
   background: hsl(var(--background));
 }
-

@@ -5,15 +5,15 @@ services:
   redroid:
     image: "{{ &redroidImage }}"
     hostname: "{{ id }}-redroid"
-#    ports:
-#      - "5555:5555/tcp"
-    privileged: true  # required for redroid
+    #    ports:
+    #      - "5555:5555/tcp"
+    privileged: true # required for redroid
     restart: unless-stopped
     networks:
-      '{{ externalNetworkName }}':
+      "{{ externalNetworkName }}":
         driver_opts:
-          com.docker.network.bandwidth.rx: "10M"  # 10 Mbps down
-          com.docker.network.bandwidth.tx: "5M"  # 5 Mbps up
+          com.docker.network.bandwidth.rx: "10M" # 10 Mbps down
+          com.docker.network.bandwidth.tx: "5M" # 5 Mbps up
     volumes:
       - "{{ &baseDir }}/{{ redroidImageDataBasePath }}:/data-base"
       - type: volume
@@ -32,18 +32,18 @@ services:
       - "androidboot.redroid_net_dns2=1.0.0.1"
       - "androidboot.redroid_net_proxy_type=pac" # static only works with http proxy, have to provide a pac file for socks5
       - "androidboot.redroid_net_proxy_pac=https://doppelgangerhq.com/api/devices/{{ id }}/proxy.pac"
-      - "androidboot.redroid_gpu_mode=guest"  # doesn't work with auto/host on oracle
-      - "ro.setupwizard.mode=DISABLED"  # our custom images do not force disable the gapps setup, we can do that here
+      - "androidboot.redroid_gpu_mode=guest" # doesn't work with auto/host on oracle
+      - "ro.setupwizard.mode=DISABLED" # our custom images do not force disable the gapps setup, we can do that here
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: "2.0"
           memory: 2G
         reservations:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 700M
     blkio_config:
-      weight: 300  # always gives the orhcestrator priority to disk I/O
+      weight: 300 # always gives the orhcestrator priority to disk I/O
   scrcpy:
     image: "ghcr.io/regulad/workspaces-images:scrcpy"
     hostname: "{{ id }}-scrcpy"
@@ -57,10 +57,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 300M
         reservations:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 200M
     depends_on:
       - "redroid"
@@ -76,8 +76,8 @@ services:
       VNC_PW: "password"
       # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
     blkio_config:
-      weight: 400  # higher than the android, but lower than the orhcestrator
-  logs:  # allows us to see the logs of the device by inspecting into this easily
+      weight: 400 # higher than the android, but lower than the orhcestrator
+  logs: # allows us to see the logs of the device by inspecting into this easily
     image: "ghcr.io/regulad/adb-logcat-docker:latest"
     hostname: "{{ id }}-logs"
     tty: true
@@ -94,7 +94,7 @@ services:
         max-file: "3"
 
 networks:
-  '{{ externalNetworkName }}':
+  "{{ externalNetworkName }}":
     external: true
 
 volumes:
@@ -106,4 +106,4 @@ volumes:
       device: "{{ &baseDir }}/{{ id }}-diff"
     name: "{{ id }}-redroid-diff"
     labels:
-      com.docker.storage.quota.size: "17179869184"  # 16 GiB in bytes
+      com.docker.storage.quota.size: "17179869184" # 16 GiB in bytes

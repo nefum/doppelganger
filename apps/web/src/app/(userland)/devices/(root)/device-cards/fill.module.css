@@ -2,13 +2,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden
+  overflow: hidden;
 }
 
 /*https://stackoverflow.com/a/56640502*/
 /* this is the button that appears when hovering over the snapshot image */
 .fill:before {
-  content: '';
+  content: "";
   opacity: 0;
   transition: opacity 0.5s ease;
 

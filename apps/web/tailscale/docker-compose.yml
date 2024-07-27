@@ -123,4 +123,4 @@ services:
 networks:
   default:
     driver_opts:
-      com.docker.network.driver.mtu: 1280  # tailscale/tailscale#3877
+      com.docker.network.driver.mtu: 1280 # tailscale/tailscale#3877

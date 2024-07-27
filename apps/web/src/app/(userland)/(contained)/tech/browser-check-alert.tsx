@@ -1,5 +1,3 @@
-
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toTitleCase } from "@/utils/misc.ts";
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";

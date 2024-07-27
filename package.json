@@ -6,7 +6,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
-    "format": "prettier --write \"**/*.{json,json5,ts,tsx,md,mdx,js,jsx}\""
+    "format": "prettier --write \"**/*.{json,json5,ts,tsx,md,mdx,js,jsx,yml,yaml,css,scss,html}\""
   },
   "devDependencies": {
     "prettier": "^3.3.3",
@@ -14,5 +14,5 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@8.15.5"
 }

@@ -1,0 +1,11 @@
+# .prettierignore has to be in the rootdirectory
+
+**/coverage/
+**/pnpm-lock.yaml
+
+apps/web/src/ws-scrcpy/
+apps/web/dist/
+apps/web/public/workers/
+apps/web/node_modules/
+apps/web/.next/
+apps/web/src/app/(userland)/(contained)/licenses/licenses.json
