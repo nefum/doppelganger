@@ -66,10 +66,12 @@ export async function bringUpDevice(device: Device): Promise<void> {
     console.error("Error bringing up docker device:", error.message);
   }
   // todo: kinggrand
-  doInitialDeviceSetup(device).catch((e) => {
-    Sentry.captureException(e);
-    console.error("Error setting up device:", e.message);
-  });
+  new Promise((r) => setTimeout(r, 60_000)) // before we try to do ANY setup or connection, even if it's done lazily, just WAIT for everything to settle
+    .then(() => doInitialDeviceSetup(device))
+    .catch((e) => {
+      Sentry.captureException(e);
+      console.error("Error setting up device:", e.message);
+    });
 }
 
 /**
