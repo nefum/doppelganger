@@ -119,6 +119,11 @@ jobs:
 
       - name: Build via turbo
         run: pnpx turbo build --filter=${{ matrix.tag }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.NEFUM_SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: nefum
+          SENTRY_PROJECT: ${{ matrix.tag }}
+          SENTRY_RELEASE: ${{ github.sha }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

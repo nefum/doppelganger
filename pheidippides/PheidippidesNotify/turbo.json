@@ -12,7 +12,8 @@
         "app/build.gradle",
         "build.gradle",
         "gradle.properties"
-      ]
+      ],
+      "env": ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT", "SENTRY_RELEASE"]
     },
     "lint": {
       "outputs": ["app/build/reports/**"],
