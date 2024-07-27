@@ -54,6 +54,13 @@ async function getIsPackageDebug(
   //     flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA TEST_ONLY ]
   // prod dympsys: https://gist.github.com/regulad/48c4e192a9ad065ae5c5db8e9b209141
   //     flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+
+  if (packageName === "com.android.webview") {
+    // for systems that have webview, the default webview may be installed with debug keys if the aosp build is debuggable
+    // we are writing the chrome webview over it, so we will need to uninstall the default webview
+    return true;
+  }
+
   const packageIsInstalled = await adbClient.isInstalled(packageName);
   if (!packageIsInstalled) {
     return false;
