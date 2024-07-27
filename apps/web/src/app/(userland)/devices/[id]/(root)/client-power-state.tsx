@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { clientSideReloadWithToast } from "@/utils/toast-utils.ts";
 import { Device } from "@prisma/client";
+import * as Sentry from "@sentry/nextjs";
 import React, { useMemo, useState } from "react";
 import { LuLoader2, LuPower, LuPowerOff } from "react-icons/lu";
 
@@ -22,13 +23,26 @@ export function ClientDevicePowerStateButtons({
     () => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
       setDeviceUpLoading(true);
-      const response = await fetch(`/api/devices/${deviceInfo.id}/start`, {
-        method: "PUT",
-      });
+      let response: Response;
+      try {
+        response = await fetch(`/api/devices/${deviceInfo.id}/start`, {
+          method: "PUT",
+        });
+      } catch (e) {
+        Sentry.captureException(e);
+        console.error("Failed to start device", e);
+        setDeviceUpLoading(false);
+        toast({
+          title: "Failed to start device",
+          description: "Please try again later.",
+        });
+        return;
+      }
       let responseJson: { error?: string };
       try {
         responseJson = await response.json();
       } catch (e) {
+        Sentry.captureException(e);
         console.error("Failed to parse response", e);
         setDeviceUpLoading(false);
         toast({
@@ -57,13 +71,26 @@ export function ClientDevicePowerStateButtons({
     () => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
       setDeviceDownLoading(true);
-      const response = await fetch(`/api/devices/${deviceInfo.id}/stop`, {
-        method: "PUT",
-      });
+      let response: Response;
+      try {
+        response = await fetch(`/api/devices/${deviceInfo.id}/stop`, {
+          method: "PUT",
+        });
+      } catch (e) {
+        Sentry.captureException(e);
+        console.error("Failed to stop device", e);
+        setDeviceUpLoading(false);
+        toast({
+          title: "Failed to stop device",
+          description: "Please try again later.",
+        });
+        return;
+      }
       let responseJson: { error?: string };
       try {
         responseJson = await response.json();
       } catch (e) {
+        Sentry.captureException(e);
         console.error("Failed to parse response", e);
         setDeviceUpLoading(false);
         toast({
