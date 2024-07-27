@@ -1,10 +1,10 @@
 {
   "tasks": {
-    "db:generate": {
+    "web#db:generate": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "licenses:check": {
+    "web#licenses:check": {
       "inputs": ["package.json", "pnpm-lock.yaml"],
       "outputs": [
         "src/app/\\(userland\\)/\\(contained\\)/licenses/licenses.json"
@@ -12,62 +12,59 @@
     },
     "build": {
       "dependsOn": [
-        "server:build",
-        "db:generate",
-        "licenses:check",
-        "android:fetch"
+        "web#server:build",
+        "web#db:generate",
+        "web#android:fetch",
+        "web#licenses:check",
+        "^build"
       ],
-      "inputs": ["**/*", "!dist/**", "!node_modules/**", "!public/workers/**"],
       "outputs": [".next/**", "!.next/cache/**"],
       "env": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"]
     },
     "dev": {
-      "dependsOn": ["db:generate", "licenses:check"],
+      "dependsOn": [
+        "web#db:generate",
+        "web#licenses:check",
+        "web#workers:dev",
+        "^dev"
+      ],
       "cache": false
     },
-    "workers:dev": {
+    "web#workers:dev": {
       "inputs": ["workers/**"],
       "outputs": ["public/workers/**"]
     },
-    "workers:build": {
+    "web#workers:build": {
       "inputs": ["workers/**"],
       "outputs": ["public/workers/**"]
     },
-    "server:dev": {
+    "web#server:dev": {
       "dependsOn": ["db:generate"],
       "inputs": ["server/**"],
       "outputs": ["dist/**"]
     },
-    "server:build": {
+    "web#server:build": {
       "dependsOn": ["db:generate"],
       "inputs": ["server/**"],
       "outputs": ["dist/**"]
     },
-    "start": {
+    "web#start": {
       "dependsOn": ["build", "db:generate"],
       "cache": false
     },
     "lint": {
-      "cache": false
+      "dependsOn": ["^lint"]
     },
     "type-check": {
-      "dependsOn": ["db:generate", "licenses:check"],
-      "inputs": [
-        "**/*.{ts,tsx,mdx}",
-        "!dist/**",
-        "!node_modules/**",
-        "!public/workers/**",
-        "!src/app/\\(userland\\)/\\(contained\\)/licenses/licenses.json"
-      ]
+      "dependsOn": ["web#db:generate", "web#licenses:check", "^type-check"]
     },
-    "format": {
+    "web#format": {
       "cache": false
     },
     "test": {
-      "dependsOn": ["db:generate", "licenses:check"],
-      "inputs": ["**/*", "!dist/**", "!node_modules/**", "!public/workers/**"]
+      "dependsOn": ["web#db:generate", "web#licenses:check", "^test"]
     },
-    "android:fetch": {
+    "web#android:fetch": {
       "cache": false
     }
   }

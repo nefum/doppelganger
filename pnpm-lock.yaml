@@ -4,414 +4,410 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@cycjimmy/jsmpeg-player':
-    specifier: ^6.1.1
-    version: 6.1.1
-  '@devicefarmer/adbkit':
-    specifier: ^3.2.6
-    version: 3.2.6
-  '@dotenvx/dotenvx':
-    specifier: ^1.6.4
-    version: 1.6.4
-  '@hookform/resolvers':
-    specifier: ^3.9.0
-    version: 3.9.0(react-hook-form@7.52.1)
-  '@mdx-js/loader':
-    specifier: ^3.0.1
-    version: 3.0.1(webpack@5.93.0)
-  '@mdx-js/react':
-    specifier: ^3.0.1
-    version: 3.0.1(@types/react@18.3.3)(react@18.3.1)
-  '@next/mdx':
-    specifier: 14.2.5
-    version: 14.2.5(@mdx-js/loader@3.0.1)(@mdx-js/react@3.0.1)
-  '@next/third-parties':
-    specifier: 14.2.5
-    version: 14.2.5(next@14.2.5)(react@18.3.1)
-  '@onesignal/node-onesignal':
-    specifier: 5.0.0-alpha-01
-    version: 5.0.0-alpha-01
-  '@paralleldrive/cuid2':
-    specifier: ^2.2.2
-    version: 2.2.2
-  '@prisma/client':
-    specifier: 5.16.1
-    version: 5.16.1(prisma@5.16.1)
-  '@radix-ui/react-alert-dialog':
-    specifier: ^1.1.1
-    version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-aspect-ratio':
-    specifier: ^1.1.0
-    version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-avatar':
-    specifier: ^1.1.0
-    version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-checkbox':
-    specifier: ^1.1.1
-    version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-dialog':
-    specifier: ^1.1.1
-    version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-dropdown-menu':
-    specifier: ^2.1.1
-    version: 2.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-icons':
-    specifier: ^1.3.0
-    version: 1.3.0(react@18.3.1)
-  '@radix-ui/react-label':
-    specifier: ^2.1.0
-    version: 2.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-popover':
-    specifier: ^1.1.1
-    version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-progress':
-    specifier: ^1.1.0
-    version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-slider':
-    specifier: ^1.2.0
-    version: 1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-slot':
-    specifier: ^1.1.0
-    version: 1.1.0(@types/react@18.3.3)(react@18.3.1)
-  '@radix-ui/react-toast':
-    specifier: ^1.2.1
-    version: 1.2.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-tooltip':
-    specifier: ^1.1.2
-    version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@radix-ui/react-visually-hidden':
-    specifier: ^1.1.0
-    version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@relume_io/relume-tailwind':
-    specifier: ^0.3.0
-    version: 0.3.0
-  '@relume_io/relume-ui':
-    specifier: ^0.3.0
-    version: 0.3.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)(tailwindcss@3.4.7)
-  '@sentry/nextjs':
-    specifier: ^8.20.0
-    version: 8.20.0(@opentelemetry/api@1.9.0)(@opentelemetry/core@1.25.1)(@opentelemetry/instrumentation@0.52.1)(@opentelemetry/sdk-trace-base@1.25.1)(next@14.2.5)(react@18.3.1)(webpack@5.93.0)
-  '@sentry/node':
-    specifier: ^8.20.0
-    version: 8.20.0
-  '@sentry/profiling-node':
-    specifier: ^8.20.0
-    version: 8.20.0
-  '@supabase/ssr':
-    specifier: ^0.4.0
-    version: 0.4.0(@supabase/supabase-js@2.44.4)
-  '@supabase/supabase-js':
-    specifier: ^2.44.4
-    version: 2.44.4(bufferutil@4.0.8)
-  '@types/mdx':
-    specifier: ^2.0.13
-    version: 2.0.13
-  '@uidotdev/usehooks':
-    specifier: ^2.4.1
-    version: 2.4.1(react-dom@18.3.1)(react@18.3.1)
-  adbkit-apkreader:
-    specifier: ^3.2.0
-    version: 3.2.0
-  ajv:
-    specifier: ^8.17.1
-    version: 8.17.1
-  ajv-draft-04:
-    specifier: ^1.0.0
-    version: 1.0.0(ajv@8.17.1)
-  ajv-formats:
-    specifier: ^3.0.1
-    version: 3.0.1(ajv@8.17.1)
-  apks:
-    specifier: ^1.0.0
-    version: 1.0.0
-  buffer:
-    specifier: ^6.0.3
-    version: 6.0.3
-  bufferutil:
-    specifier: ^4.0.8
-    version: 4.0.8
-  class-variance-authority:
-    specifier: ^0.7.0
-    version: 0.7.0
-  clsx:
-    specifier: ^2.1.1
-    version: 2.1.1
-  cmdk:
-    specifier: ^1.0.0
-    version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  cpu-features:
-    specifier: ^0.0.10
-    version: 0.0.10
-  dockerode:
-    specifier: ^4.0.2
-    version: 4.0.2
-  dockerode-compose:
-    specifier: ^1.4.0
-    version: 1.4.0
-  dotenv:
-    specifier: ^16.4.5
-    version: 16.4.5
-  dotenv-expand:
-    specifier: ^11.0.6
-    version: 11.0.6
-  find-up:
-    specifier: ^7.0.0
-    version: 7.0.0
-  framer-motion:
-    specifier: ^11.3.17
-    version: 11.3.17(react-dom@18.3.1)(react@18.3.1)
-  globby:
-    specifier: ^14.0.2
-    version: 14.0.2
-  h264-converter:
-    specifier: ^0.1.4
-    version: 0.1.4
-  image-size:
-    specifier: ^1.1.1
-    version: 1.1.1
-  ioredis:
-    specifier: ^5.4.1
-    version: 5.4.1
-  ispinner.css:
-    specifier: ^3.1.1
-    version: 3.1.1
-  lucide-react:
-    specifier: ^0.400.0
-    version: 0.400.0(react@18.3.1)
-  mustache:
-    specifier: ^4.2.0
-    version: 4.2.0
-  mutation-observer:
-    specifier: ^1.0.3
-    version: 1.0.3
-  next:
-    specifier: 14.2.5
-    version: 14.2.5(@babel/core@7.24.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.8)
-  next-themes:
-    specifier: ^0.3.0
-    version: 0.3.0(react-dom@18.3.1)(react@18.3.1)
-  nth-check:
-    specifier: ^2.1.1
-    version: 2.1.1
-  permessage-deflate:
-    specifier: ^0.1.7
-    version: 0.1.7
-  prisma-redis-middleware:
-    specifier: 4.8.0
-    version: 4.8.0
-  punycode:
-    specifier: ^2.3.1
-    version: 2.3.1
-  react:
-    specifier: ^18.3.1
-    version: 18.3.1
-  react-dom:
-    specifier: ^18.3.1
-    version: 18.3.1(react@18.3.1)
-  react-full-screen:
-    specifier: ^1.1.1
-    version: 1.1.1(react@18.3.1)
-  react-hook-form:
-    specifier: ^7.52.1
-    version: 7.52.1(react@18.3.1)
-  react-icons:
-    specifier: ^5.2.1
-    version: 5.2.1(react@18.3.1)
-  react-onesignal:
-    specifier: ^3.0.1
-    version: 3.0.1(react@18.3.1)
-  react-resizable-panels:
-    specifier: ^2.0.22
-    version: 2.0.22(react-dom@18.3.1)(react@18.3.1)
-  react-resize-detector:
-    specifier: ^11.0.1
-    version: 11.0.1(react-dom@18.3.1)(react@18.3.1)
-  remark-frontmatter:
-    specifier: ^5.0.0
-    version: 5.0.0
-  remark-gfm:
-    specifier: ^4.0.0
-    version: 4.0.0
-  remark-toc:
-    specifier: ^9.0.0
-    version: 9.0.0
-  sharp:
-    specifier: ^0.33.4
-    version: 0.33.4
-  svg-inline-loader:
-    specifier: ^0.8.2
-    version: 0.8.2
-  sylvester.js:
-    specifier: ^0.1.1
-    version: 0.1.1
-  tailwind-merge:
-    specifier: ^2.4.0
-    version: 2.4.0
-  tailwindcss-animate:
-    specifier: ^1.0.7
-    version: 1.0.7(tailwindcss@3.4.7)
-  tinyh264:
-    specifier: ^0.0.7
-    version: 0.0.7
-  ua-parser-js:
-    specifier: ^1.0.38
-    version: 1.0.38
-  usehooks-ts:
-    specifier: ^3.1.0
-    version: 3.1.0(react@18.3.1)
-  vaul:
-    specifier: ^0.9.1
-    version: 0.9.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  ws:
-    specifier: ^8.18.0
-    version: 8.18.0(bufferutil@4.0.8)
-  yaml:
-    specifier: ^2.5.0
-    version: 2.5.0
-  zod:
-    specifier: ^3.23.8
-    version: 3.23.8
+importers:
 
-devDependencies:
-  '@sentry/cli':
-    specifier: ^2.33.0
-    version: 2.33.0
-  '@swc/core':
-    specifier: ^1.7.2
-    version: 1.7.2
-  '@testing-library/jest-dom':
-    specifier: ^6.4.8
-    version: 6.4.8
-  '@testing-library/react':
-    specifier: ^16.0.0
-    version: 16.0.0(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
-  '@tsconfig/node12':
-    specifier: ^12.1.3
-    version: 12.1.3
-  '@types/async-lock':
-    specifier: ^1.4.2
-    version: 1.4.2
-  '@types/bluebird':
-    specifier: ^3.5.42
-    version: 3.5.42
-  '@types/dockerode':
-    specifier: ^3.3.31
-    version: 3.3.31
-  '@types/dockerode-compose':
-    specifier: ^1.4.1
-    version: 1.4.1
-  '@types/ioredis':
-    specifier: ^5.0.0
-    version: 5.0.0
-  '@types/jest':
-    specifier: ^29.5.12
-    version: 29.5.12
-  '@types/jsdom':
-    specifier: ^21.1.7
-    version: 21.1.7
-  '@types/mustache':
-    specifier: ^4.2.5
-    version: 4.2.5
-  '@types/node':
-    specifier: ^20.14.12
-    version: 20.14.12
-  '@types/react':
-    specifier: ^18.3.3
-    version: 18.3.3
-  '@types/react-dom':
-    specifier: ^18.3.0
-    version: 18.3.0
-  '@types/ua-parser-js':
-    specifier: ^0.7.39
-    version: 0.7.39
-  '@types/ws':
-    specifier: ^8.5.11
-    version: 8.5.11
-  eslint:
-    specifier: ^8.57.0
-    version: 8.57.0
-  eslint-config-next:
-    specifier: 14.2.4
-    version: 14.2.4(eslint@8.57.0)(typescript@5.5.4)
-  jest:
-    specifier: ^29.7.0
-    version: 29.7.0(@types/node@20.14.12)(ts-node@10.9.2)
-  jest-environment-jsdom:
-    specifier: ^29.7.0
-    version: 29.7.0(bufferutil@4.0.8)
-  jsdom:
-    specifier: ^24.1.1
-    version: 24.1.1(bufferutil@4.0.8)
-  license-checker:
-    specifier: ^25.0.1
-    version: 25.0.1
-  node-loader:
-    specifier: ^2.0.0
-    version: 2.0.0(webpack@5.93.0)
-  nodemon:
-    specifier: ^3.1.4
-    version: 3.1.4
-  pkgroll:
-    specifier: ^2.4.1
-    version: 2.4.1(typescript@5.5.4)
-  postcss:
-    specifier: ^8.4.40
-    version: 8.4.40
-  prettier:
-    specifier: ^3.3.3
-    version: 3.3.3
-  prettier-plugin-organize-imports:
-    specifier: ^4.0.0
-    version: 4.0.0(prettier@3.3.3)(typescript@5.5.4)
-  prettier-plugin-tailwindcss:
-    specifier: ^0.6.5
-    version: 0.6.5(prettier-plugin-organize-imports@4.0.0)(prettier@3.3.3)
-  prisma:
-    specifier: 5.16.1
-    version: 5.16.1
-  react-server-dom-webpack:
-    specifier: ^0.0.1
-    version: 0.0.1(react-dom@18.3.1)(react@18.3.1)
-  rimraf:
-    specifier: ^5.0.9
-    version: 5.0.9
-  sass:
-    specifier: ^1.77.8
-    version: 1.77.8
-  tailwindcss:
-    specifier: ^3.4.7
-    version: 3.4.7(ts-node@10.9.2)
-  ts-loader:
-    specifier: ^9.5.1
-    version: 9.5.1(typescript@5.5.4)(webpack@5.93.0)
-  ts-node:
-    specifier: ^10.9.2
-    version: 10.9.2(@swc/core@1.7.2)(@types/node@20.14.12)(typescript@5.5.4)
-  tsx:
-    specifier: ^4.16.2
-    version: 4.16.2
-  turbo:
-    specifier: ^2.0.9
-    version: 2.0.9
-  typescript:
-    specifier: ^5.5.4
-    version: 5.5.4
-  uglify-js:
-    specifier: ^3.19.0
-    version: 3.19.0
-  v0:
-    specifier: ^2.2.5
-    version: 2.2.5(typescript@5.5.4)
-  webpack:
-    specifier: ^5.93.0
-    version: 5.93.0(@swc/core@1.7.2)(uglify-js@3.19.0)(webpack-cli@5.1.4)
-  webpack-cli:
-    specifier: ^5.1.4
-    version: 5.1.4(webpack@5.93.0)
-  webpack-glob-entries:
-    specifier: ^1.0.1
-    version: 1.0.1
+  .:
+    devDependencies:
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
+      prettier-plugin-organize-imports:
+        specifier: ^4.0.0
+        version: 4.0.0(prettier@3.3.3)(typescript@5.5.4)
+      prettier-plugin-tailwindcss:
+        specifier: ^0.6.5
+        version: 0.6.5(prettier-plugin-organize-imports@4.0.0)(prettier@3.3.3)
+      turbo:
+        specifier: latest
+        version: 2.0.9
+
+  apps/web:
+    dependencies:
+      '@cycjimmy/jsmpeg-player':
+        specifier: ^6.1.1
+        version: 6.1.1
+      '@devicefarmer/adbkit':
+        specifier: ^3.2.6
+        version: 3.2.6
+      '@dotenvx/dotenvx':
+        specifier: ^1.6.4
+        version: 1.6.4
+      '@hookform/resolvers':
+        specifier: ^3.9.0
+        version: 3.9.0(react-hook-form@7.52.1)
+      '@mdx-js/loader':
+        specifier: ^3.0.1
+        version: 3.0.1(webpack@5.93.0)
+      '@mdx-js/react':
+        specifier: ^3.0.1
+        version: 3.0.1(@types/react@18.3.3)(react@18.3.1)
+      '@next/mdx':
+        specifier: 14.2.5
+        version: 14.2.5(@mdx-js/loader@3.0.1)(@mdx-js/react@3.0.1)
+      '@next/third-parties':
+        specifier: 14.2.5
+        version: 14.2.5(next@14.2.5)(react@18.3.1)
+      '@onesignal/node-onesignal':
+        specifier: 5.0.0-alpha-01
+        version: 5.0.0-alpha-01
+      '@paralleldrive/cuid2':
+        specifier: ^2.2.2
+        version: 2.2.2
+      '@prisma/client':
+        specifier: 5.16.1
+        version: 5.16.1(prisma@5.16.1)
+      '@radix-ui/react-alert-dialog':
+        specifier: ^1.1.1
+        version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-aspect-ratio':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-avatar':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-checkbox':
+        specifier: ^1.1.1
+        version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-dialog':
+        specifier: ^1.1.1
+        version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-dropdown-menu':
+        specifier: ^2.1.1
+        version: 2.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-icons':
+        specifier: ^1.3.0
+        version: 1.3.0(react@18.3.1)
+      '@radix-ui/react-label':
+        specifier: ^2.1.0
+        version: 2.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-popover':
+        specifier: ^1.1.1
+        version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-progress':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-slider':
+        specifier: ^1.2.0
+        version: 1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-slot':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react@18.3.3)(react@18.3.1)
+      '@radix-ui/react-toast':
+        specifier: ^1.2.1
+        version: 1.2.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-tooltip':
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@radix-ui/react-visually-hidden':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@relume_io/relume-tailwind':
+        specifier: ^0.3.0
+        version: 0.3.0
+      '@relume_io/relume-ui':
+        specifier: ^0.3.0
+        version: 0.3.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)(tailwindcss@3.4.7)
+      '@sentry/nextjs':
+        specifier: ^8.20.0
+        version: 8.20.0(@opentelemetry/api@1.9.0)(@opentelemetry/core@1.25.1)(@opentelemetry/instrumentation@0.52.1)(@opentelemetry/sdk-trace-base@1.25.1)(next@14.2.5)(react@18.3.1)(webpack@5.93.0)
+      '@sentry/node':
+        specifier: ^8.20.0
+        version: 8.20.0
+      '@sentry/profiling-node':
+        specifier: ^8.20.0
+        version: 8.20.0
+      '@supabase/ssr':
+        specifier: ^0.4.0
+        version: 0.4.0(@supabase/supabase-js@2.44.4)
+      '@supabase/supabase-js':
+        specifier: ^2.44.4
+        version: 2.44.4(bufferutil@4.0.8)
+      '@types/mdx':
+        specifier: ^2.0.13
+        version: 2.0.13
+      '@uidotdev/usehooks':
+        specifier: ^2.4.1
+        version: 2.4.1(react-dom@18.3.1)(react@18.3.1)
+      adbkit-apkreader:
+        specifier: ^3.2.0
+        version: 3.2.0
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
+      ajv-draft-04:
+        specifier: ^1.0.0
+        version: 1.0.0(ajv@8.17.1)
+      ajv-formats:
+        specifier: ^3.0.1
+        version: 3.0.1(ajv@8.17.1)
+      apks:
+        specifier: ^1.0.0
+        version: 1.0.0
+      buffer:
+        specifier: ^6.0.3
+        version: 6.0.3
+      bufferutil:
+        specifier: ^4.0.8
+        version: 4.0.8
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      cmdk:
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      cpu-features:
+        specifier: ^0.0.10
+        version: 0.0.10
+      dockerode:
+        specifier: ^4.0.2
+        version: 4.0.2
+      dockerode-compose:
+        specifier: ^1.4.0
+        version: 1.4.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      dotenv-expand:
+        specifier: ^11.0.6
+        version: 11.0.6
+      find-up:
+        specifier: ^7.0.0
+        version: 7.0.0
+      framer-motion:
+        specifier: ^11.3.17
+        version: 11.3.17(react-dom@18.3.1)(react@18.3.1)
+      globby:
+        specifier: ^14.0.2
+        version: 14.0.2
+      h264-converter:
+        specifier: ^0.1.4
+        version: 0.1.4
+      image-size:
+        specifier: ^1.1.1
+        version: 1.1.1
+      ioredis:
+        specifier: ^5.4.1
+        version: 5.4.1
+      ispinner.css:
+        specifier: ^3.1.1
+        version: 3.1.1
+      lucide-react:
+        specifier: ^0.400.0
+        version: 0.400.0(react@18.3.1)
+      mustache:
+        specifier: ^4.2.0
+        version: 4.2.0
+      mutation-observer:
+        specifier: ^1.0.3
+        version: 1.0.3
+      next:
+        specifier: 14.2.5
+        version: 14.2.5(@babel/core@7.24.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.8)
+      next-themes:
+        specifier: ^0.3.0
+        version: 0.3.0(react-dom@18.3.1)(react@18.3.1)
+      nth-check:
+        specifier: ^2.1.1
+        version: 2.1.1
+      permessage-deflate:
+        specifier: ^0.1.7
+        version: 0.1.7
+      prisma-redis-middleware:
+        specifier: 4.8.0
+        version: 4.8.0
+      punycode:
+        specifier: ^2.3.1
+        version: 2.3.1
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-full-screen:
+        specifier: ^1.1.1
+        version: 1.1.1(react@18.3.1)
+      react-hook-form:
+        specifier: ^7.52.1
+        version: 7.52.1(react@18.3.1)
+      react-icons:
+        specifier: ^5.2.1
+        version: 5.2.1(react@18.3.1)
+      react-onesignal:
+        specifier: ^3.0.1
+        version: 3.0.1(react@18.3.1)
+      react-resizable-panels:
+        specifier: ^2.0.22
+        version: 2.0.22(react-dom@18.3.1)(react@18.3.1)
+      react-resize-detector:
+        specifier: ^11.0.1
+        version: 11.0.1(react-dom@18.3.1)(react@18.3.1)
+      remark-frontmatter:
+        specifier: ^5.0.0
+        version: 5.0.0
+      remark-gfm:
+        specifier: ^4.0.0
+        version: 4.0.0
+      remark-toc:
+        specifier: ^9.0.0
+        version: 9.0.0
+      sharp:
+        specifier: ^0.33.4
+        version: 0.33.4
+      svg-inline-loader:
+        specifier: ^0.8.2
+        version: 0.8.2
+      sylvester.js:
+        specifier: ^0.1.1
+        version: 0.1.1
+      tailwind-merge:
+        specifier: ^2.4.0
+        version: 2.4.0
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.7)
+      tinyh264:
+        specifier: ^0.0.7
+        version: 0.0.7
+      ua-parser-js:
+        specifier: ^1.0.38
+        version: 1.0.38
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.0(react@18.3.1)
+      vaul:
+        specifier: ^0.9.1
+        version: 0.9.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      ws:
+        specifier: ^8.18.0
+        version: 8.18.0(bufferutil@4.0.8)
+      yaml:
+        specifier: ^2.5.0
+        version: 2.5.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@sentry/cli':
+        specifier: ^2.33.0
+        version: 2.33.0
+      '@swc/core':
+        specifier: ^1.7.2
+        version: 1.7.2
+      '@testing-library/jest-dom':
+        specifier: ^6.4.8
+        version: 6.4.8
+      '@testing-library/react':
+        specifier: ^16.0.0
+        version: 16.0.0(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@tsconfig/node12':
+        specifier: ^12.1.3
+        version: 12.1.3
+      '@types/async-lock':
+        specifier: ^1.4.2
+        version: 1.4.2
+      '@types/bluebird':
+        specifier: ^3.5.42
+        version: 3.5.42
+      '@types/dockerode':
+        specifier: ^3.3.31
+        version: 3.3.31
+      '@types/dockerode-compose':
+        specifier: ^1.4.1
+        version: 1.4.1
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.12
+      '@types/jsdom':
+        specifier: ^21.1.7
+        version: 21.1.7
+      '@types/mustache':
+        specifier: ^4.2.5
+        version: 4.2.5
+      '@types/node':
+        specifier: ^20.14.12
+        version: 20.14.12
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.3
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
+      '@types/ua-parser-js':
+        specifier: ^0.7.39
+        version: 0.7.39
+      '@types/ws':
+        specifier: ^8.5.11
+        version: 8.5.11
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      eslint-config-next:
+        specifier: 14.2.4
+        version: 14.2.4(eslint@8.57.0)(typescript@5.5.4)
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.14.12)(ts-node@10.9.2)
+      jest-environment-jsdom:
+        specifier: ^29.7.0
+        version: 29.7.0(bufferutil@4.0.8)
+      jsdom:
+        specifier: ^24.1.1
+        version: 24.1.1(bufferutil@4.0.8)
+      license-checker:
+        specifier: ^25.0.1
+        version: 25.0.1
+      node-loader:
+        specifier: ^2.0.0
+        version: 2.0.0(webpack@5.93.0)
+      pkgroll:
+        specifier: ^2.4.1
+        version: 2.4.1(typescript@5.5.4)
+      postcss:
+        specifier: ^8.4.40
+        version: 8.4.40
+      prisma:
+        specifier: 5.16.1
+        version: 5.16.1
+      rimraf:
+        specifier: ^5.0.9
+        version: 5.0.9
+      sass:
+        specifier: ^1.77.8
+        version: 1.77.8
+      tailwindcss:
+        specifier: ^3.4.7
+        version: 3.4.7(ts-node@10.9.2)
+      ts-loader:
+        specifier: ^9.5.1
+        version: 9.5.1(typescript@5.5.4)(webpack@5.93.0)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.7.2)(@types/node@20.14.12)(typescript@5.5.4)
+      tsx:
+        specifier: ^4.16.2
+        version: 4.16.2
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+      uglify-js:
+        specifier: ^3.19.0
+        version: 3.19.0
+      v0:
+        specifier: ^2.2.5
+        version: 2.2.5(typescript@5.5.4)
+      webpack:
+        specifier: ^5.93.0
+        version: 5.93.0(@swc/core@1.7.2)(uglify-js@3.19.0)(webpack-cli@5.1.4)
+      webpack-cli:
+        specifier: ^5.1.4
+        version: 5.1.4(webpack@5.93.0)
+      webpack-glob-entries:
+        specifier: ^1.0.1
+        version: 1.0.1
 
 packages:
 
@@ -461,7 +457,7 @@ packages:
       '@babel/traverse': 7.24.8
       '@babel/types': 7.24.9
       convert-source-map: 2.0.0
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -823,7 +819,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/parser': 7.24.8
       '@babel/types': 7.24.9
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -886,7 +882,7 @@ packages:
       '@devicefarmer/adbkit-monkey': 1.2.1
       bluebird: 3.7.2
       commander: 9.5.0
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       node-forge: 1.3.1
       split: 1.0.1
     transitivePeerDependencies:
@@ -1368,7 +1364,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       espree: 9.6.1
       globals: 13.24.0
       ignore: 5.3.1
@@ -1427,7 +1423,7 @@ packages:
     deprecated: Use @eslint/config-array instead
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -1633,6 +1629,7 @@ packages:
 
   /@ioredis/commands@1.2.0:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
+    dev: false
 
   /@isaacs/cliui@8.0.2:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -4949,15 +4946,6 @@ packages:
       '@types/unist': 3.0.2
     dev: false
 
-  /@types/ioredis@5.0.0:
-    resolution: {integrity: sha512-zJbJ3FVE17CNl5KXzdeSPtdltc4tMT3TzC6fxQS0sQngkbFZ6h+0uTafsRqu+eSLIugf6Yb0Ea0SUuRr42Nk9g==}
-    deprecated: This is a stub types definition. ioredis provides its own type definitions, so you do not need this installed.
-    dependencies:
-      ioredis: 5.4.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /@types/istanbul-lib-coverage@2.0.6:
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
     dev: true
@@ -5149,7 +5137,7 @@ packages:
       '@typescript-eslint/types': 7.2.0
       '@typescript-eslint/typescript-estree': 7.2.0(typescript@5.5.4)
       '@typescript-eslint/visitor-keys': 7.2.0
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       eslint: 8.57.0
       typescript: 5.5.4
     transitivePeerDependencies:
@@ -5180,7 +5168,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 7.2.0
       '@typescript-eslint/visitor-keys': 7.2.0
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
@@ -5410,7 +5398,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
 
@@ -5418,7 +5406,7 @@ packages:
     resolution: {integrity: sha512-H0TSyFNDMomMNJQBn8wFV5YC/2eJ+VXECwOadZJT554xP6cODZHPX3H9QMQECxvrgiSOP1pHjy1sMWQVYJOUOA==}
     engines: {node: '>= 14'}
     dependencies:
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6127,6 +6115,7 @@ packages:
   /cluster-key-slot@1.1.2:
     resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
     engines: {node: '>=0.10.0'}
+    dev: false
 
   /cmdk@1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-gDzVf0a09TvoJ5jnuPvygTB77+XdOSwEmJ88L6XPFPlv7T3RxbP9jgenfylrAMD0+Le1aO0nVjQUzl2g+vjz5Q==}
@@ -6463,7 +6452,7 @@ packages:
       ms: 2.1.3
     dev: false
 
-  /debug@4.3.5(supports-color@5.5.0):
+  /debug@4.3.5:
     resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
     engines: {node: '>=6.0'}
     peerDependencies:
@@ -6473,7 +6462,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-      supports-color: 5.5.0
 
   /debuglog@1.0.1:
     resolution: {integrity: sha512-syBZ+rnAK3EgMsH2aYEOLUW7mZSY9Gb+0wUMCFsZvcmiz+HigA0LOcq/HoQqVuGG+EKykunc7QG2bzrponfaSw==}
@@ -6563,6 +6551,7 @@ packages:
   /denque@2.1.0:
     resolution: {integrity: sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==}
     engines: {node: '>=0.10'}
+    dev: false
 
   /dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
@@ -6625,7 +6614,7 @@ packages:
     resolution: {integrity: sha512-89zhop5YVhcPEt5FpUFGr3cDyceGhq/F9J+ZndQ4KfqNvfbJpPMfgeixFgUj5OjCYAboElqODxY5Z1EBsSa6sg==}
     engines: {node: '>= 8.0'}
     dependencies:
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       readable-stream: 3.6.2
       split-ca: 1.0.1
       ssh2: 1.15.0
@@ -7076,7 +7065,7 @@ packages:
       eslint: '*'
       eslint-plugin-import: '*'
     dependencies:
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       enhanced-resolve: 5.17.1
       eslint: 8.57.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
@@ -7254,7 +7243,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -8016,7 +8005,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8026,7 +8015,7 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.1
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8045,7 +8034,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
 
@@ -8054,7 +8043,7 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.1
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8064,7 +8053,7 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.1
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8087,10 +8076,6 @@ packages:
 
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
-
-  /ignore-by-default@1.0.1:
-    resolution: {integrity: sha512-Ius2VYcGNk7T90CppJqcIkS5ooHUZyIQK+ClZfMfMNFEF9VSE73Fq+906u/CWu92x4gzZMWOwfFYckPObzdEbA==}
-    dev: true
 
   /ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
@@ -8197,7 +8182,7 @@ packages:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
@@ -8214,7 +8199,7 @@ packages:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
@@ -8223,6 +8208,7 @@ packages:
       standard-as-callback: 2.1.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /is-alphabetical@2.0.1:
     resolution: {integrity: sha512-FWyyY60MeTNyeSRpkM2Iry0G9hpr7/9kD40mD/cGQEuilcZYS4okz8SN2Q6rLCJ8gbCt6fN+rC+6tMGS99LaxQ==}
@@ -8572,7 +8558,7 @@ packages:
     resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
     engines: {node: '>=10'}
     dependencies:
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       istanbul-lib-coverage: 3.2.2
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -9362,9 +9348,11 @@ packages:
 
   /lodash.defaults@4.2.0:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
+    dev: false
 
   /lodash.isarguments@3.1.0:
     resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
+    dev: false
 
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -10023,7 +10011,7 @@ packages:
     resolution: {integrity: sha512-o/sd0nMof8kYff+TqcDx3VSrgBTcZpSvYcAHIfHhv5VAuNmisCxjhx6YmxS8PFEpb9z5WKWKPdzf0jM23ro3RQ==}
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       decode-named-character-reference: 1.0.2
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.1
@@ -10294,23 +10282,6 @@ packages:
 
   /node-releases@2.0.18:
     resolution: {integrity: sha512-d9VeXT4SJ7ZeOqGX6R5EM022wpL+eWPooLI+5UpWn2jCT1aosUQEhQP214x33Wkwx3JQMvIm+tIoVOdodFS40g==}
-
-  /nodemon@3.1.4:
-    resolution: {integrity: sha512-wjPBbFhtpJwmIeY2yP7QF+UKzPfltVGtfce1g/bB15/8vCGZj8uxD62b/b9M9/WVgme0NZudpownKN+c0plXlQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      chokidar: 3.6.0
-      debug: 4.3.5(supports-color@5.5.0)
-      ignore-by-default: 1.0.1
-      minimatch: 3.1.2
-      pstree.remy: 1.1.8
-      semver: 7.6.3
-      simple-update-notifier: 2.0.0
-      supports-color: 5.5.0
-      touch: 3.1.1
-      undefsafe: 2.0.5
-    dev: true
 
   /nopt@4.0.3:
     resolution: {integrity: sha512-CvaGwVMztSMJLOeXPrez7fyfObdZqNUK1cPAEzLHrTybIua9pMdmmPR5YwtfNftIOMv3DPUhFaxsZMNTQO20Kg==}
@@ -11019,10 +10990,6 @@ packages:
   /psl@1.9.0:
     resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
 
-  /pstree.remy@1.1.8:
-    resolution: {integrity: sha512-77DZwxQmxKnu3aR542U+X8FypNzbfJ+C5XQDk3uWjWxn6151aIMGthWYRXTqT1E5oJvg+ljaa2OJi+VfvCOQ8w==}
-    dev: true
-
   /pump@3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}
     dependencies:
@@ -11199,16 +11166,6 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /react-server-dom-webpack@0.0.1(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-XLR1T3SxiYe5CePB7apZg91V7zJqp55rAj1wb1rD0VQc8eA/Tt1mhCXaDKvUnLAxiOqUgRapl9CA3eud0UhEvg==}
-    peerDependencies:
-      react: ^17.0.0
-      react-dom: ^17.0.0
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    dev: true
-
   /react-style-singleton@2.2.1(@types/react@18.3.3)(react@18.3.1):
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
     engines: {node: '>=10'}
@@ -11314,12 +11271,14 @@ packages:
   /redis-errors@1.2.0:
     resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
     engines: {node: '>=4'}
+    dev: false
 
   /redis-parser@3.0.0:
     resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
     engines: {node: '>=4'}
     dependencies:
       redis-errors: 1.2.0
+    dev: false
 
   /reflect.getprototypeof@1.0.6:
     resolution: {integrity: sha512-fmfw4XgoDke3kdI6h4xcUz1dG8uaiv5q9gcEwLS4Pnth2kxT+GZ7YehS1JTMGBQmtV7Y4GFGbs2re2NqhdozUg==}
@@ -11457,7 +11416,7 @@ packages:
     resolution: {integrity: sha512-nQFEv9gRw6SJAwWD2LrL0NmQvAcO7FBwJbwmr2ttPAacfy0xuiOjE5zt+zM4xDyuyvUaxBi/9gb2SoCyNEVJcw==}
     engines: {node: '>=8.6.0'}
     dependencies:
-      debug: 4.3.5(supports-color@5.5.0)
+      debug: 4.3.5
       module-details-from-path: 1.0.3
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -11760,13 +11719,6 @@ packages:
       is-arrayish: 0.3.2
     dev: false
 
-  /simple-update-notifier@2.0.0:
-    resolution: {integrity: sha512-a2B9Y0KlNXl9u/vsW6sTIu9vGEpfKu2wRV6l1H3XEas/0gUIzGzBoP/IouTcUQbm9JWZLH3COxyn03TYlFax6w==}
-    engines: {node: '>=10'}
-    dependencies:
-      semver: 7.6.3
-    dev: true
-
   /sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
     dev: true
@@ -11923,6 +11875,7 @@ packages:
 
   /standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
+    dev: false
 
   /stdin-discarder@0.1.0:
     resolution: {integrity: sha512-xhV7w8S+bUwlPTb4bAOUQhv8/cSS5offJuX8GQGq32ONF0ZtDWKfkdomM3HMRA+LhX6um/FZ0COqlwsjD53LeQ==}
@@ -12338,11 +12291,6 @@ packages:
     dependencies:
       is-number: 7.0.0
 
-  /touch@3.1.1:
-    resolution: {integrity: sha512-r0eojU4bI8MnHr8c5bNo7lJDdI2qXlWWJk6a9EAFG7vbhTjElYhBVS3/miuE0uOuoLdb8Mc/rVfsmm6eo5o9GA==}
-    hasBin: true
-    dev: true
-
   /tough-cookie@2.5.0:
     resolution: {integrity: sha512-nlLsUzgm1kfLXSXfRZMc1KLAugd4hqJHDTvc2hDIwS3mZAfMEuMbc03SujMF+GEcpaX/qboeycw6iO8JwVv2+g==}
     engines: {node: '>=0.8'}
@@ -12660,10 +12608,6 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
-    dev: true
-
-  /undefsafe@2.0.5:
-    resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
     dev: true
 
   /undici-types@5.26.5:

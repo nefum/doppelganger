@@ -3,15 +3,15 @@ services:
   app:
     image: "ghcr.io/regulad/doppelganger-front:latest"
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: apps/web
+      dockerfile: apps/web/Dockerfile
     ports:
       - "3000:3000"
     volumes:
       - "./:/usr/src/app"
       - "/var/run/docker.sock:/var/run/docker.sock"
     env_file:
-      - ".env.local"
+      - "apps/web/.env.local"
     command: "pnpm run dev"
     networks:
       # EXTERNAL_NETWORK_NAME
