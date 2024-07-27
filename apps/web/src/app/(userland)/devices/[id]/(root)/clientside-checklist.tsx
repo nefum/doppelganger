@@ -50,8 +50,8 @@ export function ClientSideIsSignedUpForNotificationsChecklistItem() {
               >
                 If you are on iOS, follow this guide before clicking below.
               </a>{" "}
-              If you are not on iOS, no additional configuration is required.
-              <button
+              If you are not on iOS, no additional configuration is required.{" "}
+              <button // don't replace with an A
                 className="shadcn-link"
                 onClick={async () => {
                   await OneSignal.Notifications.requestPermission();

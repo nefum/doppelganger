@@ -26,7 +26,6 @@ describe("ReconnectingAdbDeviceClient", () => {
   });
 
   it("throws error on install when timeout is reached", async () => {
-    // @ts-expect-error -- private method
     jest.spyOn(reconnectingClient, "getIsConnected").mockResolvedValue(false);
 
     const apk = "path/to/apk";
@@ -36,7 +35,6 @@ describe("ReconnectingAdbDeviceClient", () => {
   });
 
   it("throws error on reboot when timeout is reached", async () => {
-    // @ts-expect-error -- private method
     jest.spyOn(reconnectingClient, "getIsConnected").mockResolvedValue(false);
 
     await expect(reconnectingClient.reboot()).rejects.toThrow(

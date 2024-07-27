@@ -29,13 +29,13 @@ export default class ReconnectingAdbDeviceClient extends DeviceClient {
     this.timeout = timeout;
   }
 
-  private async doConnect(): Promise<void> {
+  async doConnect(): Promise<void> {
     // only works with tcp hosts
     const [host, port] = this.serial.split(":");
     await this.client.connect(host, parseInt(port, 10));
   }
 
-  private async connectRobust(timeout?: number): Promise<void> {
+  async connectRobust(timeout?: number): Promise<void> {
     // keep trying to run connect until either the timeout is reached or the device is connected
     const startTime = Date.now();
     let connected = await this.getIsConnected();
@@ -59,7 +59,7 @@ export default class ReconnectingAdbDeviceClient extends DeviceClient {
     await this.waitBootComplete();
   }
 
-  private async getIsConnected(): Promise<boolean> {
+  async getIsConnected(): Promise<boolean> {
     return (await this.getState()) === "device";
   }
 

@@ -30,12 +30,12 @@ export class BaseClient<
   }
 
   public setTitle(text = this.title): void {
-    let titleTag: HTMLTitleElement | null =
-      document.querySelector("head > title");
-    if (!titleTag) {
-      titleTag = document.createElement("title");
-    }
-    titleTag.innerText = text;
+    // let titleTag: HTMLTitleElement | null =
+    //   document.querySelector("head > title");
+    // if (!titleTag) {
+    //   titleTag = document.createElement("title");
+    // }
+    // titleTag.innerText = text;
   }
 
   public setBodyClass(text: string): void {

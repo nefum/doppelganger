@@ -12,7 +12,13 @@ import {
   DeviceStatsSkeleton,
 } from "@/app/(userland)/devices/[id]/(root)/skeletons.tsx";
 import { DeviceStats } from "@/app/(userland)/devices/[id]/(root)/stats.tsx";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Device",
+  description: "Device details and actions",
+};
 
 // Main Page Component
 export default async function Page({

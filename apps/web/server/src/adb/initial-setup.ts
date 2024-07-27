@@ -1,9 +1,9 @@
 import { AdbDevice, readStreamIntoBufferAndClose } from "%/adb/adb-device.ts";
-import type { DeviceClient } from "@devicefarmer/adbkit";
 import { Device } from "@prisma/client";
 import * as Sentry from "@sentry/node";
 import ApkReader, { ManifestObject } from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
+import ReconnectingAdbDeviceClient from "%/adb/reconnecting-adb-device-client.ts";
 import { resolveOrDefaultValue } from "%/utils/promise-utils.ts";
 import { findUpSync } from "find-up";
 import { globby } from "globby";
@@ -12,7 +12,7 @@ import path from "path";
 const apksDir = path.resolve(findUpSync("package.json")!, "../android"); // may be called from any directory
 
 async function getInstalledVersionOfPackageOnClient(
-  adbClient: DeviceClient,
+  adbClient: ReconnectingAdbDeviceClient,
   packageName: string,
 ): Promise<bigint> {
   const androidVersionRet = await adbClient
@@ -24,7 +24,7 @@ async function getInstalledVersionOfPackageOnClient(
 }
 
 async function doSpecialSetupAndStarting(
-  adbClient: DeviceClient,
+  adbClient: ReconnectingAdbDeviceClient,
   packageName: string,
 ): Promise<void> {
   try {
@@ -47,7 +47,7 @@ async function doSpecialSetupAndStarting(
  * Queries an ADB device to determine if a package was installed with Debug keys. With debug (self-signed) keys, the app must be uninstalled before a new update is installed or Android will return an error
  */
 async function getIsPackageDebug(
-  adbClient: DeviceClient,
+  adbClient: ReconnectingAdbDeviceClient,
   packageName: string,
 ): Promise<boolean> {
   // debug dumpsys: https://gist.github.com/regulad/574f9bbcc6218ca7a4a36f35e086a5c6
@@ -71,7 +71,7 @@ async function getIsPackageDebug(
 }
 
 async function grantAllPermissionsOfPackage(
-  adbClient: DeviceClient,
+  adbClient: ReconnectingAdbDeviceClient,
   manifest: ManifestObject,
 ): Promise<void> {
   const packageName = manifest.package;
@@ -100,7 +100,7 @@ async function grantAllPermissionsOfPackage(
  * @param manifest
  */
 async function determineIfPackageNeedsInstallation(
-  adbClient: DeviceClient,
+  adbClient: ReconnectingAdbDeviceClient,
   manifest: ManifestObject,
 ): Promise<boolean> {
   const newVersionCode = manifest.versionCode;
@@ -124,7 +124,7 @@ async function determineIfPackageNeedsInstallation(
  * @param packageName
  */
 async function uninstallPackageCompletely(
-  adbClient: DeviceClient,
+  adbClient: ReconnectingAdbDeviceClient,
   packageName: string,
 ): Promise<void> {
   const packageIsInstalled = await adbClient.isInstalled(packageName);
@@ -138,7 +138,7 @@ async function uninstallPackageCompletely(
 }
 
 async function installOrUpdateApkAndGrantAllPermissions(
-  adbClient: DeviceClient,
+  adbClient: ReconnectingAdbDeviceClient,
   apkPath: string,
 ): Promise<void> {
   // step 1: parse the apk to get the version, package name, and any requested permissions
@@ -204,7 +204,7 @@ export async function getIsSetupComplete(device: Device): Promise<boolean> {
       const apkReader = await ApkReader.open(apkPath);
       const manifest = await apkReader.readManifest();
       const packageName = manifest.package;
-      return adbClient.isInstalled(packageName);
+      return resolveOrDefaultValue(adbClient.isInstalled(packageName), false); // if the package is not installed, it is not setup (probably?)
     }),
   );
   return isSetupCompleteArray.every((b) => b);

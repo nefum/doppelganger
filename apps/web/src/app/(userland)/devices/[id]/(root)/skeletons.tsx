@@ -36,6 +36,15 @@ export function DeviceBreadcrumbSkeleton({
   );
 }
 
+export function DeviceChecklistItemSkeleton() {
+  return (
+    <div className="flex items-center space-x-2">
+      <Skeleton className="h-4 w-4" />
+      <Skeleton className="h-4 w-32" />
+    </div>
+  );
+}
+
 export function DeviceChecklistSkeleton() {
   return (
     <Card className="mb-6">
@@ -45,10 +54,7 @@ export function DeviceChecklistSkeleton() {
       <CardContent>
         <div className="space-y-4">
           {[1, 2, 3].map((item) => (
-            <div key={item} className="flex items-center space-x-2">
-              <Skeleton className="h-4 w-4" />
-              <Skeleton className="h-4 w-32" />
-            </div>
+            <DeviceChecklistItemSkeleton key={item} />
           ))}
           <Skeleton className="h-10 w-64 ml-6" />
         </div>

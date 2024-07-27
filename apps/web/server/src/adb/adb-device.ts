@@ -1,10 +1,8 @@
-import ReconnectingAdbDeviceClient from "%/adb/reconnecting-adb-device-client.ts";
-import {
-  getAdbUdidForDevice,
-  getDefaultRedroidHostname,
-} from "%/device-info/device-info-utils";
+import ReconnectingAdbDeviceClient, {
+  DEFAULT_ADB_TIMEOUT,
+} from "%/adb/reconnecting-adb-device-client.ts";
+import { getAdbUdidForDevice } from "%/device-info/device-info-utils";
 import { getRedroidImage } from "%/device-info/redroid-images";
-import type { DeviceClient } from "@devicefarmer/adbkit";
 import { Device } from "@prisma/client";
 import { spawn } from "child_process";
 import { Duplex } from "node:stream";
@@ -47,57 +45,32 @@ export function readStreamIntoBufferAndClose(stream: Duplex): Promise<Buffer> {
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/Device.ts
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/ScrcpyServer.ts
 export class AdbDevice {
-  public adbClient: DeviceClient;
+  public adbClient: ReconnectingAdbDeviceClient;
   private readonly tag: string;
   private pidDetectionMethod: PID_DETECTION_METHOD =
     PID_DETECTION_METHOD.UNKNOWN;
 
-  constructor(public device: Device) {
+  constructor(
+    public device: Device,
+    private readonly timeout: number = DEFAULT_ADB_TIMEOUT,
+  ) {
     this.tag = `[${this.udid}]`;
-    // @ts-expect-error -- ignore the type mismatch
-    this.adbClient = new ReconnectingAdbDeviceClient(adb, this.udid);
+    this.adbClient = new ReconnectingAdbDeviceClient(adb, this.udid, timeout);
   }
 
   /**
    * Connects to the device using adb. Silently fails if the device is already connected.
    */
-  async connect(): Promise<void> {
-    const isConnected = await this.getIsConnected();
-    if (isConnected) {
-      return;
-    }
-    await adb.connect(
-      this.device.adbHostname ?? getDefaultRedroidHostname(this.device.id),
-      this.device.adbPort,
-    );
+  connect(): Promise<void> {
+    return this.adbClient.doConnect();
   }
 
-  async connectRobust(timeout?: number): Promise<void> {
-    // keep trying to run connect until either the timeout is reached or the device is connected
-    const startTime = Date.now();
-    let connected = await this.getIsConnected();
-    if (connected) return;
-    while (true) {
-      try {
-        await this.connect();
-        connected = await this.getIsConnected();
-        if (connected) return;
-      } catch (e: any) {
-        // ignore and continue loop
-      }
-      if (timeout && Date.now() - startTime > timeout) {
-        throw new Error("Timeout waiting for device to connect");
-      }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
+  connectRobust(timeout?: number): Promise<void> {
+    return this.adbClient.connectRobust(timeout);
   }
 
-  async getIsConnected(): Promise<boolean> {
-    const allDevices = await adb.listDevices();
-    return allDevices.some(
-      (device: AdbListDeviceDevice) =>
-        device.id === this.udid && device.type === "device",
-    );
+  getIsConnected(): Promise<boolean> {
+    return this.adbClient.getIsConnected();
   }
 
   get udid(): string {
@@ -105,9 +78,7 @@ export class AdbDevice {
   }
 
   public async runShellCommandAdbKit(command: string): Promise<string> {
-    if (!this.adbClient) {
-      throw new Error("Device is not connected");
-    }
+    await this.connectRobust();
     return this.adbClient
       .shell(command)
       .then(readStreamIntoBufferAndClose)
@@ -232,10 +203,7 @@ export class AdbDevice {
   }
 
   public async getPidOf(processName: string): Promise<number[]> {
-    const isConnected = await this.getIsConnected();
-    if (!isConnected) {
-      throw new Error("Device is not connected");
-    }
+    await this.connectRobust();
     const pidDetectionVariant = await this.getDetectionVariant();
     switch (pidDetectionVariant) {
       case PID_DETECTION_METHOD.PIDOF:
@@ -303,9 +271,7 @@ export class AdbDevice {
   }
 
   public async push(contents: string, path: string): Promise<void> {
-    if (!this.adbClient) {
-      throw new Error("Device is not connected");
-    }
+    await this.connectRobust();
     this.adbClient.push(contents, path);
   }
 
@@ -314,6 +280,8 @@ export class AdbDevice {
    * Gets the Framework ID for an Android device so that it may be registered with Google at https://www.google.com/android/uncertified
    */
   async getGoogleServicesFrameworkID(timeout?: number): Promise<BigInt> {
+    timeout = timeout ?? this.timeout;
+
     const startTime = Date.now();
 
     const redroidImage = getRedroidImage(this.device.redroidImage)!;
@@ -321,9 +289,7 @@ export class AdbDevice {
       throw new Error("Device does not have Google Mobile Services");
     }
 
-    if (!(await this.getIsConnected())) {
-      throw new Error("Device is not connected");
-    }
+    await this.connectRobust();
 
     // adb root
     // adb shell 'sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db \
@@ -352,10 +318,7 @@ export class AdbDevice {
   }
 
   private async getRootSafe(): Promise<void> {
-    if (!(await this.getIsConnected())) {
-      throw new Error("Device is not connected");
-    }
-
+    await this.connectRobust();
     try {
       await this.adbClient.root();
     } catch (e: any) {

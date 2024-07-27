@@ -2,12 +2,14 @@
 
 // DeviceChecklist Components
 import { AdbDevice } from "%/adb/adb-device.ts";
+import { getIsSetupComplete } from "%/adb/initial-setup.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import {
   ClientSideIsPwaChecklistItem,
   ClientSideIsSignedUpForNotificationsChecklistItem,
 } from "@/app/(userland)/devices/[id]/(root)/clientside-checklist.tsx";
+import { DeviceChecklistItemSkeleton } from "@/app/(userland)/devices/[id]/(root)/skeletons.tsx";
 import NotFound from "@/app/not-found.tsx";
 import CopyButton from "@/components/copy-button.tsx";
 import {
@@ -18,8 +20,93 @@ import {
 } from "@/components/ui/card.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { getRunningStatus } from "@/utils/redroid/stats.ts";
 import { createClient } from "@/utils/supabase/server.ts";
+import { Device } from "@prisma/client";
+import { Suspense } from "react";
+
+function SetupCompleteChecklistItem() {
+  return (
+    <div className="flex items-center space-x-2">
+      <Checkbox id="create-device" disabled checked />
+      <label htmlFor="create-device">
+        Create your device
+        <small className="shadcn-muted block">
+          Congratulations! You&apos;ve already created your device. The hardest
+          part is done, now let&apos;s finish the setup.
+        </small>
+      </label>
+    </div>
+  );
+}
+
+async function GMSChecklistItem({
+  adbDevice,
+}: Readonly<{ adbDevice: AdbDevice }>) {
+  const gmsId = (await adbDevice.getGoogleServicesFrameworkID()).toString(10);
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="connect-google-services"
+          disabled
+          checked={"indeterminate"}
+        />
+        <label htmlFor="connect-google-services">
+          Connect Google Services
+          <small className="shadcn-muted block">
+            Your device supports the Google Play Store, but you need to complete
+            a little more setup before it can be used. You must copy the code
+            below and paste it into into the Google device registration portal.{" "}
+            <a
+              href="https://www.google.com/android/uncertified/"
+              className="shadcn-link"
+            >
+              Click this link to jump to the portal.
+            </a>{" "}
+            After you have submitted the code, stop and then start your device
+            using the buttons above. When the device comes back up, you will be
+            able to sign into your Google account!
+          </small>
+        </label>
+      </div>
+      <div className={"inline-flex"}>
+        <Input
+          value={gmsId || "Start device to see ID"}
+          disabled
+          className="ml-6 w-48"
+        />
+        {gmsId && (
+          <div className={"ml-2"}>
+            <CopyButton value={String(gmsId)} className={"h-5 w-5"} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+async function DeferredSetupCompleteChecklistItem({
+  device,
+}: {
+  device: Device;
+}) {
+  const deferredSetupComplete = await getIsSetupComplete(device);
+
+  return (
+    <div className="flex items-center space-x-2">
+      <Checkbox id="create-device" disabled checked={deferredSetupComplete} />
+      <label htmlFor="create-device">
+        Wait for deferred setup tasks to complete
+        <small className="shadcn-muted block">
+          {deferredSetupComplete
+            ? "The device setup tasks have completed. You can now use your device with all features!"
+            : "Doppelganger needs to setup your device a little bit more in the background. This should only take a few minutes."}
+        </small>
+      </label>
+    </div>
+  );
+}
 
 export async function DeviceChecklist({
   deviceId,
@@ -40,21 +127,7 @@ export async function DeviceChecklist({
   const redroidImage = getRedroidImage(device.redroidImage)!; // can't be null if it was deployed
   const adbDevice = new AdbDevice(device);
 
-  const deviceUp = await getRunningStatus(device);
-  if (deviceUp) {
-    try {
-      await adbDevice.connectRobust(600_000);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  const deviceConnected = await adbDevice.getIsConnected();
-
   const deviceHasGms = redroidImage.gms;
-  const gmsId =
-    deviceHasGms &&
-    deviceConnected &&
-    (await adbDevice.getGoogleServicesFrameworkID(600_000)).toString(10);
 
   return (
     <Card className="mb-6">
@@ -63,57 +136,14 @@ export async function DeviceChecklist({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox id="create-device" disabled checked />
-            <label htmlFor="create-device">
-              Create your device
-              <small className="shadcn-muted block">
-                Congratulations! You&apos;ve already created your device. The
-                hardest part is done, now let&apos;s finish the setup.
-              </small>
-            </label>
-          </div>
-          {/*there is NO WAY to check if a gms-enabled device has been verified*/}
+          <SetupCompleteChecklistItem />
+          <Suspense fallback={<DeviceChecklistItemSkeleton />}>
+            <DeferredSetupCompleteChecklistItem device={device} />
+          </Suspense>
           {deviceHasGms && (
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="connect-google-services"
-                  disabled
-                  checked={"indeterminate"}
-                />
-                <label htmlFor="connect-google-services">
-                  Connect Google Services
-                  <small className="shadcn-muted block">
-                    Your device supports the Google Play Store, but you need to
-                    complete a little more setup before it can be used. You must
-                    copy the code below and paste it into into the Google device
-                    registration portal.{" "}
-                    <a
-                      href="https://www.google.com/android/uncertified/"
-                      className="shadcn-link"
-                    >
-                      Click this link to jump to the portal.
-                    </a>{" "}
-                    After you have submitted the code, stop and then start your
-                    device using the buttons above. When the device comes back
-                    up, you will be able to sign into your Google account!
-                  </small>
-                </label>
-              </div>
-              <div className={"inline-flex"}>
-                <Input
-                  value={gmsId || "Start device to see ID"}
-                  disabled
-                  className="ml-6 w-48"
-                />
-                {gmsId && (
-                  <div className={"ml-2"}>
-                    <CopyButton value={String(gmsId)} className={"h-5 w-5"} />
-                  </div>
-                )}
-              </div>
-            </div>
+            <Suspense fallback={<DeviceChecklistItemSkeleton />}>
+              <GMSChecklistItem adbDevice={adbDevice} />
+            </Suspense>
           )}
           <ClientSideIsPwaChecklistItem />
           <ClientSideIsSignedUpForNotificationsChecklistItem />
