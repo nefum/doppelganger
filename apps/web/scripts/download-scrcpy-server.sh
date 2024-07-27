@@ -11,7 +11,7 @@ mkdir -p "$DESTINATION_DIR"
 
 # Download the zip file
 echo "Downloading scrcpy-server.zip..."
-if ! curl -L "$DOWNLOAD_URL" -o "$TEMP_DIR/scrcpy-server.zip"; then
+if ! curl -s -L "$DOWNLOAD_URL" -o "$TEMP_DIR/scrcpy-server.zip"; then
     echo "Failed to download the file. Please check your internet connection and try again."
     rm -rf "$TEMP_DIR"
     exit 1

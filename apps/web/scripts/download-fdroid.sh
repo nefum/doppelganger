@@ -10,7 +10,7 @@ mkdir -p "$DESTINATION_DIR"
 
 # Download the APK file
 echo "Downloading F-Droid.apk..."
-if ! curl -L "$DOWNLOAD_URL" -o "$DESTINATION_FILE"; then
+if ! curl -s -L "$DOWNLOAD_URL" -o "$DESTINATION_FILE"; then
     echo "Failed to download the file. Please check your internet connection and try again."
     exit 1
 fi

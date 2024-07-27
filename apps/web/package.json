@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "init": "git submodule update --init --recursive",
-    "android:fetch": "bash scripts/download-scrcpy-server.sh & bash scripts/download-fdroid.sh & find scripts -name 'download-pheidippides-*.sh' -type f | xargs -I {} -P 0 bash {}",
+    "android:fetch": "bash scripts/download-scrcpy-server.sh & bash scripts/download-fdroid.sh",
     "db:generate": "prisma generate",
     "db:migrate": "dotenvx run --env-file=.env.local -- prisma migrate dev",
     "db:seed": "dotenvx run --env-file=.env.local -- tsx prisma/seed.ts",
-    "server:build": "pkgroll --src server/src --tsconfig=server/tsconfig.json --clean-dist --sourcemap && sentry-cli releases new $SENTRY_RELEASE && sentry-cli sourcemaps inject dist && sentry-cli sourcemaps upload dist && sentry-cli releases finalize $SENTRY_RELEASE",
+    "server:build": "pkgroll --src server/src --tsconfig=server/tsconfig.json --clean-dist --sourcemap && sentry-cli releases --project doppelganger-server new ${SENTRY_RELEASE:-$(git rev-parse HEAD)} && sentry-cli sourcemaps inject dist && sentry-cli sourcemaps --project doppelganger-server upload dist && sentry-cli releases --project doppelganger-server finalize ${SENTRY_RELEASE:-$(git rev-parse HEAD)}",
     "dev": "tsx server/src/index.ts",
     "workers:dev": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs",
     "workers:build": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs --mode production",

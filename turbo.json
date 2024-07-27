@@ -1,4 +1,6 @@
 {
+  "$schema": "https://turbo.build/schema.json",
+  "globalPassThroughEnv": ["ANDROID_HOME"],
   "tasks": {
     "web#db:generate": {
       "inputs": ["prisma/schema.prisma"],
@@ -46,7 +48,9 @@
     "web#server:build": {
       "dependsOn": ["db:generate"],
       "inputs": ["server/**"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "env": ["SENTRY_RELEASE", "SENTRY_ORG", "SENTRY_PROJECT"],
+      "passThroughEnv": ["SENTRY_AUTH_TOKEN"]
     },
     "web#start": {
       "dependsOn": ["build", "db:generate"],
@@ -66,6 +70,49 @@
     },
     "web#android:fetch": {
       "cache": false
+    },
+    "pheidippides-notify#build": {
+      "outputs": [
+        "app/build/**",
+        "build/**"
+      ],
+      "cache": true,
+      "dependsOn": [],
+      "inputs": [
+        "app/src/**/*.java",
+        "app/src/**/*.xml",
+        "app/build.gradle",
+        "build.gradle",
+        "gradle.properties"
+      ]
+    },
+    "pheidippides-notify#lint": {
+      "outputs": [
+        "app/build/reports/**"
+      ],
+      "cache": true,
+      "dependsOn": [],
+      "inputs": [
+        "app/src/**/*.java",
+        "app/src/**/*.xml",
+        "app/build.gradle",
+        "build.gradle",
+        "gradle.properties"
+      ]
+    },
+    "pheidippides-notify#test": {
+      "outputs": [
+        "app/build/test-results/**"
+      ],
+      "cache": true,
+      "dependsOn": [],
+      "inputs": [
+        "app/src/**/*.java",
+        "app/src/test/**/*.java",
+        "app/build.gradle",
+        "build.gradle",
+        "gradle.properties"
+      ]
     }
   }
 }
