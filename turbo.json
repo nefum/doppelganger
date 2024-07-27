@@ -2,117 +2,21 @@
   "$schema": "https://turbo.build/schema.json",
   "globalPassThroughEnv": ["ANDROID_HOME"],
   "tasks": {
-    "web#db:generate": {
-      "inputs": ["prisma/schema.prisma"],
-      "cache": false
-    },
-    "web#licenses:check": {
-      "inputs": ["package.json", "pnpm-lock.yaml"],
-      "outputs": [
-        "src/app/\\(userland\\)/\\(contained\\)/licenses/licenses.json"
-      ]
-    },
     "build": {
-      "dependsOn": [
-        "web#server:build",
-        "web#db:generate",
-        "web#android:fetch",
-        "web#licenses:check",
-        "^build"
-      ],
-      "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"]
+      "dependsOn": ["^build"]
     },
     "dev": {
-      "dependsOn": [
-        "web#db:generate",
-        "web#licenses:check",
-        "web#workers:dev",
-        "^dev"
-      ],
-      "cache": false
-    },
-    "web#workers:dev": {
-      "inputs": ["workers/**"],
-      "outputs": ["public/workers/**"]
-    },
-    "web#workers:build": {
-      "inputs": ["workers/**"],
-      "outputs": ["public/workers/**"]
-    },
-    "web#server:dev": {
-      "dependsOn": ["db:generate"],
-      "inputs": ["server/**"],
-      "outputs": ["dist/**"]
-    },
-    "web#server:build": {
-      "dependsOn": ["db:generate"],
-      "inputs": ["server/**"],
-      "outputs": ["dist/**"],
-      "env": ["SENTRY_RELEASE", "SENTRY_ORG", "SENTRY_PROJECT"],
-      "passThroughEnv": ["SENTRY_AUTH_TOKEN"]
-    },
-    "web#start": {
-      "dependsOn": ["build", "db:generate"],
+      "dependsOn": ["^dev"],
       "cache": false
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
     "type-check": {
-      "dependsOn": ["web#db:generate", "web#licenses:check", "^type-check"]
-    },
-    "web#format": {
-      "cache": false
+      "dependsOn": ["^type-check"]
     },
     "test": {
-      "dependsOn": ["web#db:generate", "web#licenses:check", "^test"]
-    },
-    "web#android:fetch": {
-      "cache": false
-    },
-    "pheidippides-notify#build": {
-      "outputs": [
-        "app/build/**",
-        "build/**"
-      ],
-      "cache": true,
-      "dependsOn": [],
-      "inputs": [
-        "app/src/**/*.java",
-        "app/src/**/*.xml",
-        "app/build.gradle",
-        "build.gradle",
-        "gradle.properties"
-      ]
-    },
-    "pheidippides-notify#lint": {
-      "outputs": [
-        "app/build/reports/**"
-      ],
-      "cache": true,
-      "dependsOn": [],
-      "inputs": [
-        "app/src/**/*.java",
-        "app/src/**/*.xml",
-        "app/build.gradle",
-        "build.gradle",
-        "gradle.properties"
-      ]
-    },
-    "pheidippides-notify#test": {
-      "outputs": [
-        "app/build/test-results/**"
-      ],
-      "cache": true,
-      "dependsOn": [],
-      "inputs": [
-        "app/src/**/*.java",
-        "app/src/test/**/*.java",
-        "app/build.gradle",
-        "build.gradle",
-        "gradle.properties"
-      ]
+      "dependsOn": ["^test"]
     }
   }
 }

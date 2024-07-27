@@ -1,10 +1,17 @@
 repos:
   - repo: local
     hooks:
-      - id: lint
-        name: lint
+      - id: format
+        name: format
+        entry: "pnpm"
+        args: ["format"]
+        language: system
+        pass_filenames: false
+        files: \.(js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$
+      - id: turbo
+        name: turbo
         entry: "turbo"
-        args: ["type-check", "lint", "format", "test"]
+        args: ["type-check", "lint", "test"]
         language: system
         pass_filenames: false
         files: \.(js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$

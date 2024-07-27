@@ -1,0 +1,42 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["app/build/**", "build/**"],
+      "cache": true,
+      "dependsOn": [],
+      "inputs": [
+        "app/src/**/*.java",
+        "app/src/**/*.xml",
+        "app/build.gradle",
+        "build.gradle",
+        "gradle.properties"
+      ]
+    },
+    "lint": {
+      "outputs": ["app/build/reports/**"],
+      "cache": true,
+      "dependsOn": [],
+      "inputs": [
+        "app/src/**/*.java",
+        "app/src/**/*.xml",
+        "app/build.gradle",
+        "build.gradle",
+        "gradle.properties"
+      ]
+    },
+    "test": {
+      "outputs": ["app/build/test-results/**"],
+      "cache": true,
+      "dependsOn": [],
+      "inputs": [
+        "app/src/**/*.java",
+        "app/src/test/**/*.java",
+        "app/build.gradle",
+        "build.gradle",
+        "gradle.properties"
+      ]
+    }
+  }
+}

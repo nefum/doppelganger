@@ -1,6 +1,6 @@
 # Pheidippides Notify
 
-This app provides the services required for Doppelganger to supply system APIs. 
+This app provides the services required for Doppelganger to supply system APIs.
 
 - [ ] Location
 - [ ] Photos

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "android:fetch": {
+      "cache": false,
+      "outputs": ["android/**"]
+    },
+    "test": {
+      "dependsOn": ["db:generate", "licenses:check"]
+    },
+    "type-check": {
+      "dependsOn": ["db:generate", "licenses:check"]
+    },
+    "workers:dev": {
+      "inputs": ["workers/**"],
+      "outputs": ["public/workers/**"]
+    },
+    "workers:build": {
+      "inputs": ["workers/**"],
+      "outputs": ["public/workers/**"]
+    },
+    "server:dev": {
+      "dependsOn": ["db:generate"],
+      "inputs": ["server/**"],
+      "outputs": ["dist/**"]
+    },
+    "server:build": {
+      "dependsOn": ["db:generate"],
+      "inputs": ["server/**"],
+      "outputs": ["dist/**"],
+      "env": ["SENTRY_RELEASE", "SENTRY_ORG", "SENTRY_PROJECT"],
+      "passThroughEnv": ["SENTRY_AUTH_TOKEN"]
+    },
+    "dev": {
+      "dependsOn": ["db:generate", "licenses:check", "workers:dev"],
+      "cache": false
+    },
+    "db:generate": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "licenses:check": {
+      "inputs": ["package.json", "pnpm-lock.yaml"],
+      "outputs": [
+        "src/app/\\(userland\\)/\\(contained\\)/licenses/licenses.json"
+      ]
+    },
+    "build": {
+      "dependsOn": [
+        "server:build",
+        "db:generate",
+        "android:fetch",
+        "licenses:check"
+      ],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"]
+    }
+  }
+}

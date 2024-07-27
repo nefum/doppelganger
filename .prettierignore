@@ -2,6 +2,7 @@
 
 **/coverage/
 **/pnpm-lock.yaml
+pheidippides/**
 
 apps/web/src/ws-scrcpy/
 apps/web/dist/
