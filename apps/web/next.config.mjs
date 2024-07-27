@@ -1,9 +1,9 @@
 // @ts-check
-import {withSentryConfig} from "@sentry/nextjs";
-import withMdxFactory from '@next/mdx';
+import withMdxFactory from "@next/mdx";
+import { withSentryConfig } from "@sentry/nextjs";
+import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
-import remarkFrontmatter from "remark-frontmatter";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -23,15 +23,21 @@ const nextConfig = {
   },
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   output: "standalone",
-  // https://nextjs.org/docs/messages/swc-disabled // we use the babel.config.json for our server
   experimental: {
+    // do not disable it
     forceSwcTransforms: true,
+    // ignore sentry utils from server action bundling
+    serverComponentsExternalPackages: [
+      // we load these in our server functions, if i ever split this won't be required
+      "@sentry/node",
+      "@sentry/utils",
+    ],
   },
   // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
   reactStrictMode: true,
   // https://nextjs.org/docs/app/api-reference/next-config-js/webpack
   // https://webpack.js.org/loaders/node-loader/
-  webpack: (config, {isServer}) => {
+  webpack: (config, { isServer }) => {
     if (isServer) {
       config.module.rules = [
         {
@@ -39,15 +45,15 @@ const nextConfig = {
           loader: "node-loader",
         },
         ...config.module.rules,
-      ]
+      ];
     }
     config.module.rules = [
       {
         test: /\.svg$/,
-        loader: 'svg-inline-loader',
+        loader: "svg-inline-loader",
       },
       ...config.module.rules,
-    ]
+    ];
     return config;
   },
   // turbopack is too experimental; let's not use it
@@ -62,7 +68,7 @@ const nextConfig = {
     // your project has type errors.
     // !! WARN !!
     ignoreBuildErrors: true, // already checked by pre-commit, saves time in docker builds
-  }
+  },
 };
 
 const sentryConfig = withSentryConfig(nextConfig, {
@@ -101,7 +107,7 @@ const sentryConfig = withSentryConfig(nextConfig, {
 
   env: {
     NODE_ENV: process.env.NODE_ENV,
-  }
+  },
 });
 
 const mdxConfig = withMdxFactory({
@@ -109,7 +115,7 @@ const mdxConfig = withMdxFactory({
   options: {
     remarkPlugins: [remarkGfm, remarkToc, remarkFrontmatter],
     rehypePlugins: [],
-  }
+  },
 })(sentryConfig);
 
 export default mdxConfig;

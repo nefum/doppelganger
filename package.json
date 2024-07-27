@@ -7,7 +7,7 @@
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
     "test": "turbo run test",
-    "format": "prettier --write \"**/*.{json,json5,ts,tsx,md,mdx,js,jsx,yml,yaml,css,scss,html}\""
+    "format": "prettier --write \"**/*.{json,json5,ts,tsx,md,mdx,js,cjs,mjs,jsx,yml,yaml,css,scss,html}\""
   },
   "devDependencies": {
     "prettier": "^3.3.3",
