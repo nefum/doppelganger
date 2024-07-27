@@ -3,12 +3,8 @@ import { LogoMiniHero } from "@/components/logo.tsx";
 import { Footer3 } from "@/components/relume/footer-3.tsx";
 import { Navbar1 } from "@/components/relume/navbar-1.tsx";
 import { ReactNode } from "react";
-import {
-  BiLogoFacebookCircle,
-  BiLogoInstagram,
-  BiLogoLinkedinSquare,
-} from "react-icons/bi";
-import { FaXTwitter } from "react-icons/fa6";
+import { BiLogoInstagram, BiLogoLinkedinSquare } from "react-icons/bi";
+import { FaDiscord, FaXTwitter } from "react-icons/fa6";
 
 export function ConfiguredNavbar() {
   return (
@@ -44,7 +40,7 @@ export function ConfiguredFooter() {
       contact={{
         label: "Contact:",
         phone: "+1 (732) 893-7406",
-        email: "doppelganger@regulad.xyz",
+        email: "contact@nefum.com",
       }}
       columnLinks={[
         {
@@ -94,8 +90,8 @@ export function ConfiguredFooter() {
       ]}
       socialMediaLinks={[
         {
-          url: "https://www.facebook.com/regulad00/",
-          icon: <BiLogoFacebookCircle className="size-6" />,
+          url: "https://discord.gg/k7TDVvRkSq",
+          icon: <FaDiscord className="size-6" />,
         },
         {
           url: "https://www.instagram.com/pewahle/",
