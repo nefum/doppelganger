@@ -1,3 +1,4 @@
+import ReconnectingAdbDeviceClient from "%/adb/reconnecting-adb-device-client.ts";
 import {
   getAdbUdidForDevice,
   getDefaultRedroidHostname,
@@ -53,7 +54,8 @@ export class AdbDevice {
 
   constructor(public device: Device) {
     this.tag = `[${this.udid}]`;
-    this.adbClient = adb.getDevice(this.udid);
+    // @ts-expect-error -- ignore the type mismatch
+    this.adbClient = new ReconnectingAdbDeviceClient(adb, this.udid);
   }
 
   /**

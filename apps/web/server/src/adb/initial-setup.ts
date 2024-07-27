@@ -191,6 +191,25 @@ async function installOrUpdateApkAndGrantAllPermissions(
   await doSpecialSetupAndStarting(adbClient, packageName);
 }
 
+async function getAllApks(): Promise<string[]> {
+  return await globby(apksDir + "/**/*.apk");
+}
+
+export async function getIsSetupComplete(device: Device): Promise<boolean> {
+  const adbDevice = new AdbDevice(device);
+  const adbClient = adbDevice.adbClient;
+  const apks = await getAllApks();
+  const isSetupCompleteArray = await Promise.all(
+    apks.map(async (apkPath) => {
+      const apkReader = await ApkReader.open(apkPath);
+      const manifest = await apkReader.readManifest();
+      const packageName = manifest.package;
+      return adbClient.isInstalled(packageName);
+    }),
+  );
+  return isSetupCompleteArray.every((b) => b);
+}
+
 /**
  * Performs setup/update tasks for a device. This promise should be run in the background each time a device is connected.
  * @param device
@@ -199,11 +218,11 @@ export default async function doInitialDeviceSetup(
   device: Device,
 ): Promise<void> {
   const adbDevice = new AdbDevice(device);
-  await adbDevice.connectRobust(600_000);
+  // await adbDevice.connectRobust(600_000); // we do it lazily
   const adbClient = adbDevice.adbClient;
 
   // glob the apks in absoluteApksDir
-  const apks = await globby(apksDir + "/**/*.apk");
+  const apks = await getAllApks();
   await Promise.all(
     apks.map(
       (apkPath) =>
