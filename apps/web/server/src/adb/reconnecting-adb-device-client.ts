@@ -1,6 +1,8 @@
+import { DeviceClient } from "%/adb/adb.ts";
+import { resolveOrDefaultValue } from "%/utils/promise-utils.ts";
 import {
   type Client,
-  DeviceClient,
+  type Device,
   type Features,
   type Forward,
   type FramebufferStreamWithMeta,
@@ -12,6 +14,8 @@ import {
 import { Duplex, Readable } from "node:stream";
 
 export const DEFAULT_ADB_TIMEOUT = 60_000; // 1 minute
+
+type DeviceState = Device["type"];
 
 /**
  * Extention of the ADB client that proves a connection before running commands.
@@ -60,7 +64,12 @@ export default class ReconnectingAdbDeviceClient extends DeviceClient {
   }
 
   async getIsConnected(): Promise<boolean> {
-    return (await this.getState()) === "device";
+    const state = (await resolveOrDefaultValue(
+      this.getState(),
+      "offline",
+      false,
+    )) as DeviceState; // this throws if we are offline
+    return state === "device" || state === "emulator";
   }
 
   /* overridden methods */

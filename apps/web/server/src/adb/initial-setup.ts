@@ -197,7 +197,7 @@ async function getAllApks(): Promise<string[]> {
 
 export async function getIsSetupComplete(device: Device): Promise<boolean> {
   const adbDevice = new AdbDevice(device);
-  const adbClient = adbDevice.adbClient;
+  const adbClient = adbDevice.adbDeviceClient;
   const apks = await getAllApks();
   const isSetupCompleteArray = await Promise.all(
     apks.map(async (apkPath) => {
@@ -219,7 +219,7 @@ export default async function doInitialDeviceSetup(
 ): Promise<void> {
   const adbDevice = new AdbDevice(device);
   // await adbDevice.connectRobust(600_000); // we do it lazily
-  const adbClient = adbDevice.adbClient;
+  const adbClient = adbDevice.adbDeviceClient;
 
   // glob the apks in absoluteApksDir
   const apks = await getAllApks();

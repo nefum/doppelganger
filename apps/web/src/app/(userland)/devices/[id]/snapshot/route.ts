@@ -30,8 +30,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   try {
     const adbDevice = new AdbDevice(device);
-    await adbDevice.connectRobust(600_000);
-    const screencapConnection = await adbDevice.adbClient.screencap();
+    const screencapConnection = await adbDevice.adbDeviceClient.screencap();
     // stream the bytes straight from device to response
     // it is not a perfect fit into ReadableStream, but it defines all of the methods that are needed
     return new NextResponse(screencapConnection as unknown as ReadableStream, {
