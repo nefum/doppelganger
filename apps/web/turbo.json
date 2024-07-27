@@ -32,8 +32,17 @@
       "env": ["SENTRY_RELEASE", "SENTRY_ORG", "SENTRY_PROJECT"],
       "passThroughEnv": ["SENTRY_AUTH_TOKEN"]
     },
+    "android:dev": {
+      "dependsOn": ["pheidippides-notify#build"],
+      "cache": false
+    },
     "dev": {
-      "dependsOn": ["db:generate", "licenses:check", "workers:dev"],
+      "dependsOn": [
+        "db:generate",
+        "licenses:check",
+        "workers:dev",
+        "android:dev"
+      ],
       "cache": false
     },
     "db:generate": {

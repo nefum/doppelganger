@@ -44,4 +44,8 @@ public/workers/
 # Sentry Config File
 .env.sentry-build-plugin
 
+# compiled licenses
 src/app/(userland)/(contained)/licenses/licenses.json
+
+# temporary built android files
+android/*/

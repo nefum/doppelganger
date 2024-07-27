@@ -29,6 +29,7 @@ env:
 jobs:
   check:
     runs-on: "ubuntu-22.04"
+    name: Check
     permissions:
       contents: read
 
@@ -75,15 +76,76 @@ jobs:
             exit 1
           fi
 
-  build:
+  build-android:
+    runs-on: ubuntu-latest
+    name: Build ${{ matrix.tag }}
+
+    env:
+      JAVA_VERSION: "17"
+      DISTRIBUTION: "zulu"
+      MAIN_PROJECT_MODULE: app
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - tag: "pheidippides-notify" # package.json name
+            context: "pheidippides/PheidippidesNotify"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          lfs: false
+          fetch-depth: 0
+          submodules: "recursive"
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.DISTRIBUTION }}
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Node.js 22.4.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: ">=22.4.0"
+          cache: "pnpm"
+
+      - name: Build via turbo
+        run: pnpx turbo build --filter=${{ matrix.tag }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.tag }}
+          path: ${{ matrix.context }}/app/build/outputs/apk/debug/app-debug.apk
+
+  build-docker:
     # GitHub does not yet offer native building on arm64 (https://github.blog/changelog/2023-10-30-accelerate-your-ci-cd-with-arm-based-hosted-runners-in-github-actions/)
     runs-on: "ubuntu-22.04"
+    name: Build ${{ matrix.tag }}
+    needs:
+      - build-android
+
     permissions:
       contents: read
       packages: write
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - context: "apps/web"
+            tag: "web"
 
     steps:
       - name: Checkout repository
@@ -125,7 +187,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
-            prefix=web-,onlatest=true
+            prefix=${{ matrix.tag }}-,onlatest=true
           tags: |
             type=schedule
             type=ref,event=branch
@@ -133,13 +195,20 @@ jobs:
             type=ref,event=pr
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
 
+      # Download Android APKs
+      - uses: actions/download-artifact@v4
+        name: Download APKs
+        if: ${{ matrix.tag == 'web' }}
+        with:
+          path: apps/web/android
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: apps/web
+          context: ${{ matrix.context }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

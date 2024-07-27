@@ -203,7 +203,7 @@ export default async function doInitialDeviceSetup(
   const adbClient = adbDevice.adbClient;
 
   // glob the apks in absoluteApksDir
-  const apks = await globby(apksDir + "/*.apk");
+  const apks = await globby(apksDir + "/**/*.apk");
   await Promise.all(
     apks.map(
       (apkPath) =>
