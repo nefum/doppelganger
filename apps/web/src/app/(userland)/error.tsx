@@ -21,6 +21,10 @@ export default function Error({
     <div className="container">
       <h2 className="shadcn-h2 shadcn-h">Something went wrong!</h2>
       <p className="shadcn-p">
+        An error occurred while showing you this page. That&apos;s all we know.
+        Please reach out to support if this keeps happening.
+      </p>
+      <p className="shadcn-p">
         <Button
           onClick={
             // Attempt to recover by trying to re-render the segment
