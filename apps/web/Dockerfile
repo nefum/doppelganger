@@ -41,7 +41,7 @@ RUN pnpm run db:generate
 # provide sentry for the server
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_RELEASE
-ENV SENTRY_ORG=regulad
+ENV SENTRY_ORG=nefum
 ENV SENTRY_PROJECT=doppelganger-server
 
 # Build the server-side code
@@ -59,7 +59,7 @@ RUN cp .env.local.public .env.local
 # Use ARG to accept the token during build
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_RELEASE
-ENV SENTRY_ORG=regulad
+ENV SENTRY_ORG=nefum
 ENV SENTRY_PROJECT=doppelganger-front
 
 # Build the application
