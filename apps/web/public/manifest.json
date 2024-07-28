@@ -19,6 +19,57 @@
       "sizes": "512x512"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/image/narrow/IMG_2320.PNG",
+      "type": "image/png",
+      "sizes": "1284x2778",
+      "form_factor": "narrow",
+      "label": "Fullscreen Streaming"
+    },
+    {
+      "src": "/image/narrow/IMG_2321.PNG",
+      "type": "image/png",
+      "sizes": "1284x2778",
+      "form_factor": "narrow",
+      "label": "My Devices"
+    },
+    {
+      "src": "/image/narrow/IMG_2322.PNG",
+      "type": "image/png",
+      "sizes": "1284x2778",
+      "form_factor": "narrow",
+      "label": "New Device"
+    },
+    {
+      "src": "/image/narrow/IMG_2326.PNG",
+      "type": "image/png",
+      "sizes": "1284x2778",
+      "form_factor": "narrow",
+      "label": "Device Details"
+    },
+    {
+      "src": "/image/wide/device.png",
+      "type": "image/png",
+      "sizes": "2624x2226",
+      "form_factor": "wide",
+      "label": "Fullscreen Streaming"
+    },
+    {
+      "src": "/image/wide/display.png",
+      "type": "image/png",
+      "sizes": "2624x2226",
+      "form_factor": "wide",
+      "label": "Device Details"
+    },
+    {
+      "src": "/image/wide/home.png",
+      "type": "image/png",
+      "sizes": "2624x2226",
+      "form_factor": "wide",
+      "label": "My Devices"
+    }
+  ],
   "id": "doppelganger1",
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
