@@ -1,7 +1,5 @@
 import { createAdbClient } from "%/adb/adb.ts";
-import ReconnectingAdbDeviceClient, {
-  DEFAULT_ADB_TIMEOUT,
-} from "%/adb/reconnecting-adb-device-client.ts";
+import RobustClient, { DEFAULT_ADB_TIMEOUT } from "%/adb/robust-client.ts";
 import { getAdbUdidForDevice } from "%/device-info/device-info-utils";
 import { getRedroidImage } from "%/device-info/redroid-images";
 import { type Client } from "@devicefarmer/adbkit";
@@ -15,11 +13,6 @@ enum PID_DETECTION_METHOD {
   GREP_PS,
   GREP_PS_A,
   LS_PROC,
-}
-
-interface AdbListDeviceDevice {
-  id: string;
-  type: "emulator" | "device" | "offline" | "unauthorized";
 }
 
 export function readStreamIntoBufferAndClose(stream: Duplex): Promise<Buffer> {
@@ -46,7 +39,7 @@ export function readStreamIntoBufferAndClose(stream: Duplex): Promise<Buffer> {
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/Device.ts
 // https://github.com/NetrisTV/ws-scrcpy/blob/29897e2cc5206631f79b7055f1385858572efe40/src/server/goog-device/ScrcpyServer.ts
 export class AdbDevice {
-  public adbDeviceClient: ReconnectingAdbDeviceClient;
+  public adbDeviceClient: RobustClient;
   public adbClient: Client;
   private readonly tag: string;
   private pidDetectionMethod: PID_DETECTION_METHOD =
@@ -58,11 +51,7 @@ export class AdbDevice {
   ) {
     this.tag = `[${this.udid}]`;
     this.adbClient = createAdbClient();
-    this.adbDeviceClient = new ReconnectingAdbDeviceClient(
-      this.adbClient,
-      this.udid,
-      timeout,
-    );
+    this.adbDeviceClient = new RobustClient(this.adbClient, this.udid, timeout);
   }
 
   /**

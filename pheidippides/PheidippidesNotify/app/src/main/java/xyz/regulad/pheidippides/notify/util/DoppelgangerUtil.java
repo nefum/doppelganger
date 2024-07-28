@@ -9,12 +9,18 @@ public class DoppelgangerUtil {
     public static @NotNull String DOPPELGANGER_DEVICE_ID;
 
     static {
-        DOPPELGANGER_ORIGIN = SystemPropertyHelper.getSystemProperty("ro.doppelganger.origin", "https://doppelgangerhq.com");
-        DOPPELGANGER_SECRET = SystemPropertyHelper.getSystemProperty("ro.doppelganger.secret", "badCanary");
-        DOPPELGANGER_DEVICE_ID = SystemPropertyHelper.getSystemProperty("ro.doppelganger.device", "badCanary");
+        DOPPELGANGER_ORIGIN = SystemPropertyHelper.getSystemProperty("persist.doppelganger.origin", "https://doppelgangerhq.com");
 
-        if (DOPPELGANGER_SECRET.equals("badCanary") || DOPPELGANGER_DEVICE_ID.equals("badCanary")) {
-            throw new IllegalStateException("System properties not set");
+        DOPPELGANGER_SECRET = SystemPropertyHelper.getSystemProperty("persist.doppelganger.secret", "badCanary");
+
+        if (DOPPELGANGER_SECRET.equals("badCanary")) {
+            throw new IllegalStateException("Doppelganger secret not set");
+        }
+
+        DOPPELGANGER_DEVICE_ID = SystemPropertyHelper.getSystemProperty("persist.doppelganger.device", "badCanary");
+
+        if (DOPPELGANGER_DEVICE_ID.equals("badCanary")) {
+            throw new IllegalStateException("Doppelganger device ID not set");
         }
     }
 }

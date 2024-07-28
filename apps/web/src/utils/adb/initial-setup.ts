@@ -3,8 +3,9 @@ import { Device } from "@prisma/client";
 import * as Sentry from "@sentry/node";
 import ApkReader, { ManifestObject } from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
-import ReconnectingAdbDeviceClient from "%/adb/reconnecting-adb-device-client.ts";
+import RobustClient from "%/adb/robust-client.ts";
 import { resolveOrDefaultValue } from "%/utils/promise-utils.ts";
+import { BASE_ORIGIN } from "@/constants.ts";
 import { findUpSync } from "find-up";
 import { globby } from "globby";
 import path from "path";
@@ -12,7 +13,7 @@ import path from "path";
 const apksDir = path.resolve(findUpSync("package.json")!, "../android"); // may be called from any directory
 
 async function getInstalledVersionOfPackageOnClient(
-  adbClient: ReconnectingAdbDeviceClient,
+  adbClient: RobustClient,
   packageName: string,
 ): Promise<bigint> {
   const androidVersionRet = await adbClient
@@ -24,7 +25,7 @@ async function getInstalledVersionOfPackageOnClient(
 }
 
 async function doSpecialSetupAndStarting(
-  adbClient: ReconnectingAdbDeviceClient,
+  adbClient: RobustClient,
   packageName: string,
 ): Promise<void> {
   try {
@@ -47,7 +48,7 @@ async function doSpecialSetupAndStarting(
  * Queries an ADB device to determine if a package was installed with Debug keys. With debug (self-signed) keys, the app must be uninstalled before a new update is installed or Android will return an error
  */
 async function getIsPackageDebug(
-  adbClient: ReconnectingAdbDeviceClient,
+  adbClient: RobustClient,
   packageName: string,
 ): Promise<boolean> {
   // debug dumpsys: https://gist.github.com/regulad/574f9bbcc6218ca7a4a36f35e086a5c6
@@ -78,7 +79,7 @@ async function getIsPackageDebug(
 }
 
 async function grantAllPermissionsOfPackage(
-  adbClient: ReconnectingAdbDeviceClient,
+  adbClient: RobustClient,
   manifest: ManifestObject,
 ): Promise<void> {
   const packageName = manifest.package;
@@ -107,7 +108,7 @@ async function grantAllPermissionsOfPackage(
  * @param manifest
  */
 async function determineIfPackageNeedsInstallation(
-  adbClient: ReconnectingAdbDeviceClient,
+  adbClient: RobustClient,
   manifest: ManifestObject,
 ): Promise<boolean> {
   const newVersionCode = manifest.versionCode;
@@ -131,7 +132,7 @@ async function determineIfPackageNeedsInstallation(
  * @param packageName
  */
 async function uninstallPackageCompletely(
-  adbClient: ReconnectingAdbDeviceClient,
+  adbClient: RobustClient,
   packageName: string,
 ): Promise<void> {
   const packageIsInstalled = await adbClient.isInstalled(packageName);
@@ -145,7 +146,7 @@ async function uninstallPackageCompletely(
 }
 
 async function installOrUpdateApkAndGrantAllPermissions(
-  adbClient: ReconnectingAdbDeviceClient,
+  adbClient: RobustClient,
   apkPath: string,
 ): Promise<void> {
   // step 1: parse the apk to get the version, package name, and any requested permissions
@@ -217,6 +218,25 @@ export async function getIsSetupComplete(device: Device): Promise<boolean> {
   return isSetupCompleteArray.every((b) => b);
 }
 
+async function upsertSystemProperties(device: Device): Promise<void> {
+  const adbDevice = new AdbDevice(device);
+  const adbClient = adbDevice.adbDeviceClient;
+
+  await adbClient.shell("setprop persist.sys.timezone America/New_York");
+  await adbClient.shell("setprop persist.sys.locale en-US");
+  await adbClient.shell("setprop persist.sys.language en");
+
+  // old
+  //       - "ro.doppelganger.origin={{ &doppelgangerOrigin }}"
+  //       - "ro.doppelganger.secret={{ &doppelgangerSecret }}"
+  //       - "ro.doppelganger.device={{ id }}"
+  await adbClient.shell(`setprop persist.doppelganger.origin "${BASE_ORIGIN}"`);
+  await adbClient.shell(
+    `setprop persist.doppelganger.secret "${device.redroidSecret}"`,
+  );
+  await adbClient.shell(`setprop persist.doppelganger.device "${device.id}"`);
+}
+
 /**
  * Performs setup/update tasks for a device. This promise should be run in the background each time a device is connected.
  * @param device
@@ -227,6 +247,8 @@ export default async function doInitialDeviceSetup(
   const adbDevice = new AdbDevice(device);
   // await adbDevice.connectRobust(600_000); // we do it lazily
   const adbClient = adbDevice.adbDeviceClient;
+
+  await upsertSystemProperties(device);
 
   // glob the apks in absoluteApksDir
   const apks = await getAllApks();

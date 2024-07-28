@@ -9,8 +9,8 @@
       "inputs": [
         "app/src/**/*.java",
         "app/src/**/*.xml",
-        "app/build.gradle",
-        "build.gradle",
+        "app/build.gradle.kts",
+        "build.gradle.kts",
         "gradle.properties"
       ],
       "env": ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT", "SENTRY_RELEASE"]
@@ -22,8 +22,8 @@
       "inputs": [
         "app/src/**/*.java",
         "app/src/**/*.xml",
-        "app/build.gradle",
-        "build.gradle",
+        "app/build.gradle.kts",
+        "build.gradle.kts",
         "gradle.properties"
       ]
     },
@@ -34,8 +34,8 @@
       "inputs": [
         "app/src/**/*.java",
         "app/src/test/**/*.java",
-        "app/build.gradle",
-        "build.gradle",
+        "app/build.gradle.kts",
+        "build.gradle.kts",
         "gradle.properties"
       ]
     }

@@ -3,7 +3,7 @@
  */
 
 import { type Client } from "@devicefarmer/adbkit";
-import ReconnectingAdbDeviceClient from "./reconnecting-adb-device-client";
+import RobustClient from "./robust-client.ts";
 
 const mockClient = {
   connect: jest.fn(),
@@ -14,11 +14,7 @@ const mockClient = {
 
 const serial = "127.0.0.1:5555";
 const timeout = 1000;
-const reconnectingClient = new ReconnectingAdbDeviceClient(
-  mockClient,
-  serial,
-  timeout,
-);
+const reconnectingClient = new RobustClient(mockClient, serial, timeout);
 
 describe("ReconnectingAdbDeviceClient", () => {
   beforeEach(() => {
