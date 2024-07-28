@@ -1,6 +1,7 @@
 "use client";
 
 import { getAdbUdidForDevice } from "%/device-info/device-info-utils.ts";
+import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import JSMpegClient from "@/components/client/jsmpeg-client.tsx";
 import {
   getOrientationFromRatio,
@@ -12,7 +13,12 @@ import ScrcpyDevicePlayer, {
   ScrcpyDevicePlayerHandle,
 } from "@/components/scrcpy/scrcpy-device-player.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
+import { sleep } from "@/utils/promise-utils.ts";
 import { CommandControlMessage } from "@/ws-scrcpy/src/app/controlMessage/CommandControlMessage.ts";
+import { KeyCodeControlMessage } from "@/ws-scrcpy/src/app/controlMessage/KeyCodeControlMessage";
+import KeyEvent, {
+  getKeyEventForChar,
+} from "@/ws-scrcpy/src/app/googDevice/android/KeyEvent";
 import Size from "@/ws-scrcpy/src/app/Size.ts";
 import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
 import type { Device } from "@prisma/client";
@@ -34,6 +40,8 @@ import styles from "../center.module.css";
 const DEVICE_BITRATE_BYTES = 8_000_000;
 // for some bizzarre reason, the video is always a bit too small, so we overscan it
 const OVERSCAN_MULTIPLIER = 1.025;
+// we need to wait a bit between each key press to let the result transmit to the device
+const PASTE_SLEEP_WAIT_TIME_MS = 100; // according to claude, 100ms is the average keypress duration of a human, so it's a good value
 
 interface DeviceClientProps {
   device: Device;
@@ -78,6 +86,8 @@ const OneshotDeviceClient = forwardRef<
     autoRotate,
     hardReset,
   } = props;
+  const deviceRedroidImage = getRedroidImage(device.redroidImage)!;
+
   const { type: orientationType } = useOrientation();
 
   const { toast } = useToast();
@@ -251,7 +261,7 @@ const OneshotDeviceClient = forwardRef<
 
   const doPaste = useMemo(
     () => () => {
-      navigator.clipboard.readText().then((text) => {
+      navigator.clipboard.readText().then(async (text) => {
         if (
           !scrcpyClientRef.current ||
           !scrcpyClientRef.current.streamClientRef.current
@@ -261,13 +271,85 @@ const OneshotDeviceClient = forwardRef<
 
         const streamClient = scrcpyClientRef.current.streamClientRef.current;
 
-        streamClient.sendMessage(
-          CommandControlMessage.createSetClipboardCommand(text, true),
-        );
+        // andorid >=12 (sdk >= 31) needs a permission to paste, so it will be easier to just send keys for letters in the clipboard
+        if (deviceRedroidImage.androidSdkVersion >= 31) {
+          // we wait a little between each key press to let the result transmit to the device
+          for (const char of text) {
+            const [keyCode, needShift] = getKeyEventForChar(char);
+
+            if (keyCode === KeyEvent.KEYCODE_UNKNOWN) {
+              continue; // we don't know how to type this character
+            }
+
+            if (needShift) {
+              streamClient.sendMessage(
+                new KeyCodeControlMessage(
+                  KeyEvent.ACTION_DOWN,
+                  KeyEvent.KEYCODE_SHIFT_LEFT,
+                  0,
+                  0,
+                ),
+              );
+              await sleep(PASTE_SLEEP_WAIT_TIME_MS);
+            }
+
+            streamClient.sendMessage(
+              new KeyCodeControlMessage(KeyEvent.ACTION_DOWN, keyCode, 0, 0),
+            );
+            await sleep(PASTE_SLEEP_WAIT_TIME_MS);
+
+            if (needShift) {
+              streamClient.sendMessage(
+                new KeyCodeControlMessage(
+                  KeyEvent.ACTION_UP,
+                  KeyEvent.KEYCODE_SHIFT_LEFT,
+                  0,
+                  0,
+                ),
+              );
+              await sleep(PASTE_SLEEP_WAIT_TIME_MS);
+            }
+
+            streamClient.sendMessage(
+              new KeyCodeControlMessage(KeyEvent.ACTION_UP, keyCode, 0, 0),
+            );
+            await sleep(PASTE_SLEEP_WAIT_TIME_MS);
+          }
+          return;
+        } else {
+          // we can use native paste
+          streamClient.sendMessage(
+            CommandControlMessage.createSetClipboardCommand(text, true),
+          );
+        }
       });
     },
-    [],
+    [deviceRedroidImage.androidSdkVersion],
   );
+
+  // although this is slightly inefficient, it doesn't matter since there will already be SO much js running on the client during stream time that it's inconsequential
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateBoundsRuntime();
+    }, 1_000);
+
+    return () => clearInterval(interval);
+  }, [updateBoundsRuntime]);
+
+  // when tabbing back & resuming streaming, it can reset the bounds to the initial bounds, so we need to update them
+  useEffect(() => {
+    function handleVisibilityChange() {
+      setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          updateBoundsRuntime();
+        }
+      }, 300); // wait a bit for the tab switching to finish
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [updateBoundsRuntime]);
 
   // there are only two events that can reliably be captured: keydown & keyup
   // everything else, paste, touch, pointer, etc. is completely suppressed by the client.

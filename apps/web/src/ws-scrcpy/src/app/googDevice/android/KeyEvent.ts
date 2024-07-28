@@ -314,3 +314,124 @@ export default class KeyEvent {
   public static readonly META_SHIFT_RIGHT_ON: number = 128;
   public static readonly META_SYM_ON: number = 4;
 }
+
+/**
+ * Converts a character to its corresponding KeyEvent code and shift key state.
+ *
+ * @param char - The character to convert.
+ * @returns A tuple where:
+ *   - The first element is the KeyEvent code for the character.
+ *   - The second element is a boolean indicating whether the Shift key needs to be held (true) or not (false).
+ * @example
+ * getKeyEventForChar('a') // Returns [KeyEvent.KEYCODE_A, false]
+ * getKeyEventForChar('A') // Returns [KeyEvent.KEYCODE_A, true]
+ * getKeyEventForChar('!') // Returns [KeyEvent.KEYCODE_1, true]
+ */
+export function getKeyEventForChar(char: string): [number, boolean] {
+  switch (char) {
+    // Lowercase letters
+    case 'a': return [KeyEvent.KEYCODE_A, false];
+    case 'b': return [KeyEvent.KEYCODE_B, false];
+    case 'c': return [KeyEvent.KEYCODE_C, false];
+    case 'd': return [KeyEvent.KEYCODE_D, false];
+    case 'e': return [KeyEvent.KEYCODE_E, false];
+    case 'f': return [KeyEvent.KEYCODE_F, false];
+    case 'g': return [KeyEvent.KEYCODE_G, false];
+    case 'h': return [KeyEvent.KEYCODE_H, false];
+    case 'i': return [KeyEvent.KEYCODE_I, false];
+    case 'j': return [KeyEvent.KEYCODE_J, false];
+    case 'k': return [KeyEvent.KEYCODE_K, false];
+    case 'l': return [KeyEvent.KEYCODE_L, false];
+    case 'm': return [KeyEvent.KEYCODE_M, false];
+    case 'n': return [KeyEvent.KEYCODE_N, false];
+    case 'o': return [KeyEvent.KEYCODE_O, false];
+    case 'p': return [KeyEvent.KEYCODE_P, false];
+    case 'q': return [KeyEvent.KEYCODE_Q, false];
+    case 'r': return [KeyEvent.KEYCODE_R, false];
+    case 's': return [KeyEvent.KEYCODE_S, false];
+    case 't': return [KeyEvent.KEYCODE_T, false];
+    case 'u': return [KeyEvent.KEYCODE_U, false];
+    case 'v': return [KeyEvent.KEYCODE_V, false];
+    case 'w': return [KeyEvent.KEYCODE_W, false];
+    case 'x': return [KeyEvent.KEYCODE_X, false];
+    case 'y': return [KeyEvent.KEYCODE_Y, false];
+    case 'z': return [KeyEvent.KEYCODE_Z, false];
+
+    // Uppercase letters
+    case 'A': return [KeyEvent.KEYCODE_A, true];
+    case 'B': return [KeyEvent.KEYCODE_B, true];
+    case 'C': return [KeyEvent.KEYCODE_C, true];
+    case 'D': return [KeyEvent.KEYCODE_D, true];
+    case 'E': return [KeyEvent.KEYCODE_E, true];
+    case 'F': return [KeyEvent.KEYCODE_F, true];
+    case 'G': return [KeyEvent.KEYCODE_G, true];
+    case 'H': return [KeyEvent.KEYCODE_H, true];
+    case 'I': return [KeyEvent.KEYCODE_I, true];
+    case 'J': return [KeyEvent.KEYCODE_J, true];
+    case 'K': return [KeyEvent.KEYCODE_K, true];
+    case 'L': return [KeyEvent.KEYCODE_L, true];
+    case 'M': return [KeyEvent.KEYCODE_M, true];
+    case 'N': return [KeyEvent.KEYCODE_N, true];
+    case 'O': return [KeyEvent.KEYCODE_O, true];
+    case 'P': return [KeyEvent.KEYCODE_P, true];
+    case 'Q': return [KeyEvent.KEYCODE_Q, true];
+    case 'R': return [KeyEvent.KEYCODE_R, true];
+    case 'S': return [KeyEvent.KEYCODE_S, true];
+    case 'T': return [KeyEvent.KEYCODE_T, true];
+    case 'U': return [KeyEvent.KEYCODE_U, true];
+    case 'V': return [KeyEvent.KEYCODE_V, true];
+    case 'W': return [KeyEvent.KEYCODE_W, true];
+    case 'X': return [KeyEvent.KEYCODE_X, true];
+    case 'Y': return [KeyEvent.KEYCODE_Y, true];
+    case 'Z': return [KeyEvent.KEYCODE_Z, true];
+
+    // Numbers and their shift-key symbols
+    case '0': return [KeyEvent.KEYCODE_0, false];
+    case ')': return [KeyEvent.KEYCODE_0, true];
+    case '1': return [KeyEvent.KEYCODE_1, false];
+    case '!': return [KeyEvent.KEYCODE_1, true];
+    case '2': return [KeyEvent.KEYCODE_2, false];
+    case '@': return [KeyEvent.KEYCODE_2, true];
+    case '3': return [KeyEvent.KEYCODE_3, false];
+    case '#': return [KeyEvent.KEYCODE_3, true];
+    case '4': return [KeyEvent.KEYCODE_4, false];
+    case '$': return [KeyEvent.KEYCODE_4, true];
+    case '5': return [KeyEvent.KEYCODE_5, false];
+    case '%': return [KeyEvent.KEYCODE_5, true];
+    case '6': return [KeyEvent.KEYCODE_6, false];
+    case '^': return [KeyEvent.KEYCODE_6, true];
+    case '7': return [KeyEvent.KEYCODE_7, false];
+    case '&': return [KeyEvent.KEYCODE_7, true];
+    case '8': return [KeyEvent.KEYCODE_8, false];
+    case '*': return [KeyEvent.KEYCODE_8, true];
+    case '9': return [KeyEvent.KEYCODE_9, false];
+    case '(': return [KeyEvent.KEYCODE_9, true];
+
+    // Special characters
+    case ' ': return [KeyEvent.KEYCODE_SPACE, false];
+    case '-': return [KeyEvent.KEYCODE_MINUS, false];
+    case '_': return [KeyEvent.KEYCODE_MINUS, true];
+    case '=': return [KeyEvent.KEYCODE_EQUALS, false];
+    case '+': return [KeyEvent.KEYCODE_EQUALS, true];
+    case '[': return [KeyEvent.KEYCODE_LEFT_BRACKET, false];
+    case '{': return [KeyEvent.KEYCODE_LEFT_BRACKET, true];
+    case ']': return [KeyEvent.KEYCODE_RIGHT_BRACKET, false];
+    case '}': return [KeyEvent.KEYCODE_RIGHT_BRACKET, true];
+    case '\\': return [KeyEvent.KEYCODE_BACKSLASH, false];
+    case '|': return [KeyEvent.KEYCODE_BACKSLASH, true];
+    case ';': return [KeyEvent.KEYCODE_SEMICOLON, false];
+    case ':': return [KeyEvent.KEYCODE_SEMICOLON, true];
+    case "'": return [KeyEvent.KEYCODE_APOSTROPHE, false];
+    case '"': return [KeyEvent.KEYCODE_APOSTROPHE, true];
+    case ',': return [KeyEvent.KEYCODE_COMMA, false];
+    case '<': return [KeyEvent.KEYCODE_COMMA, true];
+    case '.': return [KeyEvent.KEYCODE_PERIOD, false];
+    case '>': return [KeyEvent.KEYCODE_PERIOD, true];
+    case '/': return [KeyEvent.KEYCODE_SLASH, false];
+    case '?': return [KeyEvent.KEYCODE_SLASH, true];
+    case '`': return [KeyEvent.KEYCODE_GRAVE, false];
+    case '~': return [KeyEvent.KEYCODE_GRAVE, true];
+
+    default: return [KeyEvent.KEYCODE_UNKNOWN, false];
+  }
+}
