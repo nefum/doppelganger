@@ -147,7 +147,7 @@ export async function DeviceChecklist({
       <CardContent>
         <CardDescription>
           Although you can jump into your device right away, you may find some
-          features like snapshots, notifications, and Google services are not
+          features like screenshots, notifications, and Google services are not
           yet set up. Following this checklist will get you ready-to-go as soon
           as possible.
         </CardDescription>

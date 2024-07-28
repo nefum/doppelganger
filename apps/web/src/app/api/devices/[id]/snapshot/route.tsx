@@ -70,7 +70,12 @@ export async function GET(
               alignItems: "center",
             }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 100 100"
+              width="500px"
+              height="500px"
+            >
               <rect x="35" y="30" width="30" height="40" rx="5" fill="gray" />
               <rect x="40" y="20" width="5" height="15" fill="gray" />
               <rect x="55" y="20" width="5" height="15" fill="gray" />
@@ -90,6 +95,11 @@ export async function GET(
               />
             </svg>
             <p>Couldn&apos;t connect to {device.name}. Is it online?</p>
+            <p>No se pudo conectar a {device.name}. ¿Está en línea?</p>
+            <p>无法连接到 {device.name}。它在线吗？</p>
+            <p>Kann nicht mit {device.name} verbinden. Ist es online?</p>
+            <p>Non è possibile connettersi a {device.name}. È online?</p>
+            <p>Не удается подключиться к {device.name}. Он в сети?</p>
           </div>
         </div>
       ),
