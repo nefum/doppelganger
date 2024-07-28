@@ -22,6 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device } from "@prisma/client";
+import * as Sentry from "@sentry/nextjs";
 import { Suspense } from "react";
 
 function SetupCompleteChecklistItem() {
@@ -42,7 +43,15 @@ function SetupCompleteChecklistItem() {
 async function GMSChecklistItem({
   adbDevice,
 }: Readonly<{ adbDevice: AdbDevice }>) {
-  const gmsId = (await adbDevice.getGoogleServicesFrameworkID()).toString(10);
+  let gmsId: string | null;
+
+  try {
+    gmsId = (await adbDevice.getGoogleServicesFrameworkID()).toString(10);
+  } catch (e: any) {
+    console.error("Failed to get GMS ID", e);
+    Sentry.captureException(e);
+    gmsId = null;
+  }
 
   return (
     <div className="space-y-2">
@@ -72,7 +81,7 @@ async function GMSChecklistItem({
       </div>
       <div className={"inline-flex"}>
         <Input
-          value={gmsId || "Start device to see ID"}
+          value={gmsId || "Refresh to get GMS ID"}
           disabled
           className="ml-6 w-48"
         />
