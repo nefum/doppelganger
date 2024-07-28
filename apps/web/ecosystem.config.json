@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "server",
+      "script": "dist/index.mjs",
+      "instances": "max",
+      "exec_mode": "cluster",
+      "env": {
+        "NODE_ENV": "production",
+        "BLUEBIRD_DEBUG": "1"
+      }
+    }
+  ]
+}
