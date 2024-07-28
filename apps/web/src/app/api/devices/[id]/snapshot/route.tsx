@@ -89,7 +89,7 @@ export async function GET(
                 strokeWidth="5"
               />
             </svg>
-            <p>Couldn&apos;t connect to {device.name}. Try again later.</p>
+            <p>Couldn&apos;t connect to {device.name}. Is it online?</p>
           </div>
         </div>
       ),
