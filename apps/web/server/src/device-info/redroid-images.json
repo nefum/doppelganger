@@ -92,9 +92,9 @@
   },
   {
     "name": "Play Store Android 13",
-    "description": "Android 13 with the Play Store installed, fully-featured and ready to go.",
+    "description": "Android 13 with the Play Store installed, fully-featured and ready to go. DEBUG: Doesn't show Vending in launcher.",
     "imageName": "cr.regulad.xyz/regulad/redroid-script:13.0.0-gapps-latest",
-    "usable": true,
+    "usable": false,
     "premium": true,
     "gms": true,
     "androidSdkVersion": 33
