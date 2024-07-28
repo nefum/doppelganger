@@ -51,7 +51,12 @@ const doNotBroadcastPackages = [
   "com.google.android.gms", // This device isn’t Play Protect certified: Google apps and services can’t run on this device
   "com.rom1v.sndcpy", // sndcpy
   "xyz.regulad.pheidippides",
+  "org.fdroid", // tends to just spam
 ];
+
+function getSizeBytesOfString(str: string): number {
+  return new TextEncoder().encode(str).length;
+}
 
 function createOneSignalNotifciationForIncomingNotification(
   device: Device,
@@ -92,8 +97,10 @@ function createOneSignalNotifciationForIncomingNotification(
     ? getStaticUrlForImageDataUrl(incomingNotification.appIconDataUrl)
     : null;
 
+  // size limit of 1024 bytes for all images
+
   // if a line is commented out, it's probably android-only
-  if (largeIconStaticUrl) {
+  if (largeIconStaticUrl && getSizeBytesOfString(largeIconStaticUrl) < 1024) {
     destinationNotification.big_picture = largeIconStaticUrl;
     destinationNotification.adm_big_picture = largeIconStaticUrl;
     destinationNotification.chrome_big_picture = largeIconStaticUrl;
@@ -103,13 +110,13 @@ function createOneSignalNotifciationForIncomingNotification(
     destinationNotification.chrome_web_image = largeIconStaticUrl;
   }
 
-  if (smallIconStaticUrl) {
+  if (smallIconStaticUrl && getSizeBytesOfString(smallIconStaticUrl) < 1024) {
     destinationNotification.small_icon = smallIconStaticUrl;
     destinationNotification.adm_small_icon = smallIconStaticUrl;
     destinationNotification.chrome_web_badge = smallIconStaticUrl;
   }
 
-  if (appIconStaticUrl) {
+  if (appIconStaticUrl && getSizeBytesOfString(appIconStaticUrl) < 1024) {
     destinationNotification.chrome_web_icon = appIconStaticUrl;
     destinationNotification.firefox_icon = appIconStaticUrl;
   }
