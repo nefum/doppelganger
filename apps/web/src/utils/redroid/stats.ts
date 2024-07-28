@@ -1,15 +1,15 @@
 import { AdbDevice } from "%/adb/adb-device.ts";
+import {
+  CPU_LIMIT_CPUS,
+  MEMORY_LIMIT_BYTES,
+  VOLUME_SIZE_LIMIT_BYTES,
+} from "%/constants.ts";
 import { getDataDirOfDevice } from "%/docker/device-paths.ts";
 import {
   getIsDeviceRunning,
   getRedroidContainerName,
 } from "%/docker/device-state.ts";
 import { ignoreNumberRejection } from "%/utils/promise-utils.ts";
-import {
-  CPU_LIMIT_CPUS,
-  MEMORY_LIMIT_BYTES,
-  VOLUME_SIZE_LIMIT_BYTES,
-} from "@/constants.ts";
 import {
   getCpuUsageOfDockerContainerCpus,
   getMemoryUsageOfDockerContainerBytes,

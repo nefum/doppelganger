@@ -4,8 +4,8 @@ import * as Sentry from "@sentry/node";
 import ApkReader, { ManifestObject } from "adbkit-apkreader";
 // import { globStream } from "glob"; // glob doesn't webpack
 import RobustClient from "%/adb/robust-client.ts";
+import { BASE_ORIGIN } from "%/constants.ts";
 import { resolveOrDefaultValue } from "%/utils/promise-utils.ts";
-import { BASE_ORIGIN } from "@/constants.ts";
 import { findUpSync } from "find-up";
 import { globby } from "globby";
 import path from "path";

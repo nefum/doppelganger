@@ -1,5 +1,5 @@
+import { MIN_FPS } from "%/constants.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
-import { MIN_FPS } from "@/constants.ts";
 import { z } from "zod";
 
 export const newDeviceFormSchema = z

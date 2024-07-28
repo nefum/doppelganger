@@ -1,6 +1,6 @@
+import { BASE_ORIGIN, FREE_TIER_IDLE_TIME_MS } from "%/constants.ts";
 import prisma from "%/database/prisma.ts";
 import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
-import { BASE_ORIGIN, FREE_TIER_IDLE_TIME_MS } from "@/constants.ts";
 import {
   getSubscriptionStatus,
   SubscriptionStatus,

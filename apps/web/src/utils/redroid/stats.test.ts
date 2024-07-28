@@ -1,9 +1,9 @@
-import { getIsDeviceRunning } from "%/docker/device-state.ts";
 import {
   CPU_LIMIT_CPUS,
   MEMORY_LIMIT_BYTES,
   VOLUME_SIZE_LIMIT_BYTES,
-} from "@/constants.ts";
+} from "%/constants.ts";
+import { getIsDeviceRunning } from "%/docker/device-state.ts";
 import {
   getConnectionStatus,
   getCpuUsage,

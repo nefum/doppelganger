@@ -1,8 +1,8 @@
-import { FIRST_PAGE_PATHNAME } from "@/app/(no-layout)/(auth)/constants.ts";
 import {
   AUTH_REQUIRED_ROUTES_REGEX,
   AUTHORIZED_USERS_FORBIDDEN_REGEX,
-} from "@/constants.ts";
+} from "%/constants.ts";
+import { FIRST_PAGE_PATHNAME } from "@/app/(no-layout)/(auth)/constants.ts";
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 

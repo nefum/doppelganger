@@ -4,7 +4,7 @@ import {
   MAX_DEVICES_PRO,
   PLUS_MAX_FPS,
   PRO_MAX_FPS,
-} from "@/constants.ts";
+} from "%/constants.ts";
 
 export enum SubscriptionStatus {
   PRO = "PRO",

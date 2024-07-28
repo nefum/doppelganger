@@ -1,3 +1,4 @@
+import { BASE_ORIGIN } from "%/constants.ts";
 import { SampleDeviceSpecs } from "%/device-info/device-specs.ts";
 import { RedroidImage } from "%/device-info/redroid-images.ts";
 import {
@@ -6,7 +7,6 @@ import {
   getDockerComposeFileDirectory,
   getDockerComposePathInFolder,
 } from "%/docker/device-paths.ts";
-import { BASE_ORIGIN } from "@/constants.ts";
 import { upgradeDockerImageInfo } from "@/utils/docker/docker-api-utils.ts";
 import {
   createDockerTemplateFromView,

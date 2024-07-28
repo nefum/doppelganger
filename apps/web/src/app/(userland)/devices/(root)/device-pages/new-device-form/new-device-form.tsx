@@ -1,5 +1,6 @@
 "use client";
 
+import { MIN_FPS } from "%/constants.ts";
 import allSampleDeviceSpecs, {
   defaultSampleDeviceSpecs,
   SampleDeviceSpecs,
@@ -62,7 +63,6 @@ import {
   type toast as baseToast,
   useToast,
 } from "@/components/ui/use-toast.ts";
-import { MIN_FPS } from "@/constants.ts";
 import { cn } from "@/lib/utils.ts";
 import { getMaxFps, SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { clientSideRedirectWithToast } from "@/utils/toast-utils.ts";
