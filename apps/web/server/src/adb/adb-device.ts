@@ -3,6 +3,7 @@ import RobustClient, { DEFAULT_ADB_TIMEOUT } from "%/adb/robust-client.ts";
 import { getAdbUdidForDevice } from "%/device-info/device-info-utils";
 import { getRedroidImage } from "%/device-info/redroid-images";
 import { type Client } from "@devicefarmer/adbkit";
+import { retry } from "@lifeomic/attempt";
 import { Device } from "@prisma/client";
 import { spawn } from "child_process";
 import { Duplex } from "node:stream";
@@ -272,11 +273,7 @@ export class AdbDevice {
   /**
    * Gets the Framework ID for an Android device so that it may be registered with Google at https://www.google.com/android/uncertified
    */
-  async getGoogleServicesFrameworkID(timeout?: number): Promise<BigInt> {
-    timeout = timeout ?? this.timeout;
-
-    const startTime = Date.now();
-
+  async getGoogleServicesFrameworkID(): Promise<BigInt> {
     const redroidImage = getRedroidImage(this.device.redroidImage)!;
     if (!redroidImage.gms) {
       throw new Error("Device does not have Google Mobile Services");
@@ -287,23 +284,19 @@ export class AdbDevice {
     //     "select * from main where name = \"android_id\";"'
     await this.getRootSafe();
 
-    let androidIdRet: string;
-    while (true) {
-      try {
-        androidIdRet = await this.runShellCommandAdbKit(
+    // we might have tried to run this before it is set, so we need to retry
+    const androidIdString = await retry(
+      async () => {
+        const androidIdRet = await this.runShellCommandAdbKit(
           `sqlite3 /data/user/$(cmd activity get-current-user)/*/*/gservices.db "select * from main where name = \\"android_id\\";"`,
         );
-        // rets android_id|3546527965867813643
-        break;
-      } catch (e: any) {
-        if (timeout && Date.now() - startTime > timeout) {
-          throw new Error("Timeout waiting for device to connect");
-        }
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-    }
-
-    const androidIdString = androidIdRet.split("|")[1].trim();
+        return androidIdRet.split("|")[1].trim();
+      },
+      {
+        delay: 1_000, // give it a while, google libs are slow to start
+        maxAttempts: 50, // this will eventually return a value on any gms-enabled device, so we don't need to worry
+      },
+    );
 
     return BigInt(androidIdString); // literally too big for an integer, using parseInt will lose precision on the final values which makes the method useless
   }
