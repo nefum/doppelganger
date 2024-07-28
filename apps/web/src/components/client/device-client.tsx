@@ -327,14 +327,15 @@ const OneshotDeviceClient = forwardRef<
     [deviceRedroidImage.androidSdkVersion],
   );
 
-  // although this is slightly inefficient, it doesn't matter since there will already be SO much js running on the client during stream time that it's inconsequential
-  useEffect(() => {
-    const interval = setInterval(() => {
-      updateBoundsRuntime();
-    }, 1_000);
-
-    return () => clearInterval(interval);
-  }, [updateBoundsRuntime]);
+  // commented out because it causes refreshing on iOS
+  // // although this is slightly inefficient, it doesn't matter since there will already be SO much js running on the client during stream time that it's inconsequential
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     updateBoundsRuntime();
+  //   }, 1_000);
+  //
+  //   return () => clearInterval(interval);
+  // }, [updateBoundsRuntime]);
 
   // when tabbing back & resuming streaming, it can reset the bounds to the initial bounds, so we need to update them
   useEffect(() => {
