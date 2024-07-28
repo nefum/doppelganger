@@ -4,6 +4,7 @@ import { deviceApiEndpoint } from "%/endpoint-regex.ts";
 import getStaticUrlForImageDataUrl from "@/app/api/render/path.ts";
 import getOneSignalClient from "@/utils/onesignal/onesignal-server.ts";
 import * as OneSignal from "@onesignal/node-onesignal";
+import { Device } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -44,47 +45,15 @@ const incomingNotificationSchema = z.object({
   largeIconDataUrl: z.string().optional(),
 });
 
-export function getDataForUnixTimeMillis(unixTimeMillis: number): Date {
-  return new Date(unixTimeMillis);
-}
+const doNotBroadcastPackages = [
+  "com.android.systemui",
+  "com.google.android.gms", // This device isn’t Play Protect certified: Google apps and services can’t run on this device
+];
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-  const id = req.nextUrl.pathname.match(deviceApiEndpoint)![1];
-  const device = await getDeviceForId(id);
-  const secret = req.headers.get("X-Doppelganger-Secret");
-
-  if (!device) {
-    // its whatever that this can expose unknown devices
-    return NextResponse.json({}, { status: 404 });
-  }
-
-  if (!secret || device.redroidSecret !== secret) {
-    return NextResponse.json({}, { status: 401 });
-  }
-
-  let notificationBody: unknown;
-  try {
-    notificationBody = await req.json();
-  } catch (e: any) {
-    return NextResponse.json(
-      {
-        error: "JSON body could not be parsed",
-      },
-      { status: 400 },
-    );
-  }
-  const { success: parseSuccess, data: incomingNotification } =
-    await incomingNotificationSchema.spa(notificationBody);
-
-  if (!parseSuccess) {
-    return NextResponse.json(
-      {
-        error: "Invalid notification body",
-      },
-      { status: 400 },
-    );
-  }
-
+function createOneSignalNotifciationForIncomingNotification(
+  device: Device,
+  incomingNotification: z.infer<typeof incomingNotificationSchema>,
+): OneSignal.Notification {
   const destinationNotification = new OneSignal.Notification();
   destinationNotification.app_id = process.env.ONESIGNAL_APP_ID!;
   destinationNotification.include_aliases = { external_id: [device.ownerId] };
@@ -146,10 +115,61 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   destinationNotification.ios_badge_type = "Increase";
   destinationNotification.ios_badge_count = 1;
+  return destinationNotification;
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  const id = req.nextUrl.pathname.match(deviceApiEndpoint)![1];
+  const device = await getDeviceForId(id);
+  const secret = req.headers.get("X-Doppelganger-Secret");
+
+  if (!device) {
+    // its whatever that this can expose unknown devices
+    return NextResponse.json({}, { status: 404 });
+  }
+
+  if (!secret || device.redroidSecret !== secret) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  let notificationBody: unknown;
+  try {
+    notificationBody = await req.json();
+  } catch (e: any) {
+    return NextResponse.json(
+      {
+        error: "JSON body could not be parsed",
+      },
+      { status: 400 },
+    );
+  }
+  const { success: parseSuccess, data: incomingNotification } =
+    await incomingNotificationSchema.spa(notificationBody);
+
+  if (!parseSuccess) {
+    return NextResponse.json(
+      {
+        error: "Invalid notification body",
+      },
+      { status: 400 },
+    );
+  }
+
+  const destinationNotification =
+    createOneSignalNotifciationForIncomingNotification(
+      device,
+      incomingNotification,
+    );
+
+  const shouldSend = !doNotBroadcastPackages.includes(
+    incomingNotification.packageName,
+  );
 
   const oneSignalClient = getOneSignalClient();
 
-  await oneSignalClient.createNotification(destinationNotification);
+  if (shouldSend) {
+    await oneSignalClient.createNotification(destinationNotification);
+  }
 
   return NextResponse.json(
     {
