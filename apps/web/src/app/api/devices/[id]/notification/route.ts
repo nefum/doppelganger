@@ -45,9 +45,12 @@ const incomingNotificationSchema = z.object({
   largeIconDataUrl: z.string().optional(),
 });
 
+// any packages that start with these strings will not be broadcasted
 const doNotBroadcastPackages = [
-  "com.android.systemui",
+  "com.android",
   "com.google.android.gms", // This device isn’t Play Protect certified: Google apps and services can’t run on this device
+  "com.rom1v.sndcpy", // sndcpy
+  "xyz.regulad.pheidippides",
 ];
 
 function createOneSignalNotifciationForIncomingNotification(
@@ -155,19 +158,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const destinationNotification =
-    createOneSignalNotifciationForIncomingNotification(
-      device,
-      incomingNotification,
-    );
-
-  const shouldSend = !doNotBroadcastPackages.includes(
-    incomingNotification.packageName,
-  );
-
-  const oneSignalClient = getOneSignalClient();
+  const shouldSend = !doNotBroadcastPackages
+    .map((badPkg) => {
+      return incomingNotification.packageName.trim().startsWith(badPkg);
+    })
+    .some((isBad) => isBad);
 
   if (shouldSend) {
+    const destinationNotification =
+      createOneSignalNotifciationForIncomingNotification(
+        device,
+        incomingNotification,
+      );
+
+    const oneSignalClient = getOneSignalClient();
     await oneSignalClient.createNotification(destinationNotification);
   }
 
