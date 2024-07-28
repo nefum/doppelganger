@@ -105,10 +105,6 @@ export function DeviceScreenshotSkeleton() {
       </CardHeader>
       <CardContent>
         <Skeleton className="h-[600px] w-full" />
-        <div className="mt-4 space-x-4">
-          <Skeleton className="h-10 w-32 inline-block" />
-          <Skeleton className="h-10 w-32 inline-block" />
-        </div>
       </CardContent>
     </Card>
   );

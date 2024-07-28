@@ -15,6 +15,7 @@ import CopyButton from "@/components/copy-button.tsx";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
@@ -144,7 +145,13 @@ export async function DeviceChecklist({
         <CardTitle>Device Setup Checklist</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <CardDescription>
+          Although you can jump into your device right away, you may find some
+          features like snapshots, notifications, and Google services are not
+          yet set up. Following this checklist will get you ready-to-go as soon
+          as possible.
+        </CardDescription>
+        <div className="space-y-4 mt-4">
           <SetupCompleteChecklistItem />
           <Suspense fallback={<DeviceChecklistItemSkeleton />}>
             <DeferredSetupCompleteChecklistItem device={device} />
