@@ -31,6 +31,12 @@ services:
     networks:
       # EXTERNAL_NETWORK_NAME
       - "doppelganger"
+  redis:
+    image: "redis:latest"
+    restart: unless-stopped
+    hostname: "redis"
+    networks:
+      - "doppelganger"
 networks:
   doppelganger:
     external: true

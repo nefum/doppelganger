@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import Redis from "ioredis";
 import { createPrismaRedisCache } from "prisma-redis-middleware";
 
 interface CustomNodeJsGlobal {
@@ -10,24 +11,31 @@ declare const global: CustomNodeJsGlobal;
 function createPrisma() {
   // to save on reads, we use this middleware to attach a cache https://www.npmjs.com/package/prisma-redis-middleware
   const prisma = new PrismaClient();
-  // const redis = new Redis();
 
-  const redisMiddleware = createPrismaRedisCache({
-    storage: {
-      type: "memory", // "redis" // I have opted against using Redis for now, if this ever scales to the size that it is needed, I will implement it
-      // options: {
-      //   // client: redis as any /* built against a different version of Redis but compatible */,
-      //   invalidation: {
-      //     referencesTTL: 300
-      //   },
-      // }
-    },
-    excludeMethods: ["findMany"],
-    cacheTime: 60,
-  });
+  if (process.env.NODE_ENV === "production") {
+    const redis = new Redis({
+      host: "redis",
+      port: 6379,
+    });
 
-  // middlewares are depreciated, but the client extension version of this (https://www.npmjs.com/package/@yxx4c/prisma-redis-cache) is pretty new and not stable yet
-  prisma.$use(redisMiddleware);
+    const redisMiddleware = createPrismaRedisCache({
+      storage: {
+        type: "redis",
+        options: {
+          client:
+            redis as any /* built against a different version of Redis but compatible */,
+          invalidation: {
+            referencesTTL: 300,
+          },
+        },
+      },
+      excludeMethods: ["findMany"],
+      cacheTime: 60,
+    });
+
+    // middlewares are depreciated, but the client extension version of this (https://www.npmjs.com/package/@yxx4c/prisma-redis-cache) is pretty new and not stable yet
+    prisma.$use(redisMiddleware);
+  }
 
   return prisma;
 }
