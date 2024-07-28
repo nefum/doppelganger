@@ -2,7 +2,7 @@
 
 // DeviceScreenshot Components
 import { getDeviceForId } from "%/device-info/device-info.ts";
-import { getSnapshotUrlOfDevice } from "@/app/(userland)/devices/[id]/snapshot/path.ts";
+import { getSnapshotUrlOfDevice } from "@/app/api/devices/[id]/snapshot/path.ts";
 import NotFound from "@/app/not-found.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {

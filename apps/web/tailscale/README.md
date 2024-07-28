@@ -14,4 +14,4 @@ To set up a cluster of these proxies, do the following.
 6. `docker compose up -d`
 7. Connect to the containers with the ports specified in `docker-compose.yml`.
 
-See src/app/api/devices/[id]/proxy.pac/route.ts for the proxy configuration on the Android clients.
+See src/app/api/devices/[id]/proxy.pac/route.tsx for the proxy configuration on the Android clients.

@@ -1,3 +1,3 @@
 export function getSnapshotUrlOfDevice(id: string) {
-  return `/devices/${id}/snapshot`;
+  return `/api/devices/${id}/snapshot`;
 }
