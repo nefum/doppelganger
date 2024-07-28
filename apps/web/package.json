@@ -67,6 +67,7 @@
     "@sentry/nextjs": "^8.20.0",
     "@sentry/node": "^8.20.0",
     "@sentry/profiling-node": "^8.20.0",
+    "@sentry/utils": "^8.20.0",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.44.4",
     "@types/mdx": "^2.0.13",

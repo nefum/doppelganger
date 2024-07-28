@@ -119,6 +119,9 @@ importers:
       '@sentry/profiling-node':
         specifier: ^8.20.0
         version: 8.20.0
+      '@sentry/utils':
+        specifier: ^8.20.0
+        version: 8.20.0
       '@supabase/ssr':
         specifier: ^0.4.0
         version: 0.4.0(@supabase/supabase-js@2.44.4)
