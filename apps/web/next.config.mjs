@@ -32,6 +32,8 @@ const nextConfig = {
       "@sentry/node",
       "@sentry/utils",
     ],
+    // coding assistance for routes
+    typedRoutes: true,
   },
   // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
   reactStrictMode: true,
