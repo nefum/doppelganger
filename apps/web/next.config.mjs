@@ -24,26 +24,26 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/pricing',
-        destination: '/subscribe',
+        source: "/pricing",
+        destination: "/subscribe",
         permanent: true,
         has: {
           type: "query",
           key: "redirect",
-          value: "pricing"
-        }
+          value: "pricing",
+        },
       },
       {
-        source: '/dashboard',
-        destination: '/devices',
+        source: "/dashboard",
+        destination: "/devices",
         permanent: true,
         has: {
           type: "query",
           key: "redirect",
-          value: "dashboard"
-        }
-      }
-    ]
+          value: "dashboard",
+        },
+      },
+    ];
   },
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   output: "standalone",

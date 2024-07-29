@@ -7,11 +7,11 @@ repos:
         args: ["format"]
         language: system
         pass_filenames: false
-        files: \.(js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$
+        files: \.(mjs|cjs|js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$
       - id: turbo
         name: turbo
         entry: "turbo"
         args: ["type-check", "lint", "test"]
         language: system
         pass_filenames: false
-        files: \.(js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$
+        files: \.(mjs|cjs|js|jsx|ts|tsx|json|yaml|yml|md|mdx|html|css|scss)$

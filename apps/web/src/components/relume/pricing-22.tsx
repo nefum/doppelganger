@@ -1,7 +1,8 @@
 /* eslint-disable */
 
-import { Button, ButtonProps } from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import clsx from "clsx";
+import { ReactNode } from "react";
 import { BiCheck } from "react-icons/bi";
 
 type Feature = {
@@ -18,7 +19,7 @@ type PricingPlan = {
   planName: string;
   monthlyPrice: string;
   description: string;
-  button: ButtonProps;
+  button: ReactNode;
 };
 
 type Props = {
@@ -27,7 +28,7 @@ type Props = {
   description: string;
   pricingPlans: PricingPlan[];
   featureCategories: FeatureCategory[];
-  buttons: ButtonProps[];
+  buttons: ReactNode;
 };
 
 export type Pricing22Props = React.ComponentPropsWithoutRef<"section"> &
@@ -65,15 +66,7 @@ export const Pricing22 = (props: Pricing22Props) => {
           <FeaturesSection featureCategories={featureCategories} />
           <div className="mt-8 grid grid-cols-3 gap-x-4 bg-background md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-x-8">
             <div className="hidden md:block" />
-            {buttons.map((button, index) => (
-              <Button
-                key={index}
-                {...button}
-                className="w-full whitespace-normal px-3 py-1 sm:px-4 sm:py-3"
-              >
-                {button.title}
-              </Button>
-            ))}
+            {buttons}
           </div>
         </div>
       </div>
@@ -103,14 +96,7 @@ const PricingPlan = ({
         </div>
         <p>{description}</p>
       </div>
-      <div className="mt-6 md:mt-8">
-        <Button
-          {...button}
-          className="w-full whitespace-normal px-3 py-1 sm:px-4 sm:py-3"
-        >
-          {button.title}
-        </Button>
-      </div>
+      <div className="mt-6 md:mt-8">{button}</div>
     </div>
   );
 };
@@ -167,25 +153,19 @@ export const Pricing22Defaults: Pricing22Props = {
       planName: "Basic",
       monthlyPrice: "$19",
       description: "Lorem ipsum dolor sit amet",
-      button: {
-        title: "Get started",
-      },
+      button: <Button>Get started</Button>,
     },
     {
       planName: "Business",
       monthlyPrice: "$29",
       description: "Lorem ipsum dolor sit amet",
-      button: {
-        title: "Get started",
-      },
+      button: <Button>Get started</Button>,
     },
     {
       planName: "Enterprise",
       monthlyPrice: "$49",
       description: "Lorem ipsum dolor sit amet",
-      button: {
-        title: "Get started",
-      },
+      button: <Button>Get started</Button>,
     },
   ],
   featureCategories: [
@@ -303,17 +283,13 @@ export const Pricing22Defaults: Pricing22Props = {
       ],
     },
   ],
-  buttons: [
-    {
-      title: "Get started",
-    },
-    {
-      title: "Get started",
-    },
-    {
-      title: "Get started",
-    },
-  ],
+  buttons: (
+    <>
+      <Button>Get started</Button>
+      <Button>Get started</Button>
+      <Button>Get started</Button>
+    </>
+  ),
 };
 
 Pricing22.displayName = "Pricing22";

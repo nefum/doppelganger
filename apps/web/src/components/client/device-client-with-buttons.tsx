@@ -7,6 +7,7 @@ import MaxWidthHardlimiter from "@/components/max-width-hardlimiter.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import type { Device } from "@prisma/client";
+import * as Sentry from "@sentry/nextjs";
 import { clsx } from "clsx";
 import { ReactNode, RefObject, useEffect, useRef, useState } from "react";
 import {
@@ -29,6 +30,7 @@ import {
 import { MdOutlineSpeaker } from "react-icons/md";
 import { RiNotification2Line } from "react-icons/ri";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
+import OneSignal from "react-onesignal";
 import styles from "./client.module.css";
 
 function ButtonbarButton({
@@ -329,6 +331,15 @@ export default function DeviceClientWithButtons({
   const [captureKeyboard, setCaptureKeyboard] = useState(
     !optionalKeyboardCapture,
   );
+
+  useEffect(() => {
+    if (!OneSignal.Notifications.permission) {
+      OneSignal.Notifications.requestPermission().catch((e) => {
+        console.error("Failed to request notification permission", e);
+        Sentry.captureException(e);
+      });
+    }
+  }, []);
 
   return (
     <div className={outerMostClassName}>

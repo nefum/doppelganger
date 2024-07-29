@@ -1,7 +1,44 @@
-# Doppelganger Premium
+import { Pricing22 } from "../../../components/relume/pricing-22";
+import { Button } from "../../../components/ui/button";
+import { Link } from "react-transition-progress/next";
+import { LuArrowRight } from "react-icons/lu";
 
 export const metadata = {
   title: "Premium",
 };
 
-TODO
+<Pricing22
+  tagline="Time to get serious."
+  heading="Doppelganger Premium"
+  description="Unlock the full potential of Doppelganger with a Doppelganger premium plan. With paid options starting at $9.99/mo, there's a plan for everyone."
+  pricingPlans={[
+    {
+      planName: "Free",
+      monthlyPrice: "$0",
+      description: "Experience the core product for free.",
+      button: (
+        <Button asChild>
+          <Link href="/devices">
+            Get Started
+            <LuArrowRight className="ml-1 h-4 w-4" />
+          </Link>
+        </Button>
+      ),
+    },
+    {
+      planName: "Plus",
+      monthlyPrice: "$9.99",
+      description:
+        "Unlock better integrations and unbridled functionality for one device.",
+      button: <Button disabled>Coming Soon</Button>,
+    },
+    {
+      planName: "Pro",
+      monthlyPrice: "$14.99",
+      description:
+        "Unlock the full potential of Doppelganger's multiple deivces.",
+      button: <Button disabled>Coming Soon</Button>,
+    },
+  ]}
+  buttons={<>{/* empty */}</>}
+/>
