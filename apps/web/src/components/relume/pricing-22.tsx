@@ -1,7 +1,6 @@
 /* eslint-disable */
 
-import type { ButtonProps } from "@relume_io/relume-ui";
-import { Button } from "@relume_io/relume-ui";
+import { Button, ButtonProps } from "@/components/ui/button.tsx";
 import clsx from "clsx";
 import { BiCheck } from "react-icons/bi";
 
@@ -57,14 +56,14 @@ export const Pricing22 = (props: Pricing22Props) => {
           <p className="md:text-md">{description}</p>
         </div>
         <div className="w-full">
-          <div className="grid grid-cols-3 gap-x-4 bg-white md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-x-8">
+          <div className="grid grid-cols-3 gap-x-4 bg-background md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-x-8">
             <div className="hidden md:block" />
             {pricingPlans.map((plan, index) => (
               <PricingPlan key={index} {...plan} />
             ))}
           </div>
           <FeaturesSection featureCategories={featureCategories} />
-          <div className="mt-8 grid grid-cols-3 gap-x-4 bg-white md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-x-8">
+          <div className="mt-8 grid grid-cols-3 gap-x-4 bg-background md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-x-8">
             <div className="hidden md:block" />
             {buttons.map((button, index) => (
               <Button
@@ -136,7 +135,7 @@ const FeaturesSection = ({
               className={clsx(
                 "grid grid-cols-3 items-stretch md:grid-cols-[1.5fr_1fr_1fr_1fr]",
                 {
-                  "bg-background-secondary": index % 2 === 0,
+                  "bg-secondary": index % 2 === 0,
                 },
               )}
             >
