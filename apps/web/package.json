@@ -8,7 +8,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "dotenvx run --env-file=.env.local -- prisma migrate dev",
     "db:seed": "dotenvx run --env-file=.env.local -- tsx prisma/seed.ts",
-    "server:build": "pkgroll --minify --src server/src --tsconfig=server/tsconfig.json --clean-dist --sourcemap && sentry-cli releases --project doppelganger-server new ${SENTRY_RELEASE:-$(git rev-parse HEAD)} && sentry-cli sourcemaps inject dist && sentry-cli sourcemaps --project doppelganger-server upload dist && sentry-cli releases --project doppelganger-server finalize ${SENTRY_RELEASE:-$(git rev-parse HEAD)}",
+    "server:build": "sentry-cli releases --project doppelganger-front new ${SENTRY_RELEASE:-$(git rev-parse HEAD)} && pkgroll --minify --src server/src --tsconfig=server/tsconfig.json --clean-dist --sourcemap && sentry-cli sourcemaps inject dist && sentry-cli sourcemaps --project doppelganger-front upload dist && sentry-cli releases --project doppelganger-front finalize ${SENTRY_RELEASE:-$(git rev-parse HEAD)}",
     "android:dev": "bash scripts/android-dev.sh",
     "dev": "BLUEBIRD_DEBUG=1 tsx server/src/index.ts",
     "workers:dev": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs",
