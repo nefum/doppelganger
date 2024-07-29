@@ -5,8 +5,8 @@ import {
   ConfiguredNavbar,
 } from "@/app/(userland)/layout.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import Link from "next/link";
 import { LuArrowRight } from "react-icons/lu";
+import { Link } from "react-transition-progress/next";
 
 export default function NotFound() {
   return (

@@ -5,6 +5,7 @@ import { Navbar1 } from "@/components/relume/navbar-1.tsx";
 import { ReactNode } from "react";
 import { BiLogoInstagram, BiLogoLinkedinSquare } from "react-icons/bi";
 import { FaDiscord, FaXTwitter } from "react-icons/fa6";
+import { ProgressBar } from "react-transition-progress";
 
 export function ConfiguredNavbar() {
   return (
@@ -129,6 +130,7 @@ export default function Layout({
 }: Readonly<{ children: ReactNode }>): ReactNode {
   return (
     <>
+      <ProgressBar className="fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0" />
       <ConfiguredNavbar />
       <div className="min-h-screen">{children}</div>
       <ConfiguredFooter />

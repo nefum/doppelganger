@@ -1,6 +1,6 @@
 import { LogoBigHero } from "@/components/logo.tsx";
-import Link from "next/link";
 import { ReactNode } from "react";
+import { Link } from "react-transition-progress/next";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

@@ -1,6 +1,5 @@
 import { CopyrightDisclaimer } from "@/components/copyright-disclaimer.tsx";
 import { LogoBigHero } from "@/components/logo.tsx";
-import Link from "next/link";
 import { ReactNode } from "react";
 import {
   BiLogoFacebookCircle,
@@ -9,6 +8,7 @@ import {
   BiLogoYoutube,
 } from "react-icons/bi";
 import { FaXTwitter } from "react-icons/fa6";
+import { Link } from "react-transition-progress/next";
 
 type ImageProps = {
   url?: string;

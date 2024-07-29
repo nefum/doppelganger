@@ -2,8 +2,8 @@ import { LoggedInNavbarButtons } from "@/app/(userland)/logged-in-navbar-buttons
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { createClient } from "@/utils/supabase/server.ts";
-import Link from "next/link";
 import { ReactNode } from "react";
+import { Link } from "react-transition-progress/next";
 
 function LoggedOutNavbarButtons(): ReactNode {
   return (

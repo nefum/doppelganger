@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb.tsx";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 export function Breadcrumbs() {
   return (

@@ -1,6 +1,6 @@
 // https://nextjs.org/docs/app/building-your-application/configuring/mdx
 import type { MDXComponents } from "mdx/types";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 const classesForTypes = {
   h1: "shadcn-h1 shadcn-h-spaced",

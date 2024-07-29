@@ -11,7 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb.tsx";
 import { createClient } from "@/utils/supabase/server.ts";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 export async function DeviceBreadcrumb({
   deviceId,

@@ -16,8 +16,8 @@ import {
   SubscriptionStatus,
 } from "@/utils/subscriptions.ts";
 import { createClient } from "@/utils/supabase/server.ts";
-import Link from "next/link";
 import { LuArrowRight } from "react-icons/lu";
+import { Link } from "react-transition-progress/next";
 function NoPremiumCard() {
   return (
     <div className={styles.absolutelyCenteredItem}>

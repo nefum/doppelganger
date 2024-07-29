@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
 import { Device } from "@prisma/client";
-import Link from "next/link";
 import { LuExternalLink } from "react-icons/lu";
+import { Link } from "react-transition-progress/next";
 
 const deviceInfoPageButtonTooltip = "Open Device Info";
 

@@ -12,6 +12,7 @@ import { clsx } from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
+import { ProgressBarProvider } from "react-transition-progress";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -93,6 +94,7 @@ export default function RootLayout({
             ],
             [GoogleSigninHandlerProvider],
             [OneSignalProvider],
+            [ProgressBarProvider],
           ]}
         >
           <main>{children}</main>

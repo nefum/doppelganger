@@ -251,6 +251,9 @@ importers:
       react-resize-detector:
         specifier: ^11.0.1
         version: 11.0.1(react-dom@18.3.1)(react@18.3.1)
+      react-transition-progress:
+        specifier: ^0.0.4
+        version: 0.0.4(framer-motion@11.3.17)(next@14.2.5)(react@18.3.1)
       remark-frontmatter:
         specifier: ^5.0.0
         version: 5.0.0
@@ -11661,6 +11664,21 @@ packages:
       invariant: 2.2.4
       react: 18.3.1
       tslib: 2.6.3
+    dev: false
+
+  /react-transition-progress@0.0.4(framer-motion@11.3.17)(next@14.2.5)(react@18.3.1):
+    resolution: {integrity: sha512-ESnG9ccV48EhQ4iZuuH8QQfImgtC+iOfqZzEyWCMEHDOb7LtfNIh2DQnLo2CuwQqC+zf8Ka7a9Hkv8TVU6F+Ag==}
+    peerDependencies:
+      framer-motion: '*'
+      next: '*'
+      react: '*'
+    peerDependenciesMeta:
+      next:
+        optional: true
+    dependencies:
+      framer-motion: 11.3.17(react-dom@18.3.1)(react@18.3.1)
+      next: 14.2.5(@babel/core@7.24.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.8)
+      react: 18.3.1
     dev: false
 
   /react@18.3.1:

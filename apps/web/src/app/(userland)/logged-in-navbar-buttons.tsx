@@ -14,9 +14,9 @@ import {
 import { createClient } from "@/utils/supabase/client.ts";
 import { User } from "@supabase/supabase-js";
 import { LogOut } from "lucide-react";
-import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 import { LuChevronDown, LuUser } from "react-icons/lu";
+import { Link } from "react-transition-progress/next";
 
 async function getAvatarUrl(user: User): Promise<string | null> {
   if (user.user_metadata.avatar_url) {

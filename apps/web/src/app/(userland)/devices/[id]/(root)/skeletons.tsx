@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { Power, PowerOff } from "lucide-react";
-import Link from "next/link";
 import { ReactNode } from "react";
+import { Link } from "react-transition-progress/next";
 
 export function DeviceBreadcrumbSkeleton({
   deviceId,

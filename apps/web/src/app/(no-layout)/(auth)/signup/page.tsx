@@ -1,6 +1,6 @@
 import SignupForm from "@/app/(no-layout)/(auth)/signup/form.tsx";
 import { DynamicSignInWithGoogleButton } from "@/components/google/signin-with-google-button.tsx";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 export default function Page() {
   return (

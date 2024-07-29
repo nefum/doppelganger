@@ -111,6 +111,7 @@
     "react-onesignal": "^3.0.1",
     "react-resizable-panels": "^2.0.22",
     "react-resize-detector": "^11.0.1",
+    "react-transition-progress": "^0.0.4",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
     "remark-toc": "^9.0.0",

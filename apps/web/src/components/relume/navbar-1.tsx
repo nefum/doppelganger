@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { useMediaQuery } from "@relume_io/relume-ui";
 import { clsx } from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { RxChevronDown } from "react-icons/rx";
+import { Link } from "react-transition-progress/next";
 
 type NavLink = {
   url: string;

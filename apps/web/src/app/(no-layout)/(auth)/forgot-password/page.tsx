@@ -1,5 +1,5 @@
 import ForgotPasswordForm from "@/app/(no-layout)/(auth)/forgot-password/form.tsx";
-import Link from "next/link";
+import { Link } from "react-transition-progress/next";
 
 export default function Page() {
   return (

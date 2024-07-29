@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button.tsx";
-import Link from "next/link";
 import { TbBoxMultiple } from "react-icons/tb";
+import { Link } from "react-transition-progress/next";
 import { useMediaQuery } from "usehooks-ts";
 
 export default function MultiviewButtonClient() {

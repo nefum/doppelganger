@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import Link from "next/link";
 import { useFormState, useFormStatus } from "react-dom";
 import { LuLoader2 } from "react-icons/lu";
+import { Link } from "react-transition-progress/next";
 
 const INITIAL_LOGIN_FORM_STATE = {
   message: null,
