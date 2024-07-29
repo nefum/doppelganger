@@ -92,6 +92,8 @@ jobs:
         include:
           - tag: "pheidippides-notify" # package.json name
             context: "pheidippides/PheidippidesNotify"
+          - tag: "pheidippides-locate"
+            context: "pheidippides/PheidippidesLocate"
 
     steps:
       - name: Checkout repository
