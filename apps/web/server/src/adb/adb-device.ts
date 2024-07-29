@@ -16,7 +16,7 @@ enum PID_DETECTION_METHOD {
   LS_PROC,
 }
 
-export function readStreamIntoBufferAndClose(stream: Duplex): Promise<Buffer> {
+export function readFullStreamIntoBuffer(stream: Duplex): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
 
@@ -77,7 +77,7 @@ export class AdbDevice {
   public async runShellCommandAdbKit(command: string): Promise<string> {
     return this.adbDeviceClient
       .shell(command)
-      .then(readStreamIntoBufferAndClose)
+      .then(readFullStreamIntoBuffer)
       .then((output: Buffer) => output.toString().trim());
   }
 
@@ -293,7 +293,7 @@ export class AdbDevice {
         return androidIdRet.split("|")[1].trim();
       },
       {
-        delay: 1_000, // give it a while, google libs are slow to start
+        delay: 1_000, // give it a while, google libs are slow to start and this command rets near instantly
         maxAttempts: 50, // this will eventually return a value on any gms-enabled device, so we don't need to worry
       },
     );
@@ -301,7 +301,7 @@ export class AdbDevice {
     return BigInt(androidIdString); // literally too big for an integer, using parseInt will lose precision on the final values which makes the method useless
   }
 
-  private async getRootSafe(): Promise<void> {
+  async getRootSafe(): Promise<void> {
     try {
       await this.adbDeviceClient.root();
     } catch (e: any) {

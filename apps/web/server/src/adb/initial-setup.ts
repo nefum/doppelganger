@@ -1,4 +1,4 @@
-import { AdbDevice, readStreamIntoBufferAndClose } from "%/adb/adb-device.ts";
+import { AdbDevice, readFullStreamIntoBuffer } from "%/adb/adb-device.ts";
 import { Device } from "@prisma/client";
 import * as Sentry from "@sentry/node";
 import ApkReader, { ManifestObject } from "adbkit-apkreader";
@@ -18,7 +18,7 @@ async function getInstalledVersionOfPackageOnClient(
 ): Promise<bigint> {
   const androidVersionRet = await adbClient
     .shell(`dumpsys package ${packageName} | grep versionCode`)
-    .then(readStreamIntoBufferAndClose)
+    .then(readFullStreamIntoBuffer)
     .then((output: Buffer) => output.toString().trim());
   //     versionCode=599311101 minSdk=24 targetSdk=34
   return BigInt(androidVersionRet.split("=")[1].split(" ")[0]);
@@ -68,7 +68,7 @@ async function getIsPackageDebug(
   }
   const rawFlagString = await adbClient
     .shell(`dumpsys package ${packageName} | grep "flags=\["`)
-    .then(readStreamIntoBufferAndClose)
+    .then(readFullStreamIntoBuffer)
     .then((output: Buffer) => output.toString().trim());
 
   return (
@@ -89,7 +89,7 @@ async function grantAllPermissionsOfPackage(
       (p) =>
         adbClient
           .shell(`pm grant ${packageName} ${p}`)
-          .then(readStreamIntoBufferAndClose)
+          .then(readFullStreamIntoBuffer)
           .then((output: Buffer) => {}) // void out the buffer
           .catch((e: any) => {
             console.error("Failed to grant permission", p, e);
@@ -142,7 +142,7 @@ async function uninstallPackageCompletely(
   await adbClient.uninstall(packageName);
   await adbClient
     .shell(`pm uninstall ${packageName}`)
-    .then(readStreamIntoBufferAndClose); // wait for the duplex to close before moving on
+    .then(readFullStreamIntoBuffer); // wait for the duplex to close before moving on
 }
 
 async function installOrUpdateApkAndGrantAllPermissions(

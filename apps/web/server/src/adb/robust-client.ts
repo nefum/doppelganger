@@ -23,7 +23,7 @@ type DeviceState = Device["type"];
  * Useful for the edge and resource-constricted envuronments.
  */
 export default class RobustClient extends DeviceClient {
-  private readonly timeout: number;
+  readonly timeout: number;
 
   constructor(
     client: Client,
@@ -73,7 +73,25 @@ export default class RobustClient extends DeviceClient {
     return state === "device" || state === "emulator";
   }
 
+  /**
+   * Get the state (moreso type) of the device after it has been connected
+   */
+  getStateRuntime(): Promise<"device" | "emulator"> {
+    return retry(async () => {
+      await this.connectRobust(this.timeout);
+      const maybeState = await this.getState();
+      if (maybeState === "device" || maybeState === "emulator") {
+        return maybeState;
+      }
+      throw new Error(
+        `Device is not in a connected state, expected device or emulator but got ${maybeState}`,
+      );
+    });
+  }
+
   /* overridden methods */
+
+  // we can't define getState because it would cause a recursive call
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   install(apk: string | Readable): Promise<boolean> {

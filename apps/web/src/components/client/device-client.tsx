@@ -2,6 +2,10 @@
 
 import { getAdbUdidForDevice } from "%/device-info/device-info-utils.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
+import {
+  LocationPutReturnType,
+  LocationPutSendType,
+} from "@/app/api/devices/[id]/location/route.ts";
 import JSMpegClient from "@/components/client/jsmpeg-client.tsx";
 import {
   getOrientationFromRatio,
@@ -22,6 +26,7 @@ import KeyEvent, {
 import Size from "@/ws-scrcpy/src/app/Size.ts";
 import VideoSettings from "@/ws-scrcpy/src/app/VideoSettings.ts";
 import type { Device } from "@prisma/client";
+import * as Sentry from "@sentry/nextjs";
 import { useOrientation } from "@uidotdev/usehooks";
 import { clsx } from "clsx";
 import {
@@ -368,6 +373,86 @@ const OneshotDeviceClient = forwardRef<
     document.addEventListener("keydown", keydown);
     return () => document.removeEventListener("keydown", keydown);
   }, [captureKeyboard, doPaste]);
+
+  // location providing
+  useEffect(() => {
+    async function locationCallback(position: GeolocationPosition) {
+      const locationPayload: LocationPutSendType = {
+        ...position.coords,
+        timestamp: position.timestamp,
+      };
+
+      let response: Response;
+      try {
+        response = await fetch(`/api/devices/${device.id}/location`, {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(locationPayload),
+        });
+      } catch (e: any) {
+        console.error("Failed to send location", e);
+        Sentry.captureException(e);
+        return;
+      }
+
+      let responseJson: LocationPutReturnType;
+      try {
+        responseJson = await response.json();
+      } catch (e: any) {
+        console.error("Failed to parse location response", e);
+        Sentry.captureException(e);
+        return;
+      }
+
+      if (responseJson.error || !response.ok) {
+        console.error("Failed to send location", responseJson.error);
+        return;
+      }
+
+      console.log("Location sent successfully");
+    }
+
+    function locationError(error: GeolocationPositionError) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          toast({
+            title: "Location Permission Denied",
+            description: "Please enable location services to use this feature.",
+          });
+          break;
+        case error.POSITION_UNAVAILABLE:
+          toast({
+            title: "Location Unavailable",
+            description: "Your location could not be determined.",
+          });
+          break;
+        case error.TIMEOUT:
+          toast({
+            title: "Location Timeout",
+            description: "The request to get your location timed out.",
+          });
+          break;
+        default:
+          toast({
+            title: "Location Error",
+            description:
+              "An unknown error occurred while getting your location.",
+          });
+          Sentry.captureException(error);
+          break;
+      }
+    }
+
+    const locationWatchId = navigator.geolocation.watchPosition(
+      locationCallback,
+      locationError,
+    );
+
+    return () => navigator.geolocation.clearWatch(locationWatchId);
+  }, [device.id, toast]);
 
   useImperativeHandle(ref, () => {
     return {
