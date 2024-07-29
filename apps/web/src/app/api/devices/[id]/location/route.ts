@@ -57,6 +57,9 @@ export async function PUT(
   const adbDevice = new AdbDevice(device);
   const adbDeviceClient = adbDevice.adbDeviceClient;
   const isEmulator = (await adbDeviceClient.getStateRuntime()) === "emulator";
+  const locateInstalled = await adbDeviceClient.isInstalled(
+    "xyz.regulad.pheidippides.locate",
+  );
 
   // if we are on an emulator, instead of broadcasting a message to our client running on the device we can just run the geo fix command
   // need root to run geo fix
@@ -75,9 +78,16 @@ export async function PUT(
     // root not required on emulators
 
     await adbDeviceClient.shell(command).then(readFullStreamIntoBuffer);
-  } else {
+  } else if (locateInstalled) {
     // send the location to the client with the mock location provider
-    // TODO
+
+    const jsonLocation = JSON.stringify(location);
+
+    const escapedJsonLocation = jsonLocation.replace(/"/g, '\\"');
+
+    const command = `am start -n xyz.regulad.pheidippides.locate/.MockLocationActivity -e LOCATION_DATA "${escapedJsonLocation}"`;
+
+    await adbDeviceClient.shell(command).then(readFullStreamIntoBuffer);
   }
 
   return NextResponse.json({}, { status: 200 });

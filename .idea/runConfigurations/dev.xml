@@ -1,5 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+  <configuration
+    default="false"
+    name="dev"
+    type="js.build_tools.npm"
+    nameIsGenerated="true"
+  >
     <package-json value="$PROJECT_DIR$/package.json" />
     <command value="run" />
     <scripts>
@@ -9,7 +14,9 @@
     <envs>
       <env name="PORT" value="3030" />
     </envs>
-    <EXTENSION ID="com.intellij.lang.javascript.buildTools.npm.rc.StartBrowserRunConfigurationExtension">
+    <EXTENSION
+      ID="com.intellij.lang.javascript.buildTools.npm.rc.StartBrowserRunConfigurationExtension"
+    >
       <browser url="http://localhost:3030" />
     </EXTENSION>
     <method v="2" />

@@ -1,7 +1,9 @@
 <component name="libraryTable">
   <library name="classes1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/runtime_app_classes_jar/release/classes.jar!/" />
+      <root
+        url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/runtime_app_classes_jar/release/classes.jar!/"
+      />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

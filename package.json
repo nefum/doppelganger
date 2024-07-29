@@ -7,9 +7,10 @@
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
     "test": "turbo run test",
-    "format": "prettier --write \"**/*.{json,json5,ts,tsx,md,mdx,js,cjs,mjs,jsx,yml,yaml,css,scss,html}\""
+    "format": "prettier --write \"**/*.{json,json5,ts,tsx,md,mdx,js,cjs,mjs,jsx,yml,yaml,css,scss,html,xml,svg}\""
   },
   "devDependencies": {
+    "@prettier/plugin-xml": "^3.4.1",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.0.0",
     "prettier-plugin-tailwindcss": "^0.6.5",

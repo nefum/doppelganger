@@ -1,10 +1,18 @@
 <component name="libraryTable">
   <library name="out">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_2.jar!/" />
+      <root
+        url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_0.jar!/"
+      />
+      <root
+        url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_1.jar!/"
+      />
+      <root
+        url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_3.jar!/"
+      />
+      <root
+        url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/project_dex_archive/debug/out/c5976bca320cf8660438bc48c8fc38bf40dad46c456d3ea125ddca147b8c805d_2.jar!/"
+      />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -35,12 +35,27 @@ async function doSpecialSetupAndStarting(
   }
 
   if (packageName === "xyz.regulad.pheidippides.notify") {
-    await adbClient.shell(
-      "cmd notification allow_listener xyz.regulad.pheidippides.notify/.NotificationRelayService",
-    );
-    await adbClient.shell(
-      "am start xyz.regulad.pheidippides.notify/.MainActivity",
-    );
+    await adbClient
+      .shell(
+        "cmd notification allow_listener xyz.regulad.pheidippides.notify/.NotificationRelayService",
+      )
+      .then(readFullStreamIntoBuffer);
+    await adbClient
+      .shell("am start xyz.regulad.pheidippides.notify/.MainActivity")
+      .then(readFullStreamIntoBuffer);
+  } else if (packageName === "xyz.regulad.pheidippides.locate") {
+    // settings put global development_settings_enabled 1
+    // settings put secure mock_location 1
+    // appops set YOUR_PACKAGE_NAME android:mock_location allow
+    await adbClient
+      .shell("settings put global development_settings_enabled 1")
+      .then(readFullStreamIntoBuffer);
+    await adbClient
+      .shell("settings put secure mock_location 1")
+      .then(readFullStreamIntoBuffer);
+    await adbClient
+      .shell(`appops set ${packageName} android:mock_location allow`)
+      .then(readFullStreamIntoBuffer);
   }
 }
 

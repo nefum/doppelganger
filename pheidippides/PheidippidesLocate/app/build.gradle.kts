@@ -46,6 +46,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    lint {
+        disable += "WrongConstant" // have to use old constants for API support; they go to the same values
+    }
 }
 
 dependencies {
