@@ -70,3 +70,32 @@ export function ClientSideIsSignedUpForNotificationsChecklistItem() {
     </div>
   );
 }
+
+export function ClientSideHasGrantedLocationPermissionChecklistItem() {
+  const [locationPermission, setLocationPermission] = useState(false);
+
+  useEffect(() => {
+    if (navigator.permissions) {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then((permissionStatus) => {
+          setLocationPermission(permissionStatus.state === "granted");
+        });
+    }
+  }, []);
+
+  return (
+    <div className="flex items-center space-x-2">
+      <Checkbox id="location" disabled checked={locationPermission} />
+      <label htmlFor="location">
+        Grant location permission
+        <small className="shadcn-muted block">
+          {!locationPermission
+            ? "Doppelganger uses your location to provide location-based features to your device. " +
+              "Connecting to your device will automatically request the location permission."
+            : "Doppelganger has permission to use your location. You can manage this in your browser settings."}
+        </small>
+      </label>
+    </div>
+  );
+}

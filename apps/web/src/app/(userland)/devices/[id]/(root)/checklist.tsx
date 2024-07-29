@@ -6,6 +6,7 @@ import { getIsSetupComplete } from "%/adb/initial-setup.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import {
+  ClientSideHasGrantedLocationPermissionChecklistItem,
   ClientSideIsPwaChecklistItem,
   ClientSideIsSignedUpForNotificationsChecklistItem,
 } from "@/app/(userland)/devices/[id]/(root)/clientside-checklist.tsx";
@@ -163,6 +164,7 @@ export async function DeviceChecklist({
           )}
           <ClientSideIsPwaChecklistItem />
           <ClientSideIsSignedUpForNotificationsChecklistItem />
+          <ClientSideHasGrantedLocationPermissionChecklistItem />
         </div>
       </CardContent>
     </Card>
