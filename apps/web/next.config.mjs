@@ -21,6 +21,30 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/pricing',
+        destination: '/subscribe',
+        permanent: true,
+        has: {
+          type: "query",
+          key: "redirect",
+          value: "pricing"
+        }
+      },
+      {
+        source: '/dashboard',
+        destination: '/devices',
+        permanent: true,
+        has: {
+          type: "query",
+          key: "redirect",
+          value: "dashboard"
+        }
+      }
+    ]
+  },
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   output: "standalone",
   experimental: {
