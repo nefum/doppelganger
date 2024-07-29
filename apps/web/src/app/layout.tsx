@@ -59,6 +59,9 @@ export default function RootLayout({
   return (
     // https://ui.shadcn.com/docs/dark-mode/next
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="var(--background)" />
+      </head>
       <body
         className={clsx(
           "antialiased",
