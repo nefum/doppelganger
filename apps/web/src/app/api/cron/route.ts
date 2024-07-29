@@ -1,6 +1,7 @@
-import { BASE_ORIGIN, FREE_TIER_IDLE_TIME_MS } from "%/constants.ts";
+import { BASE_ORIGIN } from "%/constants.ts";
 import prisma from "%/database/prisma.ts";
 import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
+import { getDeviceIsActive } from "@/utils/devices.ts";
 import {
   getSubscriptionStatus,
   SubscriptionStatus,
@@ -37,11 +38,9 @@ async function shutdownAbandonedDevice(device: Device): Promise<void> {
     return; // no need to process
   }
 
-  const lastConnectedAt = device.lastConnectedAt ?? new Date();
+  const deviceActive = getDeviceIsActive(device);
 
-  const shutdownTime = lastConnectedAt.getTime() + FREE_TIER_IDLE_TIME_MS;
-
-  if (Date.now() < shutdownTime) {
+  if (deviceActive) {
     return; // not yet time to shutdown
   }
 

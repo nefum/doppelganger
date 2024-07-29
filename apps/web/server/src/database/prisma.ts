@@ -25,7 +25,7 @@ function createPrisma() {
           client:
             redis as any /* built against a different version of Redis but compatible */,
           invalidation: {
-            referencesTTL: 300,
+            referencesTTL: 60, // same cache time
           },
         },
       },

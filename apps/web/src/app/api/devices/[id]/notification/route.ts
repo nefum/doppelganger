@@ -2,6 +2,7 @@ import { BASE_ORIGIN } from "%/constants.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
 import getStaticUrlForImageDataUrl from "@/app/api/render/path.ts";
+import { getDeviceIsActive } from "@/utils/devices.ts";
 import getOneSignalClient from "@/utils/onesignal/onesignal-server.ts";
 import * as OneSignal from "@onesignal/node-onesignal";
 import { Device } from "@prisma/client";
@@ -165,11 +166,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const shouldSend = !doNotBroadcastPackages
-    .map((badPkg) => {
-      return incomingNotification.packageName.trim().startsWith(badPkg);
-    })
-    .some((isBad) => isBad);
+  // we shouldn't send notiifications for system packages or if the device is active
+  const shouldSend =
+    !doNotBroadcastPackages
+      .map((badPkg) => {
+        return incomingNotification.packageName.trim().startsWith(badPkg);
+      })
+      .some((isBad) => isBad) && !getDeviceIsActive(device);
 
   if (shouldSend) {
     const destinationNotification =
