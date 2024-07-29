@@ -94,6 +94,8 @@ jobs:
             context: "pheidippides/PheidippidesNotify"
           - tag: "pheidippides-locate"
             context: "pheidippides/PheidippidesLocate"
+          - tag: "pheidippides-administrate"
+            context: "pheidippides/PheidippidesAdministrate"
 
     steps:
       - name: Checkout repository

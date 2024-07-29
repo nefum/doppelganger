@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="assets">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/compressed_assets/debug/out/assets/sentry-external-modules.txt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app/build/intermediates/compressed_assets/debug/out/assets/sentry-debug-meta.properties.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

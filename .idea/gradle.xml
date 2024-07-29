@@ -4,11 +4,11 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify" />
-            <option value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify/app" />
+            <option value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate" />
+            <option value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app" />
           </set>
         </option>
       </GradleProjectSettings>
@@ -18,6 +18,24 @@
           <set>
             <option value="$PROJECT_DIR$/pheidippides/PheidippidesLocate" />
             <option value="$PROJECT_DIR$/pheidippides/PheidippidesLocate/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippides/PheidippidesNotify" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/pheidippides/PheidippidesNotify" />
+            <option value="$PROJECT_DIR$/pheidippides/PheidippidesNotify/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify" />
+            <option value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify/app" />
           </set>
         </option>
       </GradleProjectSettings>

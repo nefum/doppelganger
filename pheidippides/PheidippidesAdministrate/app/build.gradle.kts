@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "xyz.regulad.pheidippides.locate"
+    namespace = "xyz.regulad.pheidippides.administrate"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "xyz.regulad.pheidippides.locate"
+        applicationId = "xyz.regulad.pheidippides.administrate"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
@@ -74,7 +74,7 @@ dependencies {
 
 sentry {
     org.set("nefum")
-    projectName.set("pheidippides-locate")
+    projectName.set("pheidippides-administrate")
 
     // this will upload your source code to Sentry to show it as part of the stack traces
     // disable if you don't want to expose your sources

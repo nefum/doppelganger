@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/pheidippides/PheidippidesAdministrate" />
     <file type="web" url="file://$PROJECT_DIR$/pheidippides/PheidippidesLocate" />
+    <file type="web" url="file://$PROJECT_DIR$/pheidippides/PheidippidesNotify" />
   </component>
   <component name="PWA">
     <option name="enabled" value="true" />

@@ -1,4 +1,4 @@
-package xyz.regulad.pheidippides.locate
+package xyz.regulad.pheidippides.administrate
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        Assert.assertEquals("xyz.regulad.pheidippides.locate", appContext.packageName)
+        Assert.assertEquals("xyz.regulad.pheidippides.administrate", appContext.packageName)
     }
 }

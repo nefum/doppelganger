@@ -2,7 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="PheidippidesAdministrate.PheidippidesLocate.app">
+        <State />
+      </entry>
+      <entry key="PheidippidesAdministrate.app">
+        <State />
+      </entry>
       <entry key="PheidippidesLocate.app">
+        <State />
+      </entry>
+      <entry key="PheidippidesLocate.app.androidTest">
+        <State />
+      </entry>
+      <entry key="PheidippidesLocate.app.main">
+        <State />
+      </entry>
+      <entry key="PheidippidesLocate.app.unitTest">
         <State />
       </entry>
       <entry key="PheidippidesNotify.app">
@@ -18,6 +33,15 @@
         <State />
       </entry>
       <entry key="pheidippides-notify.app">
+        <State />
+      </entry>
+      <entry key="pheidippides.PheidippidesNotify.app.androidTest">
+        <State />
+      </entry>
+      <entry key="pheidippides.PheidippidesNotify.app.main">
+        <State />
+      </entry>
+      <entry key="pheidippides.PheidippidesNotify.app.unitTest">
         <State />
       </entry>
     </value>
