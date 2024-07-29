@@ -27,21 +27,25 @@ const nextConfig = {
         source: "/pricing",
         destination: "/subscribe",
         permanent: true,
-        has: {
-          type: "query",
-          key: "redirect",
-          value: "pricing",
-        },
+        has: [
+          {
+            type: "query",
+            key: "redirect",
+            value: "pricing",
+          },
+        ],
       },
       {
         source: "/dashboard",
         destination: "/devices",
         permanent: true,
-        has: {
-          type: "query",
-          key: "redirect",
-          value: "dashboard",
-        },
+        has: [
+          {
+            type: "query",
+            key: "redirect",
+            value: "dashboard",
+          },
+        ],
       },
     ];
   },

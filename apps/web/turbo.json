@@ -33,7 +33,11 @@
       "passThroughEnv": ["SENTRY_AUTH_TOKEN"]
     },
     "android:dev": {
-      "dependsOn": ["pheidippides-notify#build"],
+      "dependsOn": [
+        "pheidippides-notify#build",
+        "pheidippides-administrate#build",
+        "pheidippides-locate#build"
+      ],
       "cache": false
     },
     "dev": {
