@@ -2,6 +2,14 @@ import { Pricing22 } from "../../../components/relume/pricing-22";
 import { Button } from "../../../components/ui/button";
 import { Link } from "react-transition-progress/next";
 import { LuArrowRight } from "react-icons/lu";
+import {
+  FREE_MAX_FPS,
+  MAX_DEVICES_FREE, MAX_DEVICES_PLUS,
+  MAX_DEVICES_PRO,
+  PLUS_MAX_FPS,
+  PRO_MAX_FPS
+} from "../../../../server/src/constants";
+import { BiCheck, BiX } from "react-icons/bi";
 
 export const metadata = {
   title: "Premium",
@@ -39,6 +47,114 @@ export const metadata = {
         "Unlock the full potential of Doppelganger's multiple deivces.",
       button: <Button disabled>Coming Soon</Button>,
     },
+  ]}
+  featureCategories={[
+    {
+      title: "Devices",
+      features: [
+        {
+          text: "Maximum number of devices",
+          items: [
+            MAX_DEVICES_FREE,
+            MAX_DEVICES_PLUS,
+            MAX_DEVICES_PRO,
+          ]
+        },
+        {
+          text: "Device Types Available",
+          items: [
+            "Limited",
+            "Limited",
+            "All"
+          ]
+        },
+        {
+          text: "Device FPS",
+          items: [
+            FREE_MAX_FPS,
+            PLUS_MAX_FPS,
+            PRO_MAX_FPS,
+          ]
+        },
+        {
+          text: "Always-on devices",
+          items: [
+            "",
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        }
+      ]
+    },
+    {
+      title: "Integrations",
+      features: [
+        {
+          text: "Pheidippides: smooth, native-like experience",
+          items: [
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        },
+        {
+          text: "Notification Pass-through",
+          items: [
+            "",
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        },
+        {
+          text: "Location Pass-through",
+          items: [
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        },
+        {
+          text: "Contacts Pass-through (coming soon)",
+          items: [
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        },
+        {
+          text: "Camera Roll Pass-through (coming soon)",
+          items: [
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        },
+        {
+          text: "Calendar Pass-through (coming soon)",
+          items: [
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        },
+        {
+          text: "Camera Pass-through (coming soon)",
+          items: [
+            "",
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        },
+        {
+          text: "Microphone Pass-through (coming soon)",
+          items: [
+            "",
+            <BiCheck className="size-6" />,
+            <BiCheck className="size-6" />,
+          ]
+        }
+      ]
+    }
   ]}
   buttons={<>{/* empty */}</>}
 />

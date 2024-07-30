@@ -1,9 +1,9 @@
 import {
   FREE_MAX_FPS,
-  MAX_DEVICES_FREE,
+  MAX_DEVICES_FREE, MAX_DEVICES_PLUS,
   MAX_DEVICES_PRO,
   PLUS_MAX_FPS,
-  PRO_MAX_FPS,
+  PRO_MAX_FPS
 } from "%/constants.ts";
 
 export enum SubscriptionStatus {
@@ -26,6 +26,8 @@ export function getMaxDeviceCount(
   switch (subscriptionStatus) {
     case SubscriptionStatus.PRO:
       return MAX_DEVICES_PRO;
+    case SubscriptionStatus.PLUS:
+      return MAX_DEVICES_PLUS;
     default:
       return MAX_DEVICES_FREE;
   }

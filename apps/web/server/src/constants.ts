@@ -27,7 +27,8 @@ export const AUTHORIZED_USERS_FORBIDDEN_REGEX: RegExp[] = [
 export const MIN_FPS = 10;
 
 export const MAX_DEVICES_FREE = 1;
-export const MAX_DEVICES_PRO = 3;
+export const MAX_DEVICES_PLUS = MAX_DEVICES_FREE;
+export const MAX_DEVICES_PRO = 6;
 
 export const FREE_MAX_FPS = 15; // 15 is pretty crap but suprisingly usable, incentive to push to premium
 export const PLUS_MAX_FPS = 30; // 30 is pretty good, but not quite as good as pro

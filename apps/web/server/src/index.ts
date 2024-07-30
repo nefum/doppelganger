@@ -6,13 +6,10 @@ import next from "next";
 import { parse } from "url";
 // our KasmVNC connections will go to the path /devices/[id]/kasmvnc
 import { WebSocketServer } from "ws";
-import {
-  audioWsEndpoint,
-  scrcpyWsEndpoint,
-} from "./endpoint-regex";
+import { audioWsEndpoint, scrcpyWsEndpoint } from "./endpoint-regex";
 
 import { loadEnvironment } from "./load-environment";
-import { handleAudio, handleKasmVNC } from "./wsutils/kasmvnc-route";
+import { handleAudio } from "./wsutils/kasmvnc-route";
 import { handleDeviceStream } from "./wsutils/scrcpy-route";
 import { isWebSocketRequest } from "./wsutils/wsutils";
 
