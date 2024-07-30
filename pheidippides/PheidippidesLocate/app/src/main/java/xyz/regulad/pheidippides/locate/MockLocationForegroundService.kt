@@ -98,7 +98,7 @@ class MockLocationForegroundService : Service() {
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Mock Location Active")
+            .setContentTitle("Location Passthrough Active")
             .setContentText("Providing mock location data")
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
             .build()

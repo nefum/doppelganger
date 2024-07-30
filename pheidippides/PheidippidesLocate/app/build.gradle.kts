@@ -13,8 +13,8 @@ android {
         applicationId = "xyz.regulad.pheidippides.locate"
         minSdk = 29
         targetSdk = 34
-        versionCode = 8
-        versionName = "1.9"
+        versionCode = 9
+        versionName = "1.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

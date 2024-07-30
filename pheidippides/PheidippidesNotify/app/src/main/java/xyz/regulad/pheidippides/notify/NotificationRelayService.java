@@ -70,8 +70,9 @@ public class NotificationRelayService extends NotificationListenerService {
 
     private Notification createNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Pheidippides Notification Listener")
+                .setContentTitle("Notification Passthrough Active")
                 .setContentText("Listening for notifications")
+                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim)
                 .setPriority(NotificationCompat.PRIORITY_LOW);
 
         return builder.build();
