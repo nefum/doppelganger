@@ -30,6 +30,7 @@ class MockLocationForegroundService : Service() {
                 val location = intent.getParcelableExtra<Location>(EXTRA_LOCATION)
                 if (location != null) {
                     currentLocation = location
+                    Log.d(TAG, "Service started with initial location: ${location.latitude}, ${location.longitude}")
                     startMockLocationUpdates()
                 } else {
                     Log.e(TAG, "No location provided to start service")
@@ -108,7 +109,7 @@ class MockLocationForegroundService : Service() {
         private const val CHANNEL_ID = "MockLocationChannel"
         private const val NOTIFICATION_ID = 1
         private const val UPDATE_INTERVAL = 1000L // 1 second
-        const val PROVIDER_NAME = "pheidippides"
+        const val PROVIDER_NAME = LocationManager.GPS_PROVIDER
 
         const val ACTION_START_SERVICE = "START_SERVICE"
         const val ACTION_UPDATE_LOCATION = "UPDATE_LOCATION"

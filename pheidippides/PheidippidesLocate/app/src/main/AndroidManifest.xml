@@ -4,6 +4,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
             android:allowBackup="false"
@@ -21,6 +24,18 @@
                 android:exported="true">
             <!-- No intent-filter here -->
         </activity>
+
+        <service
+                android:name=".MockLocationForegroundService"
+                android:enabled="true"
+                android:exported="false"
+                android:foregroundServiceType="location">
+            <intent-filter>
+                <action android:name="xyz.regulad.pheidippides.locate.ACTION_START_SERVICE" />
+                <action android:name="xyz.regulad.pheidippides.locate.ACTION_UPDATE_LOCATION" />
+                <action android:name="xyz.regulad.pheidippides.locate.ACTION_STOP_SERVICE" />
+            </intent-filter>
+        </service>
 
     <!-- Required: set your sentry.io project identifier (DSN) -->
     <meta-data android:name="io.sentry.dsn" android:value="https://7bbee926ce3f8fe51f48d312a6de8545@o4507672050925568.ingest.us.sentry.io/4507685918736384" />

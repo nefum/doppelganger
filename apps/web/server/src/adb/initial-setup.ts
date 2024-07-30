@@ -61,6 +61,7 @@ async function doSpecialSetupAndStarting(
     // settings put global development_settings_enabled 1
     // settings put secure mock_location 1
     // appops set YOUR_PACKAGE_NAME android:mock_location allow
+    // settings put secure mock_location_app ${packageName}
     await adbClient
       .shell("settings put global development_settings_enabled 1")
       .then(readFullStreamIntoBuffer);
@@ -69,6 +70,9 @@ async function doSpecialSetupAndStarting(
       .then(readFullStreamIntoBuffer);
     await adbClient
       .shell(`appops set ${packageName} android:mock_location allow`)
+      .then(readFullStreamIntoBuffer);
+    await adbClient
+      .shell(`settings put secure mock_location_app ${packageName}`)
       .then(readFullStreamIntoBuffer);
   } else if (packageName === "xyz.regulad.pheidippides.administrate") {
     await adbClient

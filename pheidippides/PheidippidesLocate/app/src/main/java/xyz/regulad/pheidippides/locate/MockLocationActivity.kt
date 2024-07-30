@@ -98,6 +98,8 @@ class MockLocationActivity : Activity() {
                 android.location.Criteria.ACCURACY_FINE
             )
         }
+        locMgr.setTestProviderEnabled(MockLocationForegroundService.PROVIDER_NAME, true)
+        Log.d(TAG, "Test provider added and enabled")
     }
 
     private fun createMockLocation(incomingLocation: LocationData): Location {
