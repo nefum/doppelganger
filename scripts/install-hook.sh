@@ -2,35 +2,13 @@
 
 # Create the pre-commit hook file
 cat > .git/hooks/pre-commit << EOL
-#!/bin/bash
+#!/bin/sh
 
-# Run formatting
 echo "Running formatter..."
-pnpm format
-if [ \$? -ne 0 ]; then
-    echo "Formatting failed"
-    exit 1
-fi
+pnpm format || exit 1
 
-# Run turbo tasks in parallel
-echo "Running type check, lint, and test in parallel..."
-pnpm turbo type-check & TYPE_CHECK_PID=\$!
-pnpm turbo lint & LINT_PID=\$!
-pnpm turbo test & TEST_PID=\$!
-
-# Wait for all background processes to complete
-wait \$TYPE_CHECK_PID
-TYPE_CHECK_STATUS=\$?
-wait \$LINT_PID
-LINT_STATUS=\$?
-wait \$TEST_PID
-TEST_STATUS=\$?
-
-# Check if any of the processes failed
-if [ \$TYPE_CHECK_STATUS -ne 0 ] || [ \$LINT_STATUS -ne 0 ] || [ \$TEST_STATUS -ne 0 ]; then
-    echo "One or more checks failed"
-    exit 1
-fi
+echo "Running type check, lint, and test..."
+turbo type-check lint test || exit 1
 
 echo "All checks passed"
 exit 0
