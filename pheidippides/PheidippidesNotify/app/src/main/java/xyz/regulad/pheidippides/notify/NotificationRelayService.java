@@ -42,6 +42,7 @@ public class NotificationRelayService extends NotificationListenerService {
     private static final int NOTIFICATION_ID = 1;
 
     private static final @NotNull String TAG = "NotificationRelayService";
+    public static final Gson SERIALIZER = new Gson();
     private final @NotNull String ENDPOINT_URL = DoppelgangerUtil.DOPPELGANGER_ORIGIN + String.format("/api/devices/%s/notification", DoppelgangerUtil.DOPPELGANGER_DEVICE_ID);
 
     private OkHttpClient client;
@@ -90,7 +91,7 @@ public class NotificationRelayService extends NotificationListenerService {
         final @NotNull NotificationRelayService.JsonableNotification jsonableNotification = buildJsonableNotification(sbn);
 
         // use Gson to convert the JsonableNotification object to a JSON string
-        final @NotNull String json = new Gson().toJson(jsonableNotification);
+        final @NotNull String json = SERIALIZER.toJson(jsonableNotification);
 
         // Create request body
         final @NotNull RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);

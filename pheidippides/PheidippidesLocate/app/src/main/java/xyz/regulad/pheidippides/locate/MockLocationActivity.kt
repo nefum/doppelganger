@@ -7,12 +7,15 @@ import android.location.LocationManager
 import android.location.provider.ProviderProperties
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 
 class MockLocationActivity : Activity() {
     private lateinit var locMgr: LocationManager
     private val providerName = LocationManager.GPS_PROVIDER
+    private val deserializer = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +25,12 @@ class MockLocationActivity : Activity() {
         val incomingLocationString = intent.getStringExtra("LOCATION_DATA") ?: return finish()
 
         val incomingLocation = try {
-            Gson().fromJson(incomingLocationString, LocationData::class.java);
+            deserializer.fromJson(incomingLocationString, LocationData::class.java)
         } catch (e: JsonSyntaxException) {
             return finish();
         }
+
+        Log.d(TAG, "Received location: ${incomingLocation.latitude}, ${incomingLocation.longitude}")
 
         // lazily add the test provider if it doesn't exist
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -62,10 +67,14 @@ class MockLocationActivity : Activity() {
         newLocation.longitude = incomingLocation.longitude;
         newLocation.accuracy = incomingLocation.accuracy.toFloat(); // shave some precision
 
+        // extra attribute like altitude, speed, & bearing are not included here because even though we can get them
+        // from the user agent (browser), they are not always available and have to be declared available in advance
+
         newLocation.time = incomingLocation.timestamp.toLong()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            newLocation.elapsedRealtimeNanos = incomingLocation.timestamp.toLong()
-        }
+        newLocation.elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
+
+        Log.d(TAG, "Setting mock location: ${newLocation.latitude}, ${newLocation.longitude}")
+
 
         // no harm in updating the provider if it's already enabled
         locMgr.setTestProviderEnabled(providerName, true)
@@ -83,5 +92,9 @@ class MockLocationActivity : Activity() {
         } catch (e: IllegalArgumentException) {
             // Provider doesn't exist
         }
+    }
+
+    companion object {
+        private const val TAG = "MockLocationActivity"
     }
 }

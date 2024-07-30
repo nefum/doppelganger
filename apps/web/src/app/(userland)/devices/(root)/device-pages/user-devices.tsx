@@ -16,7 +16,10 @@ export default async function UserDevices() {
     return <NotFound />;
   }
 
-  const clientDevices = await getDevicesForUser(user);
+  const clientDevices = (await getDevicesForUser(user)).toSorted(
+    // sort by the createdAt
+    (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+  );
 
   const clientDeviceUpStates: { [id: string]: boolean } = {};
 

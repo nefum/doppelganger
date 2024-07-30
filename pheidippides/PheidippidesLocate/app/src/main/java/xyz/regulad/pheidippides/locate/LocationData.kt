@@ -1,41 +1,29 @@
-package xyz.regulad.pheidippides.locate;
+package xyz.regulad.pheidippides.locate
 
-import com.google.gson.annotations.SerializedName;
-import lombok.Value;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.google.gson.annotations.SerializedName
 
-@Value
-public class LocationData {
-    @NotNull
+data class LocationData(
     @SerializedName("latitude")
-    Double latitude;
+    val latitude: Double,
 
-    @NotNull
     @SerializedName("longitude")
-    Double longitude;
+    val longitude: Double,
 
-    @Nullable
     @SerializedName("altitude")
-    Double altitude;
+    val altitude: Double?,
 
-    @NotNull
     @SerializedName("accuracy")
-    Double accuracy;
+    val accuracy: Double,
 
-    @Nullable
     @SerializedName("altitudeAccuracy")
-    Double altitudeAccuracy;
+    val altitudeAccuracy: Double?,
 
-    @Nullable
     @SerializedName("heading")
-    Double heading;
+    val heading: Double?,
 
-    @Nullable
     @SerializedName("speed")
-    Double speed;
+    val speed: Double?,
 
-    @NotNull
     @SerializedName("timestamp")
-    Double timestamp;
-}
+    val timestamp: Double
+)

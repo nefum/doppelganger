@@ -12,6 +12,12 @@ import path from "path";
 
 const apksDir = path.resolve(findUpSync("package.json")!, "../android"); // may be called from any directory
 
+const PROTECTED_PACKAGES = [
+  "xyz.regulad.pheidippides.locate",
+  "xyz.regulad.pheidippides.notify",
+  // "com.rom1v.sndcpy", // we don't want to lock this one, sndcpy handles its own installation/uninstallation externally
+];
+
 async function getInstalledVersionOfPackageOnClient(
   adbClient: RobustClient,
   packageName: string,
@@ -24,6 +30,11 @@ async function getInstalledVersionOfPackageOnClient(
   return BigInt(androidVersionRet.split("=")[1].split(" ")[0]);
 }
 
+/**
+ * Performs special setup and starting for certain packages, mainly internal modules.
+ * @param adbClient
+ * @param packageName
+ */
 async function doSpecialSetupAndStarting(
   adbClient: RobustClient,
   packageName: string,
@@ -56,7 +67,79 @@ async function doSpecialSetupAndStarting(
     await adbClient
       .shell(`appops set ${packageName} android:mock_location allow`)
       .then(readFullStreamIntoBuffer);
+  } else if (packageName === "xyz.regulad.pheidippides.administrate") {
+    await adbClient
+      .shell(
+        "dpm set-device-owner xyz.regulad.pheidippidies.administrate/.DeviceAdminReceiver",
+      )
+      .then(readFullStreamIntoBuffer)
+      .then((output: Buffer) => output.toString().trim())
+      .then((output) => {
+        if (
+          output.includes(
+            "java.lang.IllegalStateException: Already has an owner",
+          )
+        ) {
+          return; // a-ok
+        } else if (output.includes("Error:")) {
+          throw new Error(output);
+        }
+      });
+
+    for (const packageName of PROTECTED_PACKAGES) {
+      await lockPackageFromUninstall(adbClient, packageName);
+    }
   }
+}
+
+/**
+ * Locks a package from uninstallation.
+ * @param adbClient
+ * @param packageName
+ */
+async function lockPackageFromUninstall(
+  adbClient: RobustClient,
+  packageName: string,
+): Promise<void> {
+  const packageIsInstalled = await adbClient.isInstalled(packageName);
+  const administrateIsInstalled = await adbClient.isInstalled(
+    "xyz.regulad.pheidippides.administrate",
+  );
+
+  if (!packageIsInstalled || !administrateIsInstalled) {
+    return;
+  }
+
+  await adbClient
+    .shell(
+      `am start -a xyz.regulad.pheidippidies.administrate.LOCK_APP -d package:${packageName}`,
+    )
+    .then(readFullStreamIntoBuffer);
+}
+
+/**
+ * Unlocks a package from uninstallation.
+ * @param adbClient
+ * @param packageName
+ */
+async function unlockPackageFromUninstall(
+  adbClient: RobustClient,
+  packageName: string,
+): Promise<void> {
+  const packageIsInstalled = await adbClient.isInstalled(packageName);
+  const administrateIsInstalled = await adbClient.isInstalled(
+    "xyz.regulad.pheidippides.administrate",
+  );
+
+  if (!packageIsInstalled || !administrateIsInstalled) {
+    return;
+  }
+
+  await adbClient
+    .shell(
+      `am start -a xyz.regulad.pheidippidies.administrate.UNLOCK_APP -d package:${packageName}`,
+    )
+    .then(readFullStreamIntoBuffer);
 }
 
 /**
@@ -93,6 +176,11 @@ async function getIsPackageDebug(
   );
 }
 
+/**
+ * Grants all permissions requested in the manifest of a package
+ * @param adbClient
+ * @param manifest
+ */
 async function grantAllPermissionsOfPackage(
   adbClient: RobustClient,
   manifest: ManifestObject,
@@ -114,8 +202,17 @@ async function grantAllPermissionsOfPackage(
   await Promise.all(requestedPermissions);
 }
 
-// NOTE: if we want to protect a Phedippides module from uninstallation, we need to either have some app installed as a device manager or set it as a manager.
-// TODO: best solution: create a device manager app that is installed on the device and can manage the other apps
+/**
+ * Forfeits device ownership of the device. This is a special case for the administrate app, enabling it to be uninstalled.
+ * @param adbClient
+ */
+async function forfeitDeviceOwnership(adbClient: RobustClient): Promise<void> {
+  await adbClient
+    .shell(
+      "am start -n xyz.regulad.pheidippidies.administrate/.ForfeitAdminActivity",
+    )
+    .then(readFullStreamIntoBuffer);
+}
 
 /**
  * Determines if a package needs installation or installation by querying the device for the current installed version
@@ -142,6 +239,28 @@ async function determineIfPackageNeedsInstallation(
 }
 
 /**
+ * Removes all safeguards for a package, such as device ownership or uninstall locks
+ * @param adbClient
+ * @param packageName
+ */
+async function removeSafeguards(
+  adbClient: RobustClient,
+  packageName: string,
+): Promise<void> {
+  if (packageName === "xyz.regulad.pheidippides.administrate") {
+    await forfeitDeviceOwnership(adbClient).catch((e) => {
+      console.error("Failed to forfeit device ownership, continuing", e);
+      Sentry.captureException(e);
+    });
+  } else if (packageName in PROTECTED_PACKAGES) {
+    await unlockPackageFromUninstall(adbClient, packageName).catch((e) => {
+      console.error("Failed to unlock package, continuing", packageName, e);
+      Sentry.captureException(e);
+    });
+  }
+}
+
+/**
  * Attempts to uninstall a package completely and clear any storage. If the package is not installed, this will fail silently.
  * @param adbClient
  * @param packageName
@@ -154,6 +273,9 @@ async function uninstallPackageCompletely(
   if (packageIsInstalled) {
     return;
   }
+
+  await removeSafeguards(adbClient, packageName);
+
   await adbClient.uninstall(packageName);
   await adbClient
     .shell(`pm uninstall ${packageName}`)
@@ -197,7 +319,8 @@ async function installOrUpdateApkAndGrantAllPermissions(
         return true;
       },
     );
-    if (appIsDebug)
+
+    if (appIsDebug) {
       await uninstallPackageCompletely(adbClient, packageName).catch((e) => {
         console.error(
           "Failed to uninstall package, continuing",
@@ -206,6 +329,9 @@ async function installOrUpdateApkAndGrantAllPermissions(
         );
         Sentry.captureException(e);
       });
+    }
+
+    await removeSafeguards(adbClient, packageName);
     await adbClient.install(apkPath);
     await grantAllPermissionsOfPackage(adbClient, manifest);
   }

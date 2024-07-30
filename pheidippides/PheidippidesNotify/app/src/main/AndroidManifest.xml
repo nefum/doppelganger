@@ -24,8 +24,6 @@
                 android:turnScreenOn="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -38,7 +36,7 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-    
+
     <!-- Required: set your sentry.io project identifier (DSN) -->
     <meta-data android:name="io.sentry.dsn" android:value="https://5b094f934cdadae555ec8545ae3bd4cf@o4507672050925568.ingest.us.sentry.io/4507672052695040" />
 

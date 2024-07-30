@@ -1,0 +1,17 @@
+<!-- res/xml/device_admin_policies.xml -->
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-policies>
+        <!-- This policy is required to block uninstallation -->
+        <disable-uninstall />
+
+        <!-- Other policies you might want to include: -->
+        <!-- <limit-password /> -->
+        <!-- <watch-login /> -->
+        <!-- <reset-password /> -->
+        <!-- <force-lock /> -->
+        <!-- <wipe-data /> -->
+        <!-- <expire-password /> -->
+        <!-- <encrypted-storage /> -->
+        <!-- <disable-camera /> -->
+    </uses-policies>
+</device-admin>

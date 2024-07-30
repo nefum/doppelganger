@@ -14,16 +14,31 @@
             android:theme="@style/Theme.Transparent"
             tools:targetApi="31"
             android:usesCleartextTraffic="true">
-        <activity
-                android:name=".MainActivity"
-                android:exported="true"
-                android:theme="@style/Theme.Transparent"
-                android:showWhenLocked="true"
-                android:turnScreenOn="true">
+        <receiver
+                android:name=".DeviceAdminReceiver"
+                android:permission="android.permission.BIND_DEVICE_ADMIN"
+                android:exported="true">
+            <meta-data
+                    android:name="android.app.device_admin"
+                    android:resource="@xml/device_admin_policies" />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+        <activity android:name=".ForfeitAdminActivity" android:exported="true" />
+        <activity android:name=".LockAppActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="xyz.regulad.pheidippidies.administrate.LOCK_APP" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".UnlockAppActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="xyz.regulad.pheidippidies.administrate.UNLOCK_APP" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
             </intent-filter>
         </activity>
 

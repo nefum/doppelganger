@@ -377,9 +377,27 @@ const OneshotDeviceClient = forwardRef<
   // location providing
   useEffect(() => {
     async function locationCallback(position: GeolocationPosition) {
+      // this does not destructure properly for a reason unbeknownst to me
+      const {
+        latitude,
+        longitude,
+        altitude,
+        accuracy,
+        altitudeAccuracy,
+        heading,
+        speed,
+      } = position.coords;
+      const timestamp = position.timestamp;
+
       const locationPayload: LocationPutSendType = {
-        ...position.coords,
-        timestamp: position.timestamp,
+        latitude,
+        longitude,
+        altitude,
+        accuracy,
+        altitudeAccuracy,
+        heading,
+        speed,
+        timestamp,
       };
 
       let response: Response;
@@ -397,7 +415,6 @@ const OneshotDeviceClient = forwardRef<
         Sentry.captureException(e);
         return;
       }
-
       let responseJson: LocationPutReturnType;
       try {
         responseJson = await response.json();
@@ -420,7 +437,8 @@ const OneshotDeviceClient = forwardRef<
         case error.PERMISSION_DENIED:
           toast({
             title: "Location Permission Denied",
-            description: "Please enable location services to use this feature.",
+            description:
+              "Location passthrough will be disabled until you enable location access.",
           });
           break;
         case error.POSITION_UNAVAILABLE:
