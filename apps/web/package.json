@@ -77,6 +77,7 @@
     "ajv-draft-04": "^1.0.0",
     "ajv-formats": "^3.0.1",
     "apks": "^1.0.0",
+    "async-lock": "^1.4.1",
     "buffer": "^6.0.3",
     "bufferutil": "^4.0.8",
     "class-variance-authority": "^0.7.0",

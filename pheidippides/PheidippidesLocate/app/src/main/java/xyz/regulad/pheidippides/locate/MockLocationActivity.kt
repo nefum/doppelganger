@@ -2,95 +2,111 @@ package xyz.regulad.pheidippides.locate
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
 import android.location.provider.ProviderProperties
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Settings
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import io.sentry.Sentry
 
 class MockLocationActivity : Activity() {
     private lateinit var locMgr: LocationManager
-    private val providerName = LocationManager.GPS_PROVIDER
     private val deserializer = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (!checkPermissions()) {
+            val exception = SecurityException("Mock location permission not granted")
+            Log.e(TAG, exception.message, exception)
+            Sentry.captureException(exception)
+            finish()
+            return
+        }
+
         locMgr = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        val incomingLocationString = intent.getStringExtra("LOCATION_DATA") ?: return finish()
+        val incomingLocationString = intent.getStringExtra("LOCATION_DATA")
+        if (incomingLocationString == null) {
+            val exception = IllegalArgumentException("No location data provided")
+            Log.e(TAG, exception.message, exception)
+            Sentry.captureException(exception)
+            finish()
+            return
+        }
 
         val incomingLocation = try {
             deserializer.fromJson(incomingLocationString, LocationData::class.java)
         } catch (e: JsonSyntaxException) {
-            return finish();
+            Log.e(TAG, "Failed to parse location data", e)
+            Sentry.captureException(e)
+            finish()
+            return
         }
 
         Log.d(TAG, "Received location: ${incomingLocation.latitude}, ${incomingLocation.longitude}")
 
-        // lazily add the test provider if it doesn't exist
+        try {
+            addTestProvider()
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Failed to add test provider", e)
+            Sentry.captureException(e)
+            finish()
+            return
+        }
+
+        val newLocation = createMockLocation(incomingLocation)
+
+        // Start or update the foreground service
+        val serviceIntent = Intent(this, MockLocationForegroundService::class.java).apply {
+            action = MockLocationForegroundService.ACTION_START_SERVICE
+            putExtra(MockLocationForegroundService.EXTRA_LOCATION, newLocation)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+
+        // Finish the activity after starting the service
+        finish()
+    }
+
+    private fun checkPermissions(): Boolean {
+        return Settings.Secure.getString(contentResolver, Settings.Secure.ALLOW_MOCK_LOCATION) == "1"
+    }
+
+    private fun addTestProvider() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             locMgr.addTestProvider(
-                providerName,
-                false,
-                false,
-                false,
-                false,
-                false, // cannot always be guaranteed
-                false, // cannot always be guaranteed
-                false, // cannot always be guaranteed
+                MockLocationForegroundService.PROVIDER_NAME,
+                false, false, false, false, false, false, false,
                 ProviderProperties.POWER_USAGE_LOW,
                 ProviderProperties.ACCURACY_FINE
             )
         } else {
             locMgr.addTestProvider(
-                providerName,
-                false,
-                false,
-                false,
-                false,
-                false, // cannot always be guaranteed
-                false, // cannot always be guaranteed
-                false, // cannot always be guaranteed
+                MockLocationForegroundService.PROVIDER_NAME,
+                false, false, false, false, false, false, false,
                 android.location.Criteria.POWER_LOW,
                 android.location.Criteria.ACCURACY_FINE
             )
         }
-
-        val newLocation = Location(LocationManager.GPS_PROVIDER)
-
-        newLocation.latitude = incomingLocation.latitude;
-        newLocation.longitude = incomingLocation.longitude;
-        newLocation.accuracy = incomingLocation.accuracy.toFloat(); // shave some precision
-
-        // extra attribute like altitude, speed, & bearing are not included here because even though we can get them
-        // from the user agent (browser), they are not always available and have to be declared available in advance
-
-        newLocation.time = incomingLocation.timestamp.toLong()
-        newLocation.elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
-
-        Log.d(TAG, "Setting mock location: ${newLocation.latitude}, ${newLocation.longitude}")
-
-
-        // no harm in updating the provider if it's already enabled
-        locMgr.setTestProviderEnabled(providerName, true)
-
-        locMgr.setTestProviderLocation(providerName, newLocation)
-
-        // Finish the activity after setting the mock location
-        finish()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        try {
-            locMgr.removeTestProvider(LocationManager.GPS_PROVIDER)
-        } catch (e: IllegalArgumentException) {
-            // Provider doesn't exist
+    private fun createMockLocation(incomingLocation: LocationData): Location {
+        return Location(MockLocationForegroundService.PROVIDER_NAME).apply {
+            latitude = incomingLocation.latitude
+            longitude = incomingLocation.longitude
+            accuracy = incomingLocation.accuracy.toFloat()
+            time = incomingLocation.timestamp.toLong()
+            elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
         }
     }
 

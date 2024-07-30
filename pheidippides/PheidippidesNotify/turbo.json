@@ -2,10 +2,13 @@
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
   "tasks": {
+    "clean": {
+      "cache": false
+    },
     "build": {
       "outputs": ["app/build/**", "build/**"],
       "cache": true,
-      "dependsOn": [],
+      "dependsOn": ["clean"],
       "inputs": [
         "app/src/**/*.java",
         "app/src/**/*.xml",
@@ -18,7 +21,7 @@
     "lint": {
       "outputs": ["app/build/reports/**"],
       "cache": true,
-      "dependsOn": [],
+      "dependsOn": ["clean"],
       "inputs": [
         "app/src/**/*.java",
         "app/src/**/*.xml",
@@ -30,7 +33,7 @@
     "test": {
       "outputs": ["app/build/test-results/**"],
       "cache": true,
-      "dependsOn": [],
+      "dependsOn": ["clean"],
       "inputs": [
         "app/src/**/*.java",
         "app/src/test/**/*.java",

@@ -6,6 +6,7 @@ import ApkReader, { ManifestObject } from "adbkit-apkreader";
 import RobustClient from "%/adb/robust-client.ts";
 import { BASE_ORIGIN } from "%/constants.ts";
 import { resolveOrDefaultValue } from "%/utils/promise-utils.ts";
+import AsyncLock from "async-lock";
 import { findUpSync } from "find-up";
 import { globby } from "globby";
 import path from "path";
@@ -17,6 +18,8 @@ const PROTECTED_PACKAGES = [
   "xyz.regulad.pheidippides.notify",
   // "com.rom1v.sndcpy", // we don't want to lock this one, sndcpy handles its own installation/uninstallation externally
 ];
+
+const thisProcessInstallLock = new AsyncLock();
 
 async function getInstalledVersionOfPackageOnClient(
   adbClient: RobustClient,
@@ -70,7 +73,7 @@ async function doSpecialSetupAndStarting(
   } else if (packageName === "xyz.regulad.pheidippides.administrate") {
     await adbClient
       .shell(
-        "dpm set-device-owner xyz.regulad.pheidippidies.administrate/.DeviceAdminReceiver",
+        "dpm set-device-owner xyz.regulad.pheidippides.administrate/.DeviceAdminReceiver",
       )
       .then(readFullStreamIntoBuffer)
       .then((output: Buffer) => output.toString().trim())
@@ -112,7 +115,7 @@ async function lockPackageFromUninstall(
 
   await adbClient
     .shell(
-      `am start -a xyz.regulad.pheidippidies.administrate.LOCK_APP -d package:${packageName}`,
+      `am start -a xyz.regulad.pheidippides.administrate/.LOCK_APP -d package:${packageName}`,
     )
     .then(readFullStreamIntoBuffer);
 }
@@ -137,7 +140,7 @@ async function unlockPackageFromUninstall(
 
   await adbClient
     .shell(
-      `am start -a xyz.regulad.pheidippidies.administrate.UNLOCK_APP -d package:${packageName}`,
+      `am start -a xyz.regulad.pheidippides.administrate/.UNLOCK_APP -d package:${packageName}`,
     )
     .then(readFullStreamIntoBuffer);
 }
@@ -154,7 +157,10 @@ async function getIsPackageDebug(
   // prod dympsys: https://gist.github.com/regulad/48c4e192a9ad065ae5c5db8e9b209141
   //     flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
 
-  if (packageName === "com.android.webview") {
+  if (
+    packageName === "com.android.webview" ||
+    packageName.startsWith("xyz.regulad.pheidippides")
+  ) {
     // for systems that have webview, the default webview may be installed with debug keys if the aosp build is debuggable
     // we are writing the chrome webview over it, so we will need to uninstall the default webview
     return true;
@@ -332,7 +338,19 @@ async function installOrUpdateApkAndGrantAllPermissions(
     }
 
     await removeSafeguards(adbClient, packageName);
-    await adbClient.install(apkPath);
+
+    // interesting node: without a stream, this will copy the app-debug.apk file to the device and then install it
+    // now, there are multiple app-debug.apk files at the same time that will attempt to install at the same time
+    // to prevent this, we will be using async-lock with the key of the apkPath and the device id
+    const adbFileName = path.basename(apkPath);
+
+    await thisProcessInstallLock.acquire(
+      `${adbFileName}-${adbClient.serial}`,
+      async () => {
+        await adbClient.install(apkPath);
+      },
+    );
+
     await grantAllPermissionsOfPackage(adbClient, manifest);
   }
 
