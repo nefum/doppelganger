@@ -58,7 +58,11 @@ export const metadata = {
           items: [MAX_DEVICES_FREE, MAX_DEVICES_PLUS, MAX_DEVICES_PRO],
         },
         {
-          text: "Device Types Available",
+          text: (
+            <Link className="shadcn-link" href="/types">
+              Device Types Available
+            </Link>
+          ),
           items: ["Limited", "Limited", "All"],
         },
         {
