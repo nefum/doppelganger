@@ -6,12 +6,12 @@ import { ReactNode } from "react";
 import { BiCheck } from "react-icons/bi";
 
 type Feature = {
-  text: string;
+  text: ReactNode;
   items: React.ReactNode[];
 };
 
 type FeatureCategory = {
-  title?: string;
+  title?: ReactNode;
   features: Feature[];
 };
 
