@@ -5,7 +5,9 @@ cat > .git/hooks/pre-commit << EOL
 #!/bin/sh
 
 echo "Running formatter..."
-pnpm format || exit 1
+if pnpm format --check | grep -q "Files were formatted"; then
+  exit 1
+fi
 
 echo "Running type check, lint, and test..."
 turbo type-check lint test || exit 1
