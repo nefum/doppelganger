@@ -42,9 +42,7 @@ RUN pnpm run db:generate
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_RELEASE
 ENV SENTRY_ORG=nefum
-#ENV SENTRY_PROJECT=doppelganger-server
-# currently, the server is not using sentry and is instead instrumented with front
-ENV SENTRY_PROJECT=doppelganger-front
+ENV SENTRY_PROJECT=doppelganger-server
 
 # Build the server-side code
 RUN pnpm run server:build && unset SENTRY_AUTH_TOKEN && unset SENTRY_RELEASE && unset SENTRY_ORG && unset SENTRY_PROJECT
