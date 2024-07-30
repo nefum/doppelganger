@@ -141,12 +141,12 @@ const OneshotDeviceClient = forwardRef<
   useEffect(() => {
     const scrcpyWsUrl = new URL(window.location.href);
     scrcpyWsUrl.protocol = scrcpyWsUrl.protocol === "https:" ? "wss" : "ws";
-    scrcpyWsUrl.pathname = `/devices/${device.id}/scrcpy`;
+    scrcpyWsUrl.pathname = `/api/devices/${device.id}/scrcpy`;
     setScrcpyWsUrlString(scrcpyWsUrl.toString());
 
     const jsmpegWsUrl = new URL(window.location.href);
     jsmpegWsUrl.protocol = jsmpegWsUrl.protocol === "https:" ? "wss" : "ws";
-    jsmpegWsUrl.pathname = `/devices/${device.id}/jsmpeg`;
+    jsmpegWsUrl.pathname = `/api/devices/${device.id}/jsmpeg`;
     setJsmpegWsUrlString(jsmpegWsUrl.toString());
   }, [device.id]);
 

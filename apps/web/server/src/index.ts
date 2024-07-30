@@ -8,12 +8,9 @@ import { parse } from "url";
 import { WebSocketServer } from "ws";
 import {
   audioWsEndpoint,
-  eventsWsEndpoint,
-  kasmVncWsEndpoint,
   scrcpyWsEndpoint,
 } from "./endpoint-regex";
 
-import handleEventStream from "./events/route";
 import { loadEnvironment } from "./load-environment";
 import { handleAudio, handleKasmVNC } from "./wsutils/kasmvnc-route";
 import { handleDeviceStream } from "./wsutils/scrcpy-route";
@@ -66,24 +63,14 @@ app.prepare().then(() => {
       const pathname = request.url!;
 
       const hitsScrcpy = !!pathname.match(scrcpyWsEndpoint);
-      const hitsEvents = !!pathname.match(eventsWsEndpoint);
-      const hitsKasmVnc = !!pathname.match(kasmVncWsEndpoint);
       const hitsAudio = !!pathname.match(audioWsEndpoint);
 
-      const hits = [hitsScrcpy, hitsEvents, hitsKasmVnc, hitsAudio].filter(
-        (hit) => hit,
-      ).length;
-
-      if (hits) {
+      if (hitsScrcpy || hitsAudio) {
         try {
           wss.handleUpgrade(request, socket, head, (ws) => {
             // open the websocket asap, do our processing lazily
             if (hitsScrcpy) {
               handleDeviceStream(request, ws);
-            } else if (hitsEvents) {
-              handleEventStream(request, ws);
-            } else if (hitsKasmVnc) {
-              handleKasmVNC(request, ws);
             } else if (hitsAudio) {
               handleAudio(request, ws);
             }
