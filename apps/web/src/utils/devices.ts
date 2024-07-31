@@ -22,7 +22,10 @@ export function getDevicesForUser(user: User): Promise<Device[]> {
 }
 
 export function getDeviceIsActive(device: Device): boolean {
-  const lastConnectedAt = device.lastConnectedAt ?? new Date();
+  const lastConnectedAt = device.lastConnectedAt;
+  if (!lastConnectedAt) {
+    return false;
+  }
   const shutdownTime = lastConnectedAt.getTime() + DEVICE_ACTIVE_TIMEOUT;
   return Date.now() < shutdownTime;
 }
