@@ -6,12 +6,12 @@ import { getDeviceForId } from "%/device-info/device-info";
 import { bringUpDevice, getIsDeviceRunning } from "%/docker/device-state";
 import { scrcpyWsEndpoint } from "%/endpoint-regex";
 import { createClient } from "%/supabase/ro-server";
+import { retry } from "@lifeomic/attempt";
 import * as Sentry from "@sentry/node";
 import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
 import { attachUpdateListener } from "./attach-update-listener";
 import { createWebSocketProxy } from "./wsproxy";
-import { retry } from "@lifeomic/attempt";
 
 export async function handleDeviceStream(
   req: IncomingMessage,
