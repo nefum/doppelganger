@@ -47,14 +47,18 @@ export async function handleDeviceStream(
   let targetWs: WsWebSocket;
 
   try {
-    try {
-      if (!(await getIsDeviceRunning(deviceInfo))) {
-        await bringUpDevice(deviceInfo); // might take a minute
+    const deviceIsRunning = await getIsDeviceRunning(deviceInfo);
+
+    if (!deviceIsRunning) {
+      try {
+        await retry(async () => {
+          await bringUpDevice(deviceInfo);
+        });
+      } catch (e: unknown) {
+        console.error("error bringing up device", e);
+        Sentry.captureException(e);
+        // do not return
       }
-    } catch (e: unknown) {
-      console.error("error bringing up device", e);
-      Sentry.captureException(e);
-      // do not return
     }
 
     try {

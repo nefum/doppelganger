@@ -62,8 +62,11 @@ export async function bringUpDevice(device: Device): Promise<void> {
       "-d",
     ]);
   } catch (error: any) {
-    Sentry.captureException(error);
-    console.error("Error bringing up docker device:", error.message);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error bringing up docker device:", error.message);
+    } else {
+      throw error;
+    }
   }
   // todo: kinggrand
   doInitialDeviceSetup(device).catch((e) => {
