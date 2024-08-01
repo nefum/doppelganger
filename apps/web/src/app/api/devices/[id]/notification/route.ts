@@ -6,6 +6,7 @@ import { getDeviceIsActive } from "@/utils/devices.ts";
 import getOneSignalClient from "@/utils/onesignal/onesignal-server.ts";
 import * as OneSignal from "@onesignal/node-onesignal";
 import { Device } from "@prisma/client";
+import * as Sentry from "@sentry/node";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -166,13 +167,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  let deviceIsActive: boolean;
+  try {
+    deviceIsActive = getDeviceIsActive(device);
+  } catch (e: unknown) {
+    console.error("error checking if device is active, assuming it isn't", e);
+    Sentry.captureException(e);
+    deviceIsActive = false;
+  }
+
   // we shouldn't send notiifications for system packages or if the device is active
   const shouldSend =
     !doNotBroadcastPackages
       .map((badPkg) => {
         return incomingNotification.packageName.trim().startsWith(badPkg);
       })
-      .some((isBad) => isBad) && !getDeviceIsActive(device);
+      .some((isBad) => isBad) && !deviceIsActive;
 
   if (shouldSend) {
     const destinationNotification =
