@@ -6,6 +6,7 @@ import DeviceClient, {
 import MaxWidthHardlimiter from "@/components/max-width-hardlimiter.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { SimpleTooltip } from "@/components/ui/tooltip.tsx";
+import { useToast } from "@/components/ui/use-toast.ts";
 import type { Device } from "@prisma/client";
 import * as Sentry from "@sentry/nextjs";
 import { clsx } from "clsx";
@@ -332,14 +333,20 @@ export default function DeviceClientWithButtons({
     !optionalKeyboardCapture,
   );
 
+  const { toast } = useToast();
+
   useEffect(() => {
     if (!OneSignal.Notifications.permission) {
       OneSignal.Notifications.requestPermission().catch((e) => {
         console.error("Failed to request notification permission", e);
+        toast({
+          title: "Failed to enable notification passthrough",
+          description: "Try disabling your adblocker",
+        });
         Sentry.captureException(e);
       });
     }
-  }, []);
+  }, [toast]);
 
   return (
     <div className={outerMostClassName}>
