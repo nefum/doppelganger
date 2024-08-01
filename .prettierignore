@@ -10,3 +10,5 @@ apps/web/public/workers/
 apps/web/node_modules/
 apps/web/.next/
 apps/web/src/app/(userland)/(contained)/licenses/licenses.json
+
+**/.idea/

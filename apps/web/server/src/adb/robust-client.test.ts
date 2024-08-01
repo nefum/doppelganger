@@ -26,7 +26,7 @@ describe("ReconnectingAdbDeviceClient", () => {
 
     const apk = "path/to/apk";
     await expect(reconnectingClient.install(apk)).rejects.toThrow(
-      "Timeout waiting for device to connect",
+      "Device is not connected",
     );
   });
 
@@ -34,7 +34,7 @@ describe("ReconnectingAdbDeviceClient", () => {
     jest.spyOn(reconnectingClient, "getIsConnected").mockResolvedValue(false);
 
     await expect(reconnectingClient.reboot()).rejects.toThrow(
-      "Timeout waiting for device to connect",
+      "Device is not connected",
     );
   });
 });

@@ -14,7 +14,7 @@ import {
 import { retry } from "@lifeomic/attempt";
 import { Duplex, Readable } from "node:stream";
 
-export const DEFAULT_ADB_TIMEOUT = 60_000; // 1 minute
+export const DEFAULT_ADB_TIMEOUT = 2 * 60 * 1_000;
 
 type DeviceState = Device["type"];
 
@@ -40,25 +40,24 @@ export default class RobustClient extends DeviceClient {
     await this.client.connect(host, parseInt(port, 10));
   }
 
-  async connectRobust(timeout?: number): Promise<void> {
+  async connectRobust(): Promise<void> {
     // keep trying to run connect until either the timeout is reached or the device is connected
     const startTime = Date.now();
     let connected = await this.getIsConnected();
     if (connected) return;
 
-    while (true) {
-      try {
+    await retry(
+      async () => {
         await this.doConnect();
         connected = await this.getIsConnected();
-        if (connected) break;
-      } catch (e: any) {
-        // ignore and continue loop
-      }
-      if (timeout && Date.now() - startTime > timeout) {
-        throw new Error("Timeout waiting for device to connect");
-      }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
+        if (!connected) {
+          throw new Error(`Device is not connected`);
+        }
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
 
     await this.waitForDevice();
     await this.waitBootComplete();
@@ -77,16 +76,21 @@ export default class RobustClient extends DeviceClient {
    * Get the state (moreso type) of the device after it has been connected
    */
   getStateRuntime(): Promise<"device" | "emulator"> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      const maybeState = await this.getState();
-      if (maybeState === "device" || maybeState === "emulator") {
-        return maybeState;
-      }
-      throw new Error(
-        `Device is not in a connected state, expected device or emulator but got ${maybeState}`,
-      );
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        const maybeState = await this.getState();
+        if (maybeState === "device" || maybeState === "emulator") {
+          return maybeState;
+        }
+        throw new Error(
+          `Device is not in a connected state, expected device or emulator but got ${maybeState}`,
+        );
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   /* overridden methods */
@@ -95,114 +99,184 @@ export default class RobustClient extends DeviceClient {
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   install(apk: string | Readable): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.install(apk);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.install(apk);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   uninstall(packageName: string): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.uninstall(packageName);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.uninstall(packageName);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   shell(command: string | ArrayLike<WithToString>): Promise<Duplex> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.shell(command);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.shell(command);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   isInstalled(packageName: string): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.isInstalled(packageName);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.isInstalled(packageName);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   getProperties(): Promise<Record<string, string>> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.getProperties();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.getProperties();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   getFeatures(): Promise<Features> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.getFeatures();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.getFeatures();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   getDHCPIpAddress(iface?: string): Promise<string> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.getDHCPIpAddress(iface);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.getDHCPIpAddress(iface);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   forward(local: string, remote: string): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.forward(local, remote);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.forward(local, remote);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   listForwards(): Promise<Forward[]> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.listForwards();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.listForwards();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   reverse(remote: string, local: string): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.reverse(remote, local);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.reverse(remote, local);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   listReverses(): Promise<Reverse[]> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.listReverses();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.listReverses();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   reboot(): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.reboot();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.reboot();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   remount(): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.remount();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.remount();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   root(): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.root();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.root();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // async trackJdwp(): Promise<JdwpTracker> {
@@ -212,50 +286,80 @@ export default class RobustClient extends DeviceClient {
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   framebuffer(format?: string): Promise<FramebufferStreamWithMeta> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.framebuffer(format);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.framebuffer(format);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   screencap(): Promise<Duplex> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.screencap();
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.screencap();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   openLocal(path: string): Promise<Duplex> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.openLocal(path);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.openLocal(path);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   openLog(name: string): Promise<Duplex> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.openLog(name);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.openLog(name);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   openTcp(port: number): Promise<Duplex> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.openTcp(port);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.openTcp(port);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   openMonkey(port?: number): Promise<Duplex> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.openMonkey(port);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.openMonkey(port);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // async openLogcat(options?: {
@@ -272,34 +376,54 @@ export default class RobustClient extends DeviceClient {
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   clear(packageName: string): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.clear(packageName);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.clear(packageName);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   installRemote(packagePath: string): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.installRemote(packagePath);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.installRemote(packagePath);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   startActivity(options: StartActivityOptions): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.startActivity(options);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.startActivity(options);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // @ts-expect-error -- promise is assignable to bluebird promise
   startService(options: StartServiceOptions): Promise<boolean> {
-    return retry(async () => {
-      await this.connectRobust(this.timeout);
-      return super.startService(options);
-    });
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.startService(options);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
   }
 
   // async syncService(): Promise<Sync> {

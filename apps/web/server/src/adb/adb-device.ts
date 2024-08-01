@@ -55,17 +55,6 @@ export class AdbDevice {
     this.adbDeviceClient = new RobustClient(this.adbClient, this.udid, timeout);
   }
 
-  /**
-   * Connects to the device using adb. Silently fails if the device is already connected.
-   */
-  connect(): Promise<void> {
-    return this.adbDeviceClient.doConnect();
-  }
-
-  connectRobust(timeout?: number): Promise<void> {
-    return this.adbDeviceClient.connectRobust(timeout);
-  }
-
   getIsConnected(): Promise<boolean> {
     return this.adbDeviceClient.getIsConnected();
   }
