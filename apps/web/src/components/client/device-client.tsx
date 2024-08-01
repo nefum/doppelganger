@@ -297,12 +297,22 @@ const OneshotDeviceClient = forwardRef<
             }
 
             streamClient.sendMessage(
-              new KeyCodeControlMessage(KeyEvent.ACTION_DOWN, keyCode, 0, metaState),
+              new KeyCodeControlMessage(
+                KeyEvent.ACTION_DOWN,
+                keyCode,
+                0,
+                metaState,
+              ),
             );
             await sleep(PASTE_SLEEP_WAIT_TIME_MS);
 
             streamClient.sendMessage(
-              new KeyCodeControlMessage(KeyEvent.ACTION_UP, keyCode, 0, metaState),
+              new KeyCodeControlMessage(
+                KeyEvent.ACTION_UP,
+                keyCode,
+                0,
+                metaState,
+              ),
             );
             await sleep(PASTE_SLEEP_WAIT_TIME_MS);
           }
