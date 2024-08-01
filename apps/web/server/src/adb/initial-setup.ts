@@ -240,6 +240,7 @@ async function determineIfPackageNeedsInstallation(
     const installedVersionCode = await resolveOrDefaultValue(
       getInstalledVersionOfPackageOnClient(adbClient, packageName),
       -1n,
+      false,
     );
     if (installedVersionCode >= newVersionCode) {
       return false;
