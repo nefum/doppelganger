@@ -244,6 +244,9 @@ const OneshotDeviceClient = forwardRef<
 
   // turn on keyboard processing when a key is pressed
   useEffect(() => {
+    // reference: apps/web/src/ws-scrcpy/src/app/googDevice/KeyInputHandler.ts line 13 for handling
+    // does e.preventDefault();
+
     if (!captureKeyboard) {
       if (!scrcpyClientRef.current) {
         return;
@@ -261,7 +264,13 @@ const OneshotDeviceClient = forwardRef<
     }
 
     document.addEventListener("keydown", keydown);
-    return () => document.removeEventListener("keydown", keydown);
+    return () => {
+      document.removeEventListener("keydown", keydown);
+      if (scrcpyClientRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- refs don't change
+        scrcpyClientRef.current.setKeyboardCapture(false);
+      }
+    };
   }, [captureKeyboard]);
 
   const doPaste = useMemo(
@@ -281,42 +290,19 @@ const OneshotDeviceClient = forwardRef<
           // we wait a little between each key press to let the result transmit to the device
           for (const char of text) {
             const [keyCode, needShift] = getKeyEventForChar(char);
+            const metaState = needShift ? KeyEvent.META_SHIFT_ON : 0;
 
             if (keyCode === KeyEvent.KEYCODE_UNKNOWN) {
               continue; // we don't know how to type this character
             }
 
-            if (needShift) {
-              streamClient.sendMessage(
-                new KeyCodeControlMessage(
-                  KeyEvent.ACTION_DOWN,
-                  KeyEvent.KEYCODE_SHIFT_LEFT,
-                  0,
-                  0,
-                ),
-              );
-              await sleep(PASTE_SLEEP_WAIT_TIME_MS);
-            }
-
             streamClient.sendMessage(
-              new KeyCodeControlMessage(KeyEvent.ACTION_DOWN, keyCode, 0, 0),
+              new KeyCodeControlMessage(KeyEvent.ACTION_DOWN, keyCode, 0, metaState),
             );
             await sleep(PASTE_SLEEP_WAIT_TIME_MS);
 
-            if (needShift) {
-              streamClient.sendMessage(
-                new KeyCodeControlMessage(
-                  KeyEvent.ACTION_UP,
-                  KeyEvent.KEYCODE_SHIFT_LEFT,
-                  0,
-                  0,
-                ),
-              );
-              await sleep(PASTE_SLEEP_WAIT_TIME_MS);
-            }
-
             streamClient.sendMessage(
-              new KeyCodeControlMessage(KeyEvent.ACTION_UP, keyCode, 0, 0),
+              new KeyCodeControlMessage(KeyEvent.ACTION_UP, keyCode, 0, metaState),
             );
             await sleep(PASTE_SLEEP_WAIT_TIME_MS);
           }
