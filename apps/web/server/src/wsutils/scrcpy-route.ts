@@ -11,6 +11,7 @@ import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
 import { attachUpdateListener } from "./attach-update-listener";
 import { createWebSocketProxy } from "./wsproxy";
+import { retry } from "@lifeomic/attempt";
 
 export async function handleDeviceStream(
   req: IncomingMessage,
@@ -51,10 +52,21 @@ export async function handleDeviceStream(
         await bringUpDevice(deviceInfo); // might take a minute
       }
     } catch (e: unknown) {
-      // if we can't bring up the device, we can still try to run scrcpy
       console.error("error bringing up device", e);
+      Sentry.captureException(e);
+      // do not return
     }
-    await runScrcpyServerOnDevice(deviceInfo);
+
+    try {
+      await retry(async () => {
+        await runScrcpyServerOnDevice(deviceInfo);
+      });
+    } catch (e: unknown) {
+      console.error("error running scrcpy server", e);
+      Sentry.captureException(e);
+      // do not return
+    }
+
     const wsUrlString = getTargetWsScrcpyUrlForDevice(deviceInfo);
     const wsUrl = new URL(wsUrlString);
     targetWs = await createWebSocketProxy(wsUrl, req, ws);
