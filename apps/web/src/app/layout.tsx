@@ -4,6 +4,7 @@ import GoogleSigninHandlerProvider from "@/components/google/google-signin-handl
 import { NonceProvider } from "@/components/google/nonce-provider.tsx";
 import OneSignalProvider from "@/components/onesignal/one-signal-provider.tsx";
 import ProviderComposer from "@/components/providers.tsx";
+import SourceTracker from "@/components/source-tracker.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
@@ -106,6 +107,9 @@ export default function RootLayout({
           </Suspense>
           <Suspense>
             <Toaster />
+          </Suspense>
+          <Suspense>
+            <SourceTracker />
           </Suspense>
         </ProviderComposer>
         {/*no need for a cookie consent manager yet, we only do business in the us*/}
