@@ -45,8 +45,14 @@ services:
         reservations:
           cpus: "0.1"
           memory: 700M
+    # there is no way to determine the number of fds that a container will use, so we cannot set a reasonable limit.
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
     blkio_config:
       weight: 300 # always gives the orhcestrator priority to disk I/O
+    pids_limit: 2000
   scrcpy:
     # implementation note: this is a custom version of my scrcpy image that only runs sndcpy since scrcpy cannot accept a WS connection while it is already connected to
     image: "ghcr.io/regulad/workspaces-images:sndcpy"
@@ -66,9 +72,13 @@ services:
         reservations:
           cpus: "0.1"
           memory: 200M
+    ulimits:
+      nofile:
+        soft: 256
+        hard: 256
     depends_on:
       - "redroid"
-    # no network limits attached because arbitrary code cannot be run on this container
+    # no network limits attached because arbitrary code cannot be run on this container, hard to predict bandwidth of mpeg audio
     networks:
       - "{{ externalNetworkName }}"
     environment:
@@ -80,22 +90,8 @@ services:
       VNC_PW: "password"
       # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
     blkio_config:
-      weight: 400 # higher than the android, but lower than the orhcestrator
-#  logs: # allows us to see the logs of the device by inspecting into this easily
-#    image: "ghcr.io/regulad/adb-logcat-docker:latest"
-#    hostname: "{{ id }}-logs"
-#    tty: true
-#    stdin_open: true
-#    restart: always
-#    networks:
-#      - "{{ externalNetworkName }}"
-#    environment:
-#      ADB_DEVICE: "{{ id }}-redroid:5555"
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "10m"
-#        max-file: "3"
+      weight: 400 # higher than the android, but lower than the orchestrator
+    pids_limit: 100
 
 networks:
   "{{ externalNetworkName }}":
