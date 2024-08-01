@@ -42,6 +42,7 @@ services:
         limits:
           cpus: "2.0"
           memory: 2G
+          pids: 2000
         reservations:
           cpus: "0.1"
           memory: 700M
@@ -52,7 +53,6 @@ services:
         hard: 16384
     blkio_config:
       weight: 300 # always gives the orhcestrator priority to disk I/O
-    pids_limit: 2000
   scrcpy:
     # implementation note: this is a custom version of my scrcpy image that only runs sndcpy since scrcpy cannot accept a WS connection while it is already connected to
     image: "ghcr.io/regulad/workspaces-images:sndcpy"
@@ -69,6 +69,7 @@ services:
         limits:
           cpus: "0.5"
           memory: 300M
+          pids: 100
         reservations:
           cpus: "0.1"
           memory: 200M
@@ -91,7 +92,6 @@ services:
       # we never plan to connect to this, only use the pulseaudio for audio streaming which doesn't require a password
     blkio_config:
       weight: 400 # higher than the android, but lower than the orchestrator
-    pids_limit: 100
 
 networks:
   "{{ externalNetworkName }}":
