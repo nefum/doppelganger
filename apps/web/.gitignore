@@ -49,3 +49,10 @@ src/app/(userland)/(contained)/licenses/licenses.json
 
 # temporary built android files
 android/*/
+
+# sitemap outputs
+public/robots.txt
+public/sitemap*.xml
+
+# contentlayer
+.contentlayer

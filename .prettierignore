@@ -12,3 +12,4 @@ apps/web/.next/
 apps/web/src/app/(userland)/(contained)/licenses/licenses.json
 
 **/.idea/
+**/.contentlayer/

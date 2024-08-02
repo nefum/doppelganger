@@ -14,12 +14,14 @@
     "allowImportingTsExtensions": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
+      "contentlayer/generated": ["./.contentlayer/generated"],
       "@/*": ["./src/*"],
       "%/*": ["./server/src/*"]
     }
@@ -39,7 +41,8 @@
     "src/pages/**/*.ts",
     "src/utils/**/*.ts",
     "src/*.ts",
-    "src/*.d.ts"
+    "src/*.d.ts",
+    ".contentlayer/generated"
   ],
   "exclude": ["node_modules", ".next", "src/ws-scrcpy/**/*.ts"]
 }

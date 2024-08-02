@@ -17,6 +17,10 @@ export function ConfiguredNavbar() {
           title: "My Devices",
         },
         {
+          url: "/blog",
+          title: "Blog",
+        },
+        {
           url: "/about",
           title: "About Us",
         },

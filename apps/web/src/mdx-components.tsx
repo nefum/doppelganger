@@ -8,6 +8,7 @@ const classesForTypes = {
   h3: "shadcn-h3 shadcn-h-spaced",
   h4: "shadcn-h4 shadcn-h-spaced",
   p: "shadcn-p",
+  a: "shadcn-link",
   blockquote: "shadcn-blockquote",
   table: "shadcn-table",
   "table tr": "shadcn-tr",
@@ -42,7 +43,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <small className={classesForTypes.small}>{children}</small>
     ),
     a: ({ children, href, ...props }) => (
-      <Link href={href!} className="shadcn-link" {...props}>
+      <Link href={href!} className={classesForTypes.a} {...props}>
         {children}
       </Link>
     ),

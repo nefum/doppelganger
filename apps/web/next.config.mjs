@@ -1,6 +1,7 @@
 // @ts-check
 import withMdxFactory from "@next/mdx";
 import { withSentryConfig } from "@sentry/nextjs";
+import { withContentlayer } from "next-contentlayer";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
@@ -148,4 +149,6 @@ const mdxConfig = withMdxFactory({
   },
 })(sentryConfig);
 
-export default mdxConfig;
+const contentlayerConfig = withContentlayer(mdxConfig);
+
+export default contentlayerConfig;
