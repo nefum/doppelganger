@@ -25,7 +25,7 @@ const ONE_SIGNAL_PARAMS = {
   notifyButton: {
     enable: false, // the default notification icon looks so scummy
   },
-  allowLocalhostAsSecureOrigin: true,
+  allowLocalhostAsSecureOrigin: process.env.NODE_ENV !== "production",
 };
 
 const OneSignalContext = createContext<boolean>(false);

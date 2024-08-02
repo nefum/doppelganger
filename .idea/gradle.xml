@@ -1,29 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option
-          name="externalProjectPath"
-          value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate"
-        />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate" />
         <option name="modules">
           <set>
-            <option
-              value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate"
-            />
-            <option
-              value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app"
-            />
+            <option value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate" />
+            <option value="$PROJECT_DIR$/pheidippides/PheidippidesAdministrate/app" />
           </set>
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option
-          name="externalProjectPath"
-          value="$PROJECT_DIR$/pheidippides/PheidippidesLocate"
-        />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippides/PheidippidesLocate" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/pheidippides/PheidippidesLocate" />
@@ -32,10 +22,7 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option
-          name="externalProjectPath"
-          value="$PROJECT_DIR$/pheidippides/PheidippidesNotify"
-        />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippides/PheidippidesNotify" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/pheidippides/PheidippidesNotify" />
@@ -44,16 +31,11 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option
-          name="externalProjectPath"
-          value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify"
-        />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify" />
-            <option
-              value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify/app"
-            />
+            <option value="$PROJECT_DIR$/pheidippidies/PheidippidesNotify/app" />
           </set>
         </option>
       </GradleProjectSettings>
