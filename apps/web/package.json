@@ -15,6 +15,7 @@
     "workers:build": "rimraf -rf public/workers/ && webpack --config workers/webpack.config.cjs --mode production",
     "licenses:check": "rimraf \"src/app/(userland)/(contained)/licenses/licenses.json\" && license-checker --production --json --out \"src/app/(userland)/(contained)/licenses/licenses.json\"",
     "build": "next build",
+    "content:build": "contentlayer build",
     "postbuild": "next-sitemap --config next-sitemap.config.mjs",
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "lint": "next lint --max-warnings 0",
