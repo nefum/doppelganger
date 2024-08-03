@@ -1,5 +1,6 @@
 "use client";
 
+import { useSupabaseGoogleAnalytics } from "@/components/google/google-analytics-hook.ts";
 import { useHashedNonce } from "@/components/google/hashed-nonce.ts";
 import { createClient } from "@/utils/supabase/client.ts";
 import Script from "next/script";
@@ -19,6 +20,7 @@ function useIsSignedIn(): boolean | null {
 }
 
 export default function GoogleOneTap() {
+  useSupabaseGoogleAnalytics();
   const hashedNonce = useHashedNonce();
   const userIsSignedIn = useIsSignedIn();
 

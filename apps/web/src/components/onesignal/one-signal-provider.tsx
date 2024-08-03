@@ -61,7 +61,29 @@ export default function OneSignalProvider({
   const supabaseClient = createClient(); // auto-singleton
 
   useEffect(() => {
-    OneSignal.init(ONE_SIGNAL_PARAMS)
+    const subscriptionPromise = OneSignal.init(ONE_SIGNAL_PARAMS)
+      .catch((error: any) => {
+        // https://nefum.sentry.io/issues/5644485008/?project=4507558058721280&query=is%3Aarchived+onesignal&referrer=issue-stream&statsPeriod=14d&stream_index=0
+        const alreadyInitalizedMessage = "OneSignal is already initialized.";
+
+        if (
+          typeof error === "string" &&
+          error.includes(alreadyInitalizedMessage)
+        ) {
+          console.warn(error);
+          return;
+        } else if (
+          error instanceof Error &&
+          error.message.includes(alreadyInitalizedMessage)
+        ) {
+          console.warn(error);
+          return;
+        }
+
+        Sentry.captureException(error);
+        console.error("OneSignal initialization failed:", error);
+        throw error;
+      })
       .then(() => {
         setOneSignalInitialized(true);
 
@@ -72,7 +94,9 @@ export default function OneSignalProvider({
         });
 
         // making this async makes supabase methods unavailable until these calls are done, don't do that
-        supabaseClient.auth.onAuthStateChange((event, session) => {
+        const {
+          data: { subscription },
+        } = supabaseClient.auth.onAuthStateChange((event, session) => {
           if (event === "SIGNED_OUT") {
             OneSignal.logout().catch((error) => {
               Sentry.captureException(error);
@@ -94,19 +118,18 @@ export default function OneSignalProvider({
             console.error("OneSignal update failed:", error);
           });
         });
-      })
-      .catch((error: any) => {
-        if (
-          error.message &&
-          error.message === "OneSignal is already initialized."
-        ) {
-          return; // this failure is inconsequential
-        }
 
-        Sentry.captureException(error);
-        console.error("OneSignal initialization failed:", error);
+        return subscription;
       });
-  });
+
+    return () => {
+      subscriptionPromise.then((subscription) => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      });
+    };
+  }, [supabaseClient]);
 
   return (
     <OneSignalContext.Provider value={oneSignalInitialized}>
