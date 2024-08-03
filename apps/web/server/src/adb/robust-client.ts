@@ -11,10 +11,19 @@ import {
   type StartServiceOptions,
   type WithToString,
 } from "@devicefarmer/adbkit";
+/* illegal imports */
+import type Logcat from "@devicefarmer/adbkit-logcat";
+import type JdwpTracker from "@devicefarmer/adbkit/dist/src/adb/jdwptracker";
+import type ProcStat from "@devicefarmer/adbkit/dist/src/adb/proc/stat";
+import type Sync from "@devicefarmer/adbkit/dist/src/adb/sync";
+import type Entry from "@devicefarmer/adbkit/dist/src/adb/sync/entry";
+import type PullTransfer from "@devicefarmer/adbkit/dist/src/adb/sync/pulltransfer";
+import type Stats from "@devicefarmer/adbkit/dist/src/adb/sync/stats";
+/* end illegal imports */
 import { retry } from "@lifeomic/attempt";
 import { Duplex, Readable } from "node:stream";
 
-export const DEFAULT_ADB_TIMEOUT = 2 * 60 * 1_000;
+export const DEFAULT_ADB_TIMEOUT = 5 * 60 * 1_000; // so much time 🔥
 
 type DeviceState = Device["type"];
 
@@ -97,7 +106,6 @@ export default class RobustClient extends DeviceClient {
 
   // we can't define getState because it would cause a recursive call
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   install(apk: string | Readable): Promise<boolean> {
     return retry(
       async () => {
@@ -110,7 +118,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   uninstall(packageName: string): Promise<boolean> {
     return retry(
       async () => {
@@ -123,7 +130,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   shell(command: string | ArrayLike<WithToString>): Promise<Duplex> {
     return retry(
       async () => {
@@ -136,7 +142,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   isInstalled(packageName: string): Promise<boolean> {
     return retry(
       async () => {
@@ -149,7 +154,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   getProperties(): Promise<Record<string, string>> {
     return retry(
       async () => {
@@ -162,7 +166,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   getFeatures(): Promise<Features> {
     return retry(
       async () => {
@@ -175,7 +178,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   getDHCPIpAddress(iface?: string): Promise<string> {
     return retry(
       async () => {
@@ -188,7 +190,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   forward(local: string, remote: string): Promise<boolean> {
     return retry(
       async () => {
@@ -201,7 +202,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   listForwards(): Promise<Forward[]> {
     return retry(
       async () => {
@@ -214,7 +214,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   reverse(remote: string, local: string): Promise<boolean> {
     return retry(
       async () => {
@@ -227,7 +226,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   listReverses(): Promise<Reverse[]> {
     return retry(
       async () => {
@@ -240,7 +238,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   reboot(): Promise<boolean> {
     return retry(
       async () => {
@@ -253,7 +250,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   remount(): Promise<boolean> {
     return retry(
       async () => {
@@ -266,7 +262,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   root(): Promise<boolean> {
     return retry(
       async () => {
@@ -279,12 +274,18 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // async trackJdwp(): Promise<JdwpTracker> {
-  //   await this.connectRobust(this.timeout);
-  //   return super.trackJdwp();
-  // }
+  trackJdwp(): Promise<JdwpTracker> {
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.trackJdwp();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
+  }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   framebuffer(format?: string): Promise<FramebufferStreamWithMeta> {
     return retry(
       async () => {
@@ -297,7 +298,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   screencap(): Promise<Duplex> {
     return retry(
       async () => {
@@ -310,7 +310,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   openLocal(path: string): Promise<Duplex> {
     return retry(
       async () => {
@@ -323,7 +322,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   openLog(name: string): Promise<Duplex> {
     return retry(
       async () => {
@@ -336,7 +334,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   openTcp(port: number): Promise<Duplex> {
     return retry(
       async () => {
@@ -349,7 +346,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   openMonkey(port?: number): Promise<Duplex> {
     return retry(
       async () => {
@@ -362,19 +358,30 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // async openLogcat(options?: {
-  //   clear?: boolean;
-  // }): Promise<Logcat> {
-  //   await this.connectRobust(this.timeout);
-  //   return super.openLogcat(options);
-  // }
+  openLogcat(options?: { clear?: boolean }): Promise<Logcat> {
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.openLogcat(options);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
+  }
 
-  // async openProcStat(): Promise<ProcStat> {
-  //   await this.connectRobust(this.timeout);
-  //   return super.openProcStat();
-  // }
+  openProcStat(): Promise<ProcStat> {
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.openProcStat();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
+  }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   clear(packageName: string): Promise<boolean> {
     return retry(
       async () => {
@@ -387,7 +394,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   installRemote(packagePath: string): Promise<boolean> {
     return retry(
       async () => {
@@ -400,7 +406,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   startActivity(options: StartActivityOptions): Promise<boolean> {
     return retry(
       async () => {
@@ -413,7 +418,6 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // @ts-expect-error -- promise is assignable to bluebird promise
   startService(options: StartServiceOptions): Promise<boolean> {
     return retry(
       async () => {
@@ -426,25 +430,51 @@ export default class RobustClient extends DeviceClient {
     );
   }
 
-  // async syncService(): Promise<Sync> {
-  //   await this.connectRobust(this.timeout);
-  //   return super.syncService();
-  // }
+  syncService(): Promise<Sync> {
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.syncService();
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
+  }
 
-  // async stat(path: string): Promise<Stats> {
-  //   await this.connectRobust(this.timeout);
-  //   return super.stat(path);
-  // }
+  stat(path: string): Promise<Stats> {
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.stat(path);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
+  }
 
-  // async readdir(path: string): Promise<Entry[]> {
-  //   await this.connectRobust(this.timeout);
-  //   return super.readdir(path);
-  // }
+  readdir(path: string): Promise<Entry[]> {
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.readdir(path);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
+  }
 
-  // async pull(path: string): Promise<PullTransfer> {
-  //   await this.connectRobust(this.timeout);
-  //   return super.pull(path);
-  // }
-
-  // no tcpip or usb
+  pull(path: string): Promise<PullTransfer> {
+    return retry(
+      async () => {
+        await this.connectRobust();
+        return super.pull(path);
+      },
+      {
+        timeout: this.timeout,
+      },
+    );
+  }
 }
