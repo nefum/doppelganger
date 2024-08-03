@@ -22,10 +22,26 @@ export function getDevicesForUser(user: User): Promise<Device[]> {
 }
 
 export function getDeviceIsActive(device: Device): boolean {
-  const lastConnectedAt = device.lastConnectedAt;
+  const lastConnectedAt: Date | null = device.lastConnectedAt;
+
   if (!lastConnectedAt) {
     return false;
   }
-  const shutdownTime = lastConnectedAt.getTime() + DEVICE_ACTIVE_TIMEOUT;
+
+  // Ensure lastConnectedAt is a Date object
+  // ignore that this seems to be redundant
+  const lastConnectedDate =
+    lastConnectedAt instanceof Date
+      ? lastConnectedAt
+      : new Date(lastConnectedAt);
+
+  const timestamp = lastConnectedDate.getTime();
+
+  // Check if the conversion was successful
+  if (isNaN(timestamp)) {
+    throw new Error("Invalid lastConnectedAt value");
+  }
+
+  const shutdownTime = timestamp + DEVICE_ACTIVE_TIMEOUT;
   return Date.now() < shutdownTime;
 }
