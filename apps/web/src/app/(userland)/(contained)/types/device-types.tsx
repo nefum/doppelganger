@@ -6,6 +6,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
+import "array.prototype.toreversed/auto";
+import "array.prototype.tosorted/auto";
 import { ReactNode } from "react";
 import { FaAndroid } from "react-icons/fa6";
 import { LuCrown } from "react-icons/lu";
