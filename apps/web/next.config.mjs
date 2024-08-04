@@ -37,6 +37,18 @@ const nextConfig = {
         ],
       },
       {
+        source: "/premium",
+        destination: "/subscribe",
+        permanent: true,
+        has: [
+          {
+            type: "query",
+            key: "redirect",
+            value: "premium",
+          },
+        ],
+      },
+      {
         source: "/dashboard",
         destination: "/devices",
         permanent: true,
@@ -135,10 +147,6 @@ const sentryConfig = withSentryConfig(nextConfig, {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
-
-  env: {
-    NODE_ENV: process.env.NODE_ENV,
-  },
 });
 
 const mdxConfig = withMdxFactory({

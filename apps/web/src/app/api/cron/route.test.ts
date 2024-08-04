@@ -1,10 +1,8 @@
 // route.test.ts
 import prisma from "%/database/prisma.ts";
 import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
-import {
-  getSubscriptionStatus,
-  SubscriptionStatus,
-} from "@/utils/subscriptions.ts";
+import { getSubscriptionStatus } from "@/utils/stripe/utils.ts";
+import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { GET } from "./route";
 
 jest.mock("%/database/prisma.ts", () => ({
@@ -19,8 +17,7 @@ jest.mock("next/server", () => ({
   },
 }));
 
-jest.mock("@/utils/subscriptions.ts", () => ({
-  ...jest.requireActual("@/utils/subscriptions.ts"),
+jest.mock("@/utils/stripe/utils.ts", () => ({
   getSubscriptionStatus: jest.fn(),
 }));
 

@@ -52,3 +52,33 @@ model Device {
   @@index([ownerId, id])
   @@map(name: "devices")
 }
+
+model StripeCustomer {
+  id               String         @id @default(cuid())
+  supabaseUserId   String         @unique
+  stripeCustomerId String         @unique
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  Subscription     Subscription[]
+
+  @@index([supabaseUserId, stripeCustomerId])
+  @@map("stripe_customers")
+}
+
+// Optionally, you might want to track subscriptions as well
+model Subscription {
+  id                   String   @id @default(cuid())
+  stripeCustomerId     String
+  stripePriceId        String
+  stripeSubscriptionId String   @unique
+  status               String
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  customer StripeCustomer @relation(fields: [stripeCustomerId], references: [stripeCustomerId])
+
+  @@index([stripeCustomerId, stripeSubscriptionId])
+  @@map("subscriptions")
+}

@@ -40,3 +40,12 @@ export const DEVICE_ACTIVE_TIMEOUT = 1_000 * 60 * 5; // 5 minutes
 export const VOLUME_SIZE_LIMIT_BYTES = 17_179_869_184; // 16 GiB
 export const CPU_LIMIT_CPUS = 2.0;
 export const MEMORY_LIMIT_BYTES = 2_147_483_648; // 2 GiB
+
+export const PLUS_STRIPE_PRODUCT =
+  process.env.NODE_ENV === "production"
+    ? "prod_Qb3rH6MR0jBBiX"
+    : "price_1PjrmsJ5A6f1xaSssdFx6I3Y";
+export const PRO_STRIPE_PRODUCT =
+  process.env.NODE_ENV === "production"
+    ? "price_1PjrkeJ5A6f1xaSsYm8BjZDo"
+    : "price_1PjrneJ5A6f1xaSsxL86tS6i";

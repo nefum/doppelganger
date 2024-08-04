@@ -2,10 +2,8 @@ import { BASE_ORIGIN } from "%/constants.ts";
 import prisma from "%/database/prisma.ts";
 import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
 import { getDeviceIsActive } from "@/utils/devices.ts";
-import {
-  getSubscriptionStatus,
-  SubscriptionStatus,
-} from "@/utils/subscriptions.ts";
+import { getSubscriptionStatus } from "@/utils/stripe/utils.ts";
+import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import * as OneSignal from "@onesignal/node-onesignal";
 import { Device } from "@prisma/client";
 import * as Sentry from "@sentry/nextjs";

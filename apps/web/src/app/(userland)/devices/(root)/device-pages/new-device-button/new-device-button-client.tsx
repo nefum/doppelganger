@@ -2,8 +2,9 @@
 
 import { NewDeviceButtonStatic } from "@/app/(userland)/devices/(root)/device-pages/new-device-button/new-device-button-static.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
-import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import React, { ReactNode } from "react";
+
+import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 
 export default function NewDeviceButtonClient({
   emailVerified,

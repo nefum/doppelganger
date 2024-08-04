@@ -40,6 +40,7 @@ function createPrisma() {
   return prisma;
 }
 
+// this is actually created during the build process; luckily the prisma client is more or less stateless
 // this prevents multiple instances of Prisma Client in development
 const prisma = global.prisma || createPrisma();
 

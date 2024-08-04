@@ -349,6 +349,7 @@ async function installOrUpdateApkAndGrantAllPermissions(
     // to prevent this, we will be using async-lock with the key of the apkPath and the device id
     const adbFileName = path.basename(apkPath);
 
+    // todo: kinggrand -- between different nodes in the cluster, we need to ensure that the same apk is not installed on the same device at the same time
     await thisProcessInstallLock.acquire(
       `${adbFileName}-${adbClient.serial}`,
       async () => {

@@ -11,10 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { getDevicesForUser } from "@/utils/devices.ts";
-import {
-  getSubscriptionStatus,
-  SubscriptionStatus,
-} from "@/utils/subscriptions.ts";
+import { getSubscriptionStatus } from "@/utils/stripe/utils.ts";
+import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { LuArrowRight } from "react-icons/lu";
 import { Link } from "react-transition-progress/next";

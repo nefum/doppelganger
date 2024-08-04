@@ -13,14 +13,6 @@ export enum SubscriptionStatus {
   FREE = "FREE",
 }
 
-export async function getSubscriptionStatus(
-  userId: string,
-): Promise<SubscriptionStatus> {
-  return userId === "4d7a801f-130a-438f-b013-31e738693fad"
-    ? SubscriptionStatus.PRO
-    : SubscriptionStatus.FREE; // TODO
-}
-
 export function getMaxDeviceCount(
   subscriptionStatus: SubscriptionStatus,
 ): number {

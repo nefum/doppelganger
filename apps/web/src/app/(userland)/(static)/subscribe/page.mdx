@@ -1,5 +1,5 @@
-import { Pricing22 } from "../../../components/relume/pricing-22";
-import { Button } from "../../../components/ui/button";
+import { Pricing22 } from "../../../../components/relume/pricing-22";
+import { Button } from "../../../../components/ui/button";
 import { Link } from "react-transition-progress/next";
 import { LuArrowRight } from "react-icons/lu";
 import {
@@ -8,9 +8,11 @@ import {
   MAX_DEVICES_PLUS,
   MAX_DEVICES_PRO,
   PLUS_MAX_FPS,
+  PLUS_STRIPE_PRODUCT,
   PRO_MAX_FPS,
-} from "../../../../server/src/constants";
-import { BiCheck, BiX } from "react-icons/bi";
+  PRO_STRIPE_PRODUCT,
+} from "../../../../../server/src/constants";
+import { BiCheck } from "react-icons/bi";
 
 export const metadata = {
   title: "Premium",
@@ -39,16 +41,60 @@ export const metadata = {
       monthlyPrice: "$9.99",
       description:
         "Unlock better integrations and unbridled functionality for one device.",
-      button: <Button disabled>Coming Soon</Button>,
+      button: (
+        <Button asChild>
+          <Link
+            href={`/api/stripe/get-checkout-session?priceId=${PLUS_STRIPE_PRODUCT}`}
+          >
+            Subscribe
+            <LuArrowRight className="ml-1 h-4 w-4" />
+          </Link>
+        </Button>
+      ),
     },
     {
       planName: "Pro",
       monthlyPrice: "$14.99",
       description:
         "Unlock the full potential of Doppelganger's multiple deivces.",
-      button: <Button disabled>Coming Soon</Button>,
+      button: (
+        <Button asChild>
+          <Link
+            href={`/api/stripe/get-checkout-session?priceId=${PRO_STRIPE_PRODUCT}`}
+          >
+            Subscribe
+            <LuArrowRight className="ml-1 h-4 w-4" />
+          </Link>
+        </Button>
+      ),
     },
   ]}
+  buttons={
+    <>
+      <Button asChild>
+        <Link href="/devices">
+          Get Started
+          <LuArrowRight className="ml-1 h-4 w-4" />
+        </Link>
+      </Button>
+      <Button asChild>
+        <Link
+          href={`/api/stripe/get-checkout-session?priceId=${PLUS_STRIPE_PRODUCT}`}
+        >
+          Subscribe
+          <LuArrowRight className="ml-1 h-4 w-4" />
+        </Link>
+      </Button>
+      <Button asChild>
+        <Link
+          href={`/api/stripe/get-checkout-session?priceId=${PRO_STRIPE_PRODUCT}`}
+        >
+          Subscribe
+          <LuArrowRight className="ml-1 h-4 w-4" />
+        </Link>
+      </Button>
+    </>
+  }
   featureCategories={[
     {
       title: "Devices",
@@ -189,5 +235,4 @@ export const metadata = {
       ],
     },
   ]}
-  buttons={<>{/* empty */}</>}
 />

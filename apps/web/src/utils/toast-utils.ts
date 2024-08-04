@@ -30,6 +30,11 @@ export function encodeQueryParams({
   return `?toastTitle=${encodedToastTitle}${encodedToastDescription ? `&toastDescription=${encodedToastDescription}` : ""}`;
 }
 
+export function getQueryForToast(params: PlaintextToastParams): string {
+  const encodedToastParams = encodeToastParams(params);
+  return encodeQueryParams(encodedToastParams);
+}
+
 /**
  * Redirects the user (client-side) to a given URL and has a toast show up with the given message.
  * @param pathName

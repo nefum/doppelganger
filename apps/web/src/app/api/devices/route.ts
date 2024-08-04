@@ -4,10 +4,10 @@ import { bringUpDevice } from "%/docker/device-state.ts";
 import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
 import { getDevicesForUser } from "@/utils/devices.ts";
 import { initializeDevice } from "@/utils/redroid/deployment.ts";
+import { getSubscriptionStatus } from "@/utils/stripe/utils.ts";
 import {
   getMaxDeviceCount,
   getMaxFps,
-  getSubscriptionStatus,
   SubscriptionStatus,
 } from "@/utils/subscriptions.ts";
 import { createClient } from "@/utils/supabase/server.ts";

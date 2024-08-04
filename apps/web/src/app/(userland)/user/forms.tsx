@@ -34,8 +34,43 @@ import {
 } from "@/utils/toast-utils.ts";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
+import { Link } from "react-transition-progress/next";
 import { z } from "zod";
 import handleDeleteAccount from "./actions.ts";
+
+export function SubscriptionChangeForm() {
+  return (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle>Subscription</CardTitle>
+        <CardDescription>Change your subscription</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>
+          To change or cancel your subscription, please visit the{" "}
+          <a href="/api/stripe/get-portal-session" className="shadcn-link">
+            subscription management page
+          </a>
+          .
+        </p>
+        <p className="mt-2">
+          To sign up for a subscription, please visit the{" "}
+          <Link href="/subscribe" className="shadcn-link">
+            subscription page
+          </Link>
+          .
+        </p>
+        <p className="mt-2">
+          Have any questions or comments? Please reach out to us at{" "}
+          <Link href="/contact" className="shadcn-link">
+            our contact page
+          </Link>
+          .
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
 
 export function EmailChangeForm() {
   const supabaseClient = createClient();
