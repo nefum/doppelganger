@@ -80,6 +80,7 @@ export const metadata = {
       <Button asChild>
         <Link
           href={`/api/stripe/get-checkout-session?priceId=${PLUS_STRIPE_PRODUCT}`}
+          prefetch={false}
         >
           Subscribe
           <LuArrowRight className="ml-1 h-4 w-4" />
@@ -88,6 +89,7 @@ export const metadata = {
       <Button asChild>
         <Link
           href={`/api/stripe/get-checkout-session?priceId=${PRO_STRIPE_PRODUCT}`}
+          prefetch={false}
         >
           Subscribe
           <LuArrowRight className="ml-1 h-4 w-4" />

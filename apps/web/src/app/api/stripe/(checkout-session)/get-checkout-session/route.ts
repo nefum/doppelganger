@@ -7,6 +7,8 @@ import { getQueryForToast } from "@/utils/toast-utils.ts";
 import * as Sentry from "@sentry/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = createClient();
