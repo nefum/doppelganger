@@ -1,5 +1,5 @@
 import { BASE_ORIGIN } from "%/constants.ts";
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
 import { getDeviceIsActive } from "@/utils/devices.ts";
 import { getSubscriptionStatus } from "@/utils/stripe/utils.ts";
@@ -71,6 +71,8 @@ async function handleOwner(ownerId: string, devices: Device[]): Promise<void> {
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const prisma = getPrisma();
+
   const allDevices = await prisma.device.findMany({
     where: {
       id:

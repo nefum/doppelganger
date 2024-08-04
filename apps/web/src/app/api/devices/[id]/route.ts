@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { destroyDevice } from "%/docker/device-state.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
@@ -9,6 +9,8 @@ import { DeviceState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
+  const prisma = getPrisma();
+
   const id = req.nextUrl.pathname.match(deviceApiEndpoint)![1];
 
   const deviceInfo = await getDeviceForId(id);

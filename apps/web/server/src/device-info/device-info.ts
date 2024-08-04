@@ -1,4 +1,4 @@
-import prisma from "%/database/prisma";
+import { getPrisma } from "%/database/prisma";
 import { Device } from "@prisma/client";
 
 export async function getDeviceForId(id: string): Promise<Device | null> {
@@ -6,6 +6,8 @@ export async function getDeviceForId(id: string): Promise<Device | null> {
     console.warn("Tried to access staging/debug device in production");
     return null;
   }
+
+  const prisma = getPrisma();
 
   return prisma.device.findUnique({
     where: {

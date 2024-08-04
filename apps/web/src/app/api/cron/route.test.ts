@@ -1,14 +1,21 @@
 // route.test.ts
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { bringDownDevice, getIsDeviceRunning } from "%/docker/device-state.ts";
 import { getSubscriptionStatus } from "@/utils/stripe/utils.ts";
 import { SubscriptionStatus } from "@/utils/subscriptions.ts";
 import { GET } from "./route";
 
 jest.mock("%/database/prisma.ts", () => ({
-  device: {
-    findMany: jest.fn(),
-  },
+  getPrisma: jest.fn().mockReturnValue({
+    device: {
+      findMany: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+    },
+    stripeCustomer: {
+      findUnique: jest.fn(),
+    },
+  })
 }));
 
 jest.mock("next/server", () => ({
@@ -28,6 +35,8 @@ jest.mock("%/docker/device-state.ts", () => ({
 
 describe("GET function in route.ts", () => {
   it("should handle devices correctly based on subscription status", async () => {
+    const prisma = getPrisma();
+
     // Mock responses
     // @ts-expect-error -- testing purposes
     prisma.device.findMany.mockResolvedValue([
@@ -53,6 +62,8 @@ describe("GET function in route.ts", () => {
   });
 
   it("should call bringDownDevice for devices with inactive subscription past the idle time", async () => {
+    const prisma = getPrisma();
+
     // Mock the current time to ensure consistent test behavior
     jest.useFakeTimers().setSystemTime(new Date("2023-01-01T12:00:00Z"));
 

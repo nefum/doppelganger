@@ -1,10 +1,12 @@
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { getDeviceForId } from "%/device-info/device-info.ts";
 import { deviceApiEndpoint } from "%/endpoint-regex.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
+  const prisma = getPrisma();
+
   const supabaseClient = createClient();
   const {
     data: { user },

@@ -1,5 +1,5 @@
 import { BASE_ORIGIN } from "%/constants.ts";
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import createStripeClient from "@/utils/stripe/server.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { getQueryForToast } from "@/utils/toast-utils.ts";
@@ -9,6 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const prisma = getPrisma();
+
   try {
     const supabase = createClient();
     const {

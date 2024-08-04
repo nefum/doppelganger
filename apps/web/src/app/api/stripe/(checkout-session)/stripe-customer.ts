@@ -1,4 +1,4 @@
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import createStripeClient from "@/utils/stripe/server.ts";
 import * as Sentry from "@sentry/nextjs";
 
@@ -6,6 +6,8 @@ export async function createStripeCustomer(
   email: string,
   supabaseUserId: string,
 ) {
+  const prisma = getPrisma();
+
   const stripe = await createStripeClient();
 
   try {

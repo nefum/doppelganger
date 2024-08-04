@@ -1,4 +1,4 @@
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { getRedroidImage } from "%/device-info/redroid-images.ts";
 import { bringUpDevice } from "%/docker/device-state.ts";
 import { newDeviceFormSchema } from "@/app/(userland)/devices/(root)/device-pages/new-device-form/new-device-form-schema.ts";
@@ -23,6 +23,8 @@ export interface NewDeviceResponse {
 export async function POST(
   req: NextRequest,
 ): Promise<NextResponse<NewDeviceResponse>> {
+  const prisma = getPrisma();
+
   const supabaseClient = createClient();
   const {
     data: { user },

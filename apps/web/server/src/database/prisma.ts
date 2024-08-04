@@ -3,7 +3,7 @@ import Redis from "ioredis";
 import { createPrismaRedisCache } from "prisma-redis-middleware";
 
 interface CustomNodeJsGlobal {
-  prisma: PrismaClient;
+  __prisma: PrismaClient;
 }
 
 declare const global: CustomNodeJsGlobal;
@@ -40,11 +40,11 @@ function createPrisma() {
   return prisma;
 }
 
-// this is actually created during the build process; luckily the prisma client is more or less stateless
-// this prevents multiple instances of Prisma Client in development
-const prisma = global.prisma || createPrisma();
+export function getPrisma() {
+  if (global.__prisma) {
+    return global.__prisma;
+  }
 
-// if (process.env.NODE_ENV === 'development') global.prisma = prisma;
-global.prisma = prisma; // we don't care in our case
-
-export default prisma;
+  global.__prisma = createPrisma();
+  return global.__prisma;
+}

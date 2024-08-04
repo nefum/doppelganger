@@ -1,12 +1,13 @@
 "use server";
 
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { destroyDevice } from "%/docker/device-state.ts";
 import { getDevicesForUser } from "@/utils/devices.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device, DeviceState } from "@prisma/client";
 
 export default async function handleDeleteUser() {
+  const prisma = getPrisma();
   const supabaseClient = createClient();
   const {
     data: { user },

@@ -1,4 +1,4 @@
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import createStripeClient from "@/utils/stripe/server";
 import * as Sentry from "@sentry/nextjs";
 import { NextRequest, NextResponse } from "next/server";
@@ -49,6 +49,8 @@ export async function POST(
 async function handleSubscriptionCreatedOrUpdated(
   subscription: Stripe.Subscription,
 ) {
+  const prisma = getPrisma();
+
   const {
     id,
     customer,
@@ -104,6 +106,8 @@ async function handleSubscriptionCreatedOrUpdated(
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  const prisma = getPrisma();
+
   const { id } = subscription;
 
   try {

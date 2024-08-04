@@ -1,9 +1,11 @@
 import { DEVICE_ACTIVE_TIMEOUT } from "%/constants.ts";
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { Device } from "@prisma/client";
 import { User } from "@supabase/supabase-js";
 
 export function getDevicesForUser(user: User): Promise<Device[]> {
+  const prisma = getPrisma();
+
   return prisma.device.findMany({
     where: {
       ownerId: user.id,

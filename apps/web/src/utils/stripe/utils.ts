@@ -1,11 +1,13 @@
 import { PLUS_STRIPE_PRODUCT, PRO_STRIPE_PRODUCT } from "%/constants.ts";
-import prisma from "%/database/prisma.ts";
+import { getPrisma } from "%/database/prisma.ts";
 import { SubscriptionStatus } from "@/utils/subscriptions";
 import "server-only";
 
 export async function getSubscriptionStatus(
   userId: string,
 ): Promise<SubscriptionStatus> {
+  const prisma = getPrisma();
+
   try {
     // Find the StripeCustomer associated with the Supabase user
     const stripeCustomer = await prisma.stripeCustomer.findUnique({
