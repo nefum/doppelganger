@@ -46,6 +46,15 @@ jobs:
           fetch-depth: 0
           submodules: "recursive"
 
+      - name: Load public environment variables
+        run: |
+          if [ -f apps/web/.env.local.public ]; then
+            set -a && source apps/web/.env.local.public && set +a
+          else
+            echo "Error: apps/web/.env.local.public not found"
+            exit 1
+          fi
+
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v3
         with:
