@@ -43,7 +43,7 @@ export const MEMORY_LIMIT_BYTES = 2_147_483_648; // 2 GiB
 
 export const PLUS_STRIPE_PRODUCT =
   process.env.NODE_ENV === "production"
-    ? "prod_Qb3rH6MR0jBBiX"
+    ? "price_1PjrjNJ5A6f1xaSscXx0SEBm"
     : "price_1PjrmsJ5A6f1xaSssdFx6I3Y";
 export const PRO_STRIPE_PRODUCT =
   process.env.NODE_ENV === "production"
