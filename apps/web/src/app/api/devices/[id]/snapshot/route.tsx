@@ -106,7 +106,10 @@ export async function GET(
       {
         width: device.redroidWidth,
         height: device.redroidHeight,
-        // status: 503 // passing a status code will disable rendering
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+          Pragma: "no-cache",
+        },
       },
     );
   }
