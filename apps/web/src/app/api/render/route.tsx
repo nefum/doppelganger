@@ -31,6 +31,10 @@ export async function GET(
     {
       width: dimensions.width,
       height: dimensions.height,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+        Pragma: "no-cache",
+      },
     },
   );
 }

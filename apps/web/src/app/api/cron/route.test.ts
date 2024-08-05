@@ -15,7 +15,7 @@ jest.mock("%/database/prisma.ts", () => ({
     stripeCustomer: {
       findUnique: jest.fn(),
     },
-  })
+  }),
 }));
 
 jest.mock("next/server", () => ({

@@ -4,7 +4,7 @@ import createStripeClient from "@/utils/stripe/server.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { getQueryForToast } from "@/utils/toast-utils.ts";
 import * as Sentry from "@sentry/nextjs";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
