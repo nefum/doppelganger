@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- type import errors
+// @ts-nocheck
+
 import ArrowBackSVG from "../../public/images/buttons/arrow_back.svg";
 import CancelSVG from "../../public/images/buttons/cancel.svg";
 import MenuSVG from "../../public/images/buttons/menu.svg";

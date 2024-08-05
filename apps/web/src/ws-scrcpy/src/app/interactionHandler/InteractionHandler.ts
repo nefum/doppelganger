@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- type import errors
+// @ts-nocheck
+
 import CenterPointPNG from "../../public/images/multitouch/center_point.png";
 import TouchPointPNG from "../../public/images/multitouch/touch_point.png";
 import MotionEvent from "../MotionEvent";
