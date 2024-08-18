@@ -6,8 +6,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
-import "array.prototype.toreversed/auto";
-import "array.prototype.tosorted/auto";
+// import "array.prototype.toreversed/auto"; // cannot shim at compile time
+import shimReversed from "array.prototype.toreversed/shim";
+// import "array.prototype.tosorted/auto"; // cannot shim at compile time
+import shimSorted from "array.prototype.tosorted/shim";
 import { ReactNode } from "react";
 import { FaAndroid } from "react-icons/fa6";
 import { LuCrown } from "react-icons/lu";
@@ -36,6 +38,8 @@ function PremiumButton() {
 }
 
 export default function DeviceTypes(): ReactNode {
+  shimSorted();
+  shimReversed();
   return (
     <ul className="shadcn-ul">
       {allRedroidImages

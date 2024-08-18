@@ -4,10 +4,13 @@ import NoDevicesCard from "@/app/(userland)/devices/(root)/device-pages/no-devic
 import { getDevicesForUser } from "@/utils/devices.ts";
 import { createClient } from "@/utils/supabase/server.ts";
 import { Device } from "@prisma/client";
-import "array.prototype.tosorted/auto";
+// import "array.prototype.tosorted/auto"; // cannot shim at compile time
+import shimSorted from "array.prototype.tosorted/shim";
 import NotFound from "next/dist/client/components/not-found-error";
 
 export default async function UserDevices() {
+  shimSorted();
+
   const supabaseClient = createClient();
   const {
     data: { user },
