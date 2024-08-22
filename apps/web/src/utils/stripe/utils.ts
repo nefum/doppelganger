@@ -1,5 +1,6 @@
 import { PLUS_STRIPE_PRODUCT, PRO_STRIPE_PRODUCT } from "%/constants.ts";
 import { getPrisma } from "%/database/prisma.ts";
+import fixDateFromPrisma from "@/app/api/cron/util.ts";
 import { SubscriptionStatus } from "@/utils/subscriptions";
 import "server-only";
 
@@ -23,7 +24,9 @@ export async function getSubscriptionStatus(
     const activeSubscription = stripeCustomer.Subscription.filter((sub) =>
       ["active", "trialing"].includes(sub.status),
     ).sort(
-      (a, b) => b.currentPeriodEnd.getTime() - a.currentPeriodEnd.getTime(),
+      (a, b) =>
+        fixDateFromPrisma(b.currentPeriodEnd).getTime() -
+        fixDateFromPrisma(a.currentPeriodEnd).getTime(),
     )[0];
 
     if (!activeSubscription) {

@@ -10,7 +10,10 @@ import { retry } from "@lifeomic/attempt";
 import * as Sentry from "@sentry/node";
 import { IncomingMessage } from "node:http";
 import { WebSocket as WsWebSocket } from "ws";
-import { attachUpdateListener } from "./attach-update-listener";
+import {
+  attachUpdateListener,
+  updateDeviceLastConnected,
+} from "./attach-update-listener";
 import { createWebSocketProxy } from "./wsproxy";
 
 export async function handleDeviceStream(
@@ -73,6 +76,7 @@ export async function handleDeviceStream(
 
     const wsUrlString = getTargetWsScrcpyUrlForDevice(deviceInfo);
     const wsUrl = new URL(wsUrlString);
+    await updateDeviceLastConnected(deviceInfo.id);
     targetWs = await createWebSocketProxy(wsUrl, req, ws);
   } catch (e) {
     Sentry.captureException(e);
