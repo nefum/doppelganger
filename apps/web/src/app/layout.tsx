@@ -62,7 +62,7 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="var(--background)" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8306062105319601"
-     crossorigin="anonymous" />
+     crossOrigin="anonymous" />
       </head>
       <body
         className={clsx(
